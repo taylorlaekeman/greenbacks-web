@@ -1,8 +1,18 @@
 import React from 'react';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import styled, { ThemeProvider } from 'styled-components';
 
+import Login from 'components/Login';
+import Register from 'components/Register';
 import Global from 'styles/Global';
 import theme from 'styles/theme';
+
+const Wrapper = styled.article`
+  box-sizing: border-box;
+  height: 100vh;
+  padding: 12px 32px;
+  width: 100vw;
+`;
 
 const Content = styled.article`
   height: 100vh;
@@ -17,7 +27,7 @@ const Title = styled.h1`
   font-family: 'Playfair Display', serif;
   font-weight: 500;
   font-size: 4rem;
-  color: ${props => props.theme.colours.text.title};
+  color: ${(props) => props.theme.colours.text.title};
   margin: 0;
   margin-bottom: 2vh;
 `;
@@ -26,7 +36,7 @@ const Subtitle = styled.p`
   font-family: 'Inter', sans-serif;
   font-weight: 200;
   font-size: 1.2rem;
-  color: ${props => props.theme.colours.text.normal};
+  color: ${(props) => props.theme.colours.text.normal};
   margin: 0;
   margin-bottom: 20vh;
 `;
@@ -34,10 +44,24 @@ const Subtitle = styled.p`
 const App = () => (
   <ThemeProvider theme={theme}>
     <Global />
-    <Content>
-      <Title>Greenbacks</Title>
-      <Subtitle>Construction will begin soon</Subtitle>
-    </Content>
+    <Wrapper>
+      <Router>
+        <Switch>
+          <Route path="/login">
+            <Login />
+          </Route>
+          <Route path="/register">
+            <Register />
+          </Route>
+          <Route>
+            <Content>
+              <Title>Greenbacks</Title>
+              <Subtitle>Construction will begin soon</Subtitle>
+            </Content>
+          </Route>
+        </Switch>
+      </Router>
+    </Wrapper>
   </ThemeProvider>
 );
 
