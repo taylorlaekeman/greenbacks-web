@@ -18,11 +18,13 @@ const Form = ({ children, className, onSubmit }) => (
 Form.propTypes = {
   children: PropTypes.node,
   className: PropTypes.string,
+  onSubmit: PropTypes.func,
 };
 
 Form.defaultProps = {
   children: null,
   className: '',
+  onSubmit: () => {},
 };
 
 export default Form;

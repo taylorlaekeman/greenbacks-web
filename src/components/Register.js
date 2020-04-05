@@ -25,7 +25,10 @@ const Register = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isEmailErrorVisible, setIsEmailErrorVisible] = useState(false);
   const [isPasswordErrorVisible, setIsPasswordErrorVisible] = useState(false);
-  const [isConfirmPasswordErrorVisible, setIsConfirmPasswordErrorVisible] = useState(false);
+  const [
+    isConfirmPasswordErrorVisible,
+    setIsConfirmPasswordErrorVisible,
+  ] = useState(false);
 
   return (
     <Container>
@@ -33,11 +36,13 @@ const Register = () => {
         <Title>Welcome to Greenbacks</Title>
       </header>
       <main>
-        <Form onSubmit={() => {
-          setIsEmailErrorVisible(true);
-          setIsPasswordErrorVisible(true);
-          setIsConfirmPasswordErrorVisible(true);
-        }}>
+        <Form
+          onSubmit={() => {
+            setIsEmailErrorVisible(true);
+            setIsPasswordErrorVisible(true);
+            setIsConfirmPasswordErrorVisible(true);
+          }}
+        >
           <Input
             error={!email ? 'This field is required' : 'Must be a valid email'}
             isErrorVisible={isEmailErrorVisible}
@@ -60,7 +65,9 @@ const Register = () => {
             value={password}
           />
           <Input
-            error={confirmPassword ? 'Must match password' : 'This field is required'}
+            error={
+              confirmPassword ? 'Must match password' : 'This field is required'
+            }
             isErrorVisible={isConfirmPasswordErrorVisible}
             isValid={!!confirmPassword && password === confirmPassword}
             name="confirm password"
