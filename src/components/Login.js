@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 
 import Form from 'components/Form';
@@ -7,6 +7,7 @@ import Link from 'components/Link';
 import Submit from 'components/Form/Submit';
 import Subtitle from 'components/Subtitle';
 import Title from 'components/Title';
+import { isValidEmail } from 'utils/isValid';
 
 const Container = styled.article`
   display: flex;
@@ -23,28 +24,44 @@ const Underlined = styled.span`
   text-decoration: underline;
 `;
 
-const Login = () => (
-  <Container>
-    <Header>
-      <Title>Greenbacks</Title>
-      <Subtitle>Understand your spending</Subtitle>
-    </Header>
-    <main>
-      <Form>
-        <Input
-          name="email"
-          placeholder="Please enter your email"
-          type="email"
-        />
-        <Input name="password" type="password" />
-        <Submit value="Log in" />
-      </Form>
-      <Link to="/register">
-        {"Don't have an account? "}
-        <Underlined>Sign up</Underlined>
-      </Link>
-    </main>
-  </Container>
-);
+const Login = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  return (
+    <Container>
+      <Header>
+        <Title>Greenbacks</Title>
+        <Subtitle>Understand your spending</Subtitle>
+      </Header>
+      <main>
+        <Form>
+          <Input
+            error={!email ? 'This field is required' : 'Must be a valid email'}
+            isValid={email && isValidEmail(email)}
+            name="email"
+            onChange={setEmail}
+            placeholder="Please enter your email"
+            type="email"
+            value={email}
+          />
+          <Input
+            error="This field is required"
+            isValid={!!password}
+            name="password"
+            onChange={setPassword}
+            type="password"
+            value={password}
+          />
+          <Submit value="Log in" />
+        </Form>
+        <Link to="/register">
+          {"Don't have an account? "}
+          <Underlined>Sign up</Underlined>
+        </Link>
+      </main>
+    </Container>
+  );
+};
 
 export default Login;
