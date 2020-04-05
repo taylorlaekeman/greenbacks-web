@@ -27,6 +27,8 @@ const Underlined = styled.span`
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [isEmailErrorVisible, setIsEmailErrorVisible] = useState(false);
+  const [isPasswordErrorVisible, setIsPasswordErrorVisible] = useState(false);
 
   return (
     <Container>
@@ -38,8 +40,10 @@ const Login = () => {
         <Form>
           <Input
             error={!email ? 'This field is required' : 'Must be a valid email'}
-            isValid={email && isValidEmail(email)}
+            isErrorVisible={isEmailErrorVisible}
+            isValid={!!email && isValidEmail(email)}
             name="email"
+            onBlur={() => setIsEmailErrorVisible(true)}
             onChange={setEmail}
             placeholder="Please enter your email"
             type="email"
@@ -47,8 +51,10 @@ const Login = () => {
           />
           <Input
             error="This field is required"
+            isErrorVisible={isPasswordErrorVisible}
             isValid={!!password}
             name="password"
+            onBlur={() => setIsPasswordErrorVisible(true)}
             onChange={setPassword}
             type="password"
             value={password}
