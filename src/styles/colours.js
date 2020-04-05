@@ -1,4 +1,7 @@
 const palette = {
+  error: {
+    900: 'red',
+  },
   neutral: {
     100: 'white',
     200: 'hsl(100, 3%, 95%)',
@@ -29,6 +32,7 @@ export default {
     button: {
       primary: palette.primary[900],
     },
+    error: palette.error[900],
     divider: palette.neutral[300],
     normal: palette.neutral[700],
   },
@@ -36,6 +40,7 @@ export default {
     button: {
       primary: palette.neutral[900],
     },
+    error: palette.error[900],
     label: palette.neutral[700],
     normal: palette.neutral[900],
     placeholder: palette.neutral[600],

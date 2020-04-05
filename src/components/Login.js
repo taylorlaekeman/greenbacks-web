@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
+import Form from 'components/Form';
 import Input from 'components/Form/Input';
 import Link from 'components/Link';
 import Submit from 'components/Form/Submit';
@@ -29,7 +30,7 @@ const Login = () => (
       <Subtitle>Understand your spending</Subtitle>
     </Header>
     <main>
-      <form>
+      <Form>
         <Input
           name="email"
           placeholder="Please enter your email"
@@ -37,7 +38,7 @@ const Login = () => (
         />
         <Input name="password" type="password" />
         <Submit value="Log in" />
-      </form>
+      </Form>
       <Link to="/register">
         {"Don't have an account? "}
         <Underlined>Sign up</Underlined>
