@@ -2,49 +2,48 @@ import React from 'react';
 import styled from 'styled-components';
 
 import Input from 'components/Form/Input';
-import Label from 'components/Form/Label';
+import Link from 'components/Link';
 import Submit from 'components/Form/Submit';
-import UnstyledLink from 'components/Link';
+import Subtitle from 'components/Subtitle';
+import Title from 'components/Title';
 
-const Title = styled.h2`
-  color: ${(props) => props.theme.colours.text.title};
-  font-family: 'Playfair Display', serif;
-  font-size: 3rem;
-  font-weight: 400;
-  margin: 0;
-  padding: 32px 0;
+const Container = styled.article`
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: space-between;
 `;
 
-const Main = styled.main`
-  display: grid;
+const Header = styled.header`
+  border-bottom: solid ${(props) => props.theme.colours.border.divider} 1px;
 `;
 
-const Form = styled.form`
-  display: grid;
-`;
-
-const Link = styled(UnstyledLink)`
-  font-size: 0.8rem;
-  margin-top: 16px;
-  padding: 6px 13px;
+const Underlined = styled.span`
+  text-decoration: underline;
 `;
 
 const Login = () => (
-  <article>
-    <header>
-      <Title>Login</Title>
-    </header>
-    <Main>
-      <Form>
-        <Label htmlFor="email">Email</Label>
-        <Input id="email" type="email" />
-        <Label htmlFor="password">Password</Label>
-        <Input id="password" type="password" />
-        <Submit value="Login" />
-      </Form>
-      <Link to="/register">Sign up</Link>
-    </Main>
-  </article>
+  <Container>
+    <Header>
+      <Title>Greenbacks</Title>
+      <Subtitle>Understand your spending</Subtitle>
+    </Header>
+    <main>
+      <form>
+        <Input
+          name="email"
+          placeholder="Please enter your email"
+          type="email"
+        />
+        <Input name="password" type="password" />
+        <Submit value="Log in" />
+      </form>
+      <Link to="/register">
+        {"Don't have an account? "}
+        <Underlined>Sign up</Underlined>
+      </Link>
+    </main>
+  </Container>
 );
 
 export default Login;

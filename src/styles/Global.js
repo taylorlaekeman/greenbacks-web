@@ -1,6 +1,10 @@
 import { createGlobalStyle } from 'styled-components';
 
 export default createGlobalStyle`
+  * {
+    font-family: 'Inter', sans-serif;
+  }
+
   html {
     background-color: ${(props) => props.theme.colours.background.overflow};
   }

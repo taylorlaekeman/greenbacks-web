@@ -10,7 +10,7 @@ import theme from 'styles/theme';
 const Wrapper = styled.article`
   box-sizing: border-box;
   height: 100vh;
-  padding: 12px 32px;
+  padding: 30px 60px;
   width: 100vw;
 `;
 
@@ -33,7 +33,6 @@ const Title = styled.h1`
 `;
 
 const Subtitle = styled.p`
-  font-family: 'Inter', sans-serif;
   font-weight: 200;
   font-size: 1.2rem;
   color: ${(props) => props.theme.colours.text.normal};
