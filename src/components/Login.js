@@ -37,7 +37,10 @@ const Login = () => {
         <Subtitle>Understand your spending</Subtitle>
       </Header>
       <main>
-        <Form>
+        <Form onSubmit={() => {
+          setIsEmailErrorVisible(true);
+          setIsPasswordErrorVisible(true);
+        }}>
           <Input
             error={!email ? 'This field is required' : 'Must be a valid email'}
             isErrorVisible={isEmailErrorVisible}

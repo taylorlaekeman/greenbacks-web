@@ -1,8 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const Form = ({ children, className }) => (
-  <form className={className} noValidate>
+const Form = ({ children, className, onSubmit }) => (
+  <form
+    action="#"
+    className={className}
+    noValidate
+    onSubmit={(event) => {
+      event.preventDefault();
+      onSubmit(event);
+    }}
+  >
     {children}
   </form>
 );
