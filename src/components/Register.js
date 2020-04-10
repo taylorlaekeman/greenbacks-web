@@ -13,6 +13,24 @@ const Container = styled.article`
   flex-direction: column;
   height: 100%;
   justify-content: space-between;
+
+  @media (min-width: 380px) {
+    margin-left: calc(50vw - 190px);
+    width: 260px;
+  }
+
+  @media (min-height: 600px) {
+    height: 540px;
+    margin-top: calc(50vh - 300px);
+  }
+
+  @media (min-height: 700px) {
+    margin-top: 50px;
+  }
+
+  @media (min-height: 900px) {
+    margin-top: calc(50vh - 400px);
+  }
 `;
 
 const Underlined = styled.span`
