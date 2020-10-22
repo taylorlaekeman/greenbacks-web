@@ -1,6 +1,5 @@
 install:
 	npm install
-	npm install react-scripts@3.0.1
 
 build:
 	npm run build
