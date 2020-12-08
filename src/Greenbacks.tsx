@@ -13,7 +13,7 @@ const Greenbacks: FunctionComponent<propTypes> = () => {
   return (
     <>
       <h1>{user.name}</h1>
-      <button onClick={() => logout()}>Logout</button>
+      <button onClick={() => logout({ returnTo: window.location.origin })}>Logout</button>
     </>
   );
 };
