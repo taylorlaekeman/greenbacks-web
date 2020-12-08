@@ -1,22 +1,17 @@
 import React from 'react';
 
+import { Provider } from 'auth';
+import Greenbacks from 'Greenbacks';
+
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Provider
+      clientId="KO3di6CbUea9Cy6kafI5prCOsNPdZuEk"
+      domain="dev-ql06dx5h.us.auth0.com"
+      redirectUri={window.location.origin}
+    >
+      <Greenbacks />
+    </Provider>
   );
 }
 
