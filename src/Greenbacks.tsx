@@ -5,8 +5,6 @@ import { useAuth } from 'auth';
 const Greenbacks: FunctionComponent<propTypes> = () => {
   const { isAuthenticated, loginWithRedirect, logout, user } = useAuth();
 
-  console.log({ isAuthenticated, user });
-
   if (!isAuthenticated)
     return (
       <button onClick={() => loginWithRedirect()}>Login</button>
@@ -14,7 +12,7 @@ const Greenbacks: FunctionComponent<propTypes> = () => {
 
   return (
     <>
-      <div>{user.name}</div>
+      <h1>{user.name}</h1>
       <button onClick={() => logout()}>Logout</button>
     </>
   );
