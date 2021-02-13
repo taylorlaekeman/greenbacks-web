@@ -5,11 +5,9 @@ import { useAuth } from 'auth';
 const Login: FunctionComponent<propTypes> = () => {
   const { loginWithRedirect } = useAuth();
 
-  return (
-    <button onClick={() => loginWithRedirect()}>Login</button>
-  );
+  return <button onClick={() => loginWithRedirect()}>Login</button>;
 };
 
-interface propTypes {};
+interface propTypes {}
 
 export default Login;
