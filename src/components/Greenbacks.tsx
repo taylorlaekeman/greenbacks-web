@@ -1,32 +1,37 @@
-import React, { FunctionComponent } from 'react';
+import React, { FunctionComponent, useCallback, useState } from 'react';
 
-import { useQuery, queries } from 'api';
-import { useAuth } from 'auth';
+import { mutations, queries, useLazyQuery, useMutation, useQuery } from 'api';
+import FinancialAuthorizer from 'components/FinancialAuthorizer';
+import noop from 'utils/noop';
 
 const Greenbacks: FunctionComponent<propTypes> = () => {
-  const { logout, user } = useAuth();
+  const [hasClosed, setHasClosed] = useState(false);
+  const [
+    getAuthorizerToken,
+    { data: tokenResponse, error: tokenError, loading: isLoadingToken },
+  ] = useLazyQuery(queries.getAuthorizerToken, { fetchPolicy: 'network-only' });
+  const [
+    createFinancialAccount,
+    { data, error },
+  ] = useMutation(mutations.createFinancialAccount, { onError: noop });
+  const onAuthorize = useCallback((token: string, metadata: any) => {
+    createFinancialAccount({ variables: { token } });
+  }, [createFinancialAccount]);
 
-  const { data, error, loading } = useQuery(queries.hello);
-
-  if (loading)
+  if (tokenResponse?.getAuthorizerToken && !hasClosed)
     return (
-      <p>loading...</p>
-    );
-
-  if (error)
-    return (
-      <>
-        <h1>{user.name}</h1>
-        <p>{error.message}</p>
-        <button onClick={() => logout({ returnTo: window.location.origin })}>Logout</button>
-      </>
+      <FinancialAuthorizer
+        onClose={() => setHasClosed(true)}
+        onSuccess={onAuthorize}
+        token={tokenResponse.getAuthorizerToken}
+      />
     );
 
   return (
     <>
-      <h1>{user.name}</h1>
-      <p>{data.hello}</p>
-      <button onClick={() => logout({ returnTo: window.location.origin })}>Logout</button>
+      <button type="button" onClick={() => getAuthorizerToken()}>
+        Connect an account
+      </button>
     </>
   );
 };
