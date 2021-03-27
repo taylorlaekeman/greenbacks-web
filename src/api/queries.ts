@@ -3,14 +3,14 @@ import { gql } from '@apollo/client';
 export { useLazyQuery, useQuery } from '@apollo/client';
 
 export const queries = {
-  getAuthorizerToken: gql`
+  getConnectionInitializationToken: gql`
     {
-      getAuthorizerToken
+      getConnectionInitializationToken
     }
   `,
-  getConnections: gql`
+  getAccounts: gql`
     {
-      getConnections
+      getAccounts
     }
   `,
 };
