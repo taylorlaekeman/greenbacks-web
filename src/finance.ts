@@ -1,4 +1,4 @@
 export {
-  usePlaidLink as useFinancialAuthorizer,
+  usePlaidLink as useConnectionInitializer,
   usePlaidLink as default,
 } from 'react-plaid-link';

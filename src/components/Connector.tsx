@@ -1,7 +1,7 @@
 import React, { FunctionComponent } from 'react';
 
 import { mutations, useMutation } from 'api';
-import { useFinancialAuthorizer } from 'finance';
+import { useConnectionInitializer } from 'finance';
 import noop from 'utils/noop';
 
 const Connector: FunctionComponent<propTypes> = ({
@@ -10,7 +10,7 @@ const Connector: FunctionComponent<propTypes> = ({
   const [connectAccount] = useMutation(mutations.connectAccount, {
     onError: noop,
   });
-  const { open } = useFinancialAuthorizer({
+  const { open } = useConnectionInitializer({
     onSuccess: (temporaryToken: string) =>
       connectAccount({ variables: { token: temporaryToken } }),
     token: initializationToken,
