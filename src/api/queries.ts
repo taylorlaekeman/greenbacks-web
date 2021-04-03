@@ -8,9 +8,14 @@ export const queries = {
       getConnectionInitializationToken
     }
   `,
-  getAccounts: gql`
+  getConnections: gql`
     {
-      getAccounts
+      getConnections {
+        id
+        institution {
+          name
+        }
+      }
     }
   `,
 };

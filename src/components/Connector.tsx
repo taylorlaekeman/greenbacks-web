@@ -7,12 +7,12 @@ import noop from 'utils/noop';
 const Connector: FunctionComponent<propTypes> = ({
   initializationToken,
 }: propTypes) => {
-  const [connectAccount] = useMutation(mutations.connectAccount, {
+  const [createConnection] = useMutation(mutations.createConnection, {
     onError: noop,
   });
   const { open } = useConnectionInitializer({
     onSuccess: (temporaryToken: string) =>
-      connectAccount({ variables: { token: temporaryToken } }),
+      createConnection({ variables: { token: temporaryToken } }),
     token: initializationToken,
   });
 

@@ -11,11 +11,32 @@ const Greenbacks: FunctionComponent = () => {
       fetchPolicy: 'network-only',
     }
   );
+  const { data: connectionsResponse } = useQuery(queries.getConnections);
 
   const initializationToken = tokenResponse?.getConnectionInitializationToken;
+  const connections = connectionsResponse?.getConnections;
 
-  if (!initializationToken) return <LoadingIndicator />;
-  return <Connector initializationToken={initializationToken} />;
+  const isLoading = !initializationToken || !connections;
+
+  if (isLoading) return <LoadingIndicator />;
+  return (
+    <>
+      <h1>Connections</h1>
+      <ul>
+        {connections.map((connection: Connection) => (
+          <li key={connection.id}>{connection.institution.name}</li>
+        ))}
+      </ul>
+      <Connector initializationToken={initializationToken} />
+    </>
+  );
 };
+
+interface Connection {
+  id: string;
+  institution: {
+    name: string;
+  };
+}
 
 export default Greenbacks;
