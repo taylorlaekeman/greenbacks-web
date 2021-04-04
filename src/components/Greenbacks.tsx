@@ -1,36 +1,42 @@
 import React, { FunctionComponent } from 'react';
 
-import { useQuery, queries } from 'api';
-import { useAuth } from 'auth';
+import { queries, useQuery } from 'api';
+import Connector from 'components/Connector';
+import LoadingIndicator from 'components/LoadingIndicator';
 
-const Greenbacks: FunctionComponent<propTypes> = () => {
-  const { logout, user } = useAuth();
+const Greenbacks: FunctionComponent = () => {
+  const { data: tokenResponse } = useQuery(
+    queries.getConnectionInitializationToken,
+    {
+      fetchPolicy: 'network-only',
+    }
+  );
+  const { data: connectionsResponse } = useQuery(queries.getConnections);
 
-  const { data, error, loading } = useQuery(queries.hello);
+  const initializationToken = tokenResponse?.getConnectionInitializationToken;
+  const connections = connectionsResponse?.getConnections;
 
-  if (loading)
-    return (
-      <p>loading...</p>
-    );
+  const isLoading = !initializationToken || !connections;
 
-  if (error)
-    return (
-      <>
-        <h1>{user.name}</h1>
-        <p>{error.message}</p>
-        <button onClick={() => logout({ returnTo: window.location.origin })}>Logout</button>
-      </>
-    );
-
+  if (isLoading) return <LoadingIndicator />;
   return (
     <>
-      <h1>{user.name}</h1>
-      <p>{data.hello}</p>
-      <button onClick={() => logout({ returnTo: window.location.origin })}>Logout</button>
+      <h1>Connections</h1>
+      <ul>
+        {connections.map((connection: Connection) => (
+          <li key={connection.id}>{connection.institution.name}</li>
+        ))}
+      </ul>
+      <Connector initializationToken={initializationToken} />
     </>
   );
 };
 
-type propTypes = {};
+interface Connection {
+  id: string;
+  institution: {
+    name: string;
+  };
+}
 
 export default Greenbacks;

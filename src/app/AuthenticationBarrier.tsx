@@ -2,7 +2,10 @@ import React, { FunctionComponent, ReactNode } from 'react';
 
 import { useAuth } from 'auth';
 
-const AuthenticationBarrier : FunctionComponent<propTypes> = ({ children, LoginComponent }: propTypes) => {
+const AuthenticationBarrier: FunctionComponent<propTypes> = ({
+  children,
+  LoginComponent,
+}: propTypes) => {
   const { isAuthenticated } = useAuth();
 
   if (!isAuthenticated) return <LoginComponent />;
@@ -13,6 +16,6 @@ const AuthenticationBarrier : FunctionComponent<propTypes> = ({ children, LoginC
 interface propTypes {
   children: ReactNode;
   LoginComponent: FunctionComponent;
-};
+}
 
 export default AuthenticationBarrier;

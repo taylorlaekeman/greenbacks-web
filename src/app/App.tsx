@@ -6,7 +6,7 @@ import { Provider as AuthProvider } from 'auth';
 import Greenbacks from 'components/Greenbacks';
 import Login from 'components/Login';
 
-const App : FunctionComponent = () => (
+const App: FunctionComponent = () => (
   <AuthProvider
     audience="https://greenbacks"
     clientId="KO3di6CbUea9Cy6kafI5prCOsNPdZuEk"
