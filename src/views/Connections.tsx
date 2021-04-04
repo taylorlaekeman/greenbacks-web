@@ -1,8 +1,8 @@
 import React, { FunctionComponent } from 'react';
 
 import { queries, useQuery } from 'api';
-import Connector from 'components/Connector';
 import LoadingIndicator from 'components/LoadingIndicator';
+import Connector from 'views/Connector';
 
 const Connections: FunctionComponent = () => {
   const { data: tokenResponse } = useQuery(
