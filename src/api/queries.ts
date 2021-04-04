@@ -18,4 +18,13 @@ export const queries = {
       }
     }
   `,
+  getTransactions: gql`
+    {
+      getTransactions {
+        amount
+        date
+        name
+      }
+    }
+  `,
 };
