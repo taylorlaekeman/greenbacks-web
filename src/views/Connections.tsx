@@ -2,6 +2,7 @@ import React, { FunctionComponent } from 'react';
 
 import { queries, useQuery } from 'api';
 import LoadingIndicator from 'components/LoadingIndicator';
+import { Link } from 'routing';
 import Connector from 'views/Connector';
 
 const Connections: FunctionComponent = () => {
@@ -22,6 +23,7 @@ const Connections: FunctionComponent = () => {
 
   return (
     <>
+      <Link to="/">home</Link>
       <h1>Connections</h1>
       <ul>
         {connections.map((connection: Connection) => (
