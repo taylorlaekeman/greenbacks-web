@@ -17,6 +17,8 @@ jobs:
       - run: make install
       - save_cache:
           key: dependencies-v1-{{ checksum "package.json" }}
+          paths:
+            - node_modules
       - run: make lint
 
   install:
