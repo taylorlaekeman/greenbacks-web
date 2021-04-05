@@ -1,10 +1,11 @@
 import React, { FunctionComponent } from 'react';
 
 import { queries, useQuery } from 'api';
-import Connector from 'components/Connector';
 import LoadingIndicator from 'components/LoadingIndicator';
+import { Link } from 'routing';
+import Connector from 'views/Connector';
 
-const Greenbacks: FunctionComponent = () => {
+const Connections: FunctionComponent = () => {
   const { data: tokenResponse } = useQuery(
     queries.getConnectionInitializationToken,
     {
@@ -19,8 +20,10 @@ const Greenbacks: FunctionComponent = () => {
   const isLoading = !initializationToken || !connections;
 
   if (isLoading) return <LoadingIndicator />;
+
   return (
     <>
+      <Link to="/">home</Link>
       <h1>Connections</h1>
       <ul>
         {connections.map((connection: Connection) => (
@@ -39,4 +42,4 @@ interface Connection {
   };
 }
 
-export default Greenbacks;
+export default Connections;

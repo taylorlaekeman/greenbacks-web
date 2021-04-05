@@ -3,8 +3,9 @@ import React, { FunctionComponent } from 'react';
 import { Provider as ApiProvider } from 'api';
 import AuthenticationBarrier from 'app/AuthenticationBarrier';
 import { Provider as AuthProvider } from 'auth';
-import Greenbacks from 'components/Greenbacks';
-import Login from 'components/Login';
+import Router from 'routing';
+import Greenbacks from 'views/Greenbacks';
+import Login from 'views/Login';
 
 const App: FunctionComponent = () => (
   <AuthProvider
@@ -15,7 +16,9 @@ const App: FunctionComponent = () => (
   >
     <AuthenticationBarrier LoginComponent={Login}>
       <ApiProvider uri="http://localhost:8000/dev/graphql">
-        <Greenbacks />
+        <Router>
+          <Greenbacks />
+        </Router>
       </ApiProvider>
     </AuthenticationBarrier>
   </AuthProvider>
