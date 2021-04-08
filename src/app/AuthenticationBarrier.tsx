@@ -1,12 +1,15 @@
 import React, { FunctionComponent, ReactNode } from 'react';
 
 import { useAuth } from 'auth';
+import LoadingIndicator from 'components/LoadingIndicator';
 
 const AuthenticationBarrier: FunctionComponent<propTypes> = ({
   children,
   LoginComponent,
 }: propTypes) => {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, isLoading } = useAuth();
+
+  if (isLoading) return <LoadingIndicator />;
 
   if (!isAuthenticated) return <LoginComponent />;
 

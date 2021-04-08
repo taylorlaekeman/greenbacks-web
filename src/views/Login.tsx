@@ -1,9 +1,14 @@
-import React, { FunctionComponent } from 'react';
+import React, { FunctionComponent, useEffect } from 'react';
 
-import { useAuth } from 'auth';
+import { useAuth, useRedirectLocation } from 'auth';
 
 const Login: FunctionComponent = () => {
   const { loginWithRedirect } = useAuth();
+  const { saveRedirectLocation } = useRedirectLocation();
+
+  useEffect(() => {
+    saveRedirectLocation(window.location.href);
+  }, [saveRedirectLocation]);
 
   return (
     <button onClick={() => loginWithRedirect()} type="button">
