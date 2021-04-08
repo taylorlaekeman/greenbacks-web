@@ -14,6 +14,7 @@ import React, {
 } from 'react';
 
 import { useAuth } from 'auth';
+import LoadingIndicator from 'components/LoadingIndicator';
 
 const Provider: FunctionComponent<propTypes> = ({
   children,
@@ -31,7 +32,7 @@ const Provider: FunctionComponent<propTypes> = ({
     saveToken();
   }, [getAccessTokenSilently]);
 
-  if (!token) return <h1>loading</h1>;
+  if (!token) return <LoadingIndicator />;
 
   return <ApolloProvider client={client}>{children}</ApolloProvider>;
 };
