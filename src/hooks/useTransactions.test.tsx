@@ -3,9 +3,10 @@ import { render, screen } from '@testing-library/react';
 
 import useTransactions from 'hooks/useTransactions';
 
-const getMock = ({ result = 'test' } = {}) => {
+const getMock = ({ result = 'test', isEmpty = false } = {}) => {
   const mock = jest.fn();
   mock.mockReturnValue({ data: { getTransactions: result } });
+  if (isEmpty) mock.mockReturnValue({ data: null });
   return mock;
 };
 
@@ -26,7 +27,7 @@ const Component = ({ endDate, mock, startDate }) => {
     startDate,
     useQuery: mock,
   });
-  return <div aria-label="result">{result}</div>;
+  return <div aria-label="result">{result || 'empty'}</div>;
 };
 
 describe('useTransactions', () => {
@@ -83,5 +84,12 @@ describe('useTransactions', () => {
     render(<Component mock={mock} />);
     const element = screen.getByRole('generic', { name: 'result' });
     expect(element).toHaveTextContent(value);
+  });
+
+  test('returns empty data %s', () => {
+    const mock = getMock({ isEmpty: true });
+    render(<Component mock={mock} />);
+    const element = screen.getByRole('generic', { name: 'result' });
+    expect(element).toHaveTextContent('empty');
   });
 });
