@@ -6,7 +6,10 @@ const useTransactions = ({ endDate, startDate, useQuery = useApiQuery }) => {
   const variables = {};
   if (endDate) variables.endDate = endDate;
   if (startDate) variables.startDate = startDate;
-  const { data } = useQuery(query, { variables });
+  const {
+    data: { getTransactions },
+  } = useQuery(query, { variables });
+  return getTransactions;
 };
 
 const query = gql`

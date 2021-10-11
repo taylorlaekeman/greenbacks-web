@@ -1,12 +1,11 @@
-import { render } from '@testing-library/react';
+import '@testing-library/jest-dom/extend-expect';
+import { render, screen } from '@testing-library/react';
 
 import useTransactions from 'hooks/useTransactions';
 
-expect.extend({});
-
-const getMock = () => {
+const getMock = ({ result = 'test' } = {}) => {
   const mock = jest.fn();
-  mock.mockReturnValue({ data: 'test' });
+  mock.mockReturnValue({ data: { getTransactions: result } });
   return mock;
 };
 
@@ -22,8 +21,12 @@ const extractQuery = (mock) => {
 };
 
 const Component = ({ endDate, mock, startDate }) => {
-  const transactions = useTransactions({ endDate, startDate, useQuery: mock });
-  return <></>;
+  const result = useTransactions({
+    endDate,
+    startDate,
+    useQuery: mock,
+  });
+  return <div aria-label="result">{result}</div>;
 };
 
 describe('useTransactions', () => {
@@ -73,5 +76,12 @@ describe('useTransactions', () => {
     render(<Component mock={mock} />);
     const { variables } = extractQuery(mock);
     expect(variables).not.toHaveProperty('endDate');
+  });
+
+  test.each(['foo', 'bar'])('returns query result %s', (value) => {
+    const mock = getMock({ result: value });
+    render(<Component mock={mock} />);
+    const element = screen.getByRole('generic', { name: 'result' });
+    expect(element).toHaveTextContent(value);
   });
 });
