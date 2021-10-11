@@ -21,9 +21,9 @@ const extractQuery = (mock) => {
   return { fields, name, variables };
 };
 
-const Component = ({ mock, startDate }) => {
-  const transactions = useTransactions({ startDate, useQuery: mock });
-  return <>test</>;
+const Component = ({ endDate, mock, startDate }) => {
+  const transactions = useTransactions({ endDate, startDate, useQuery: mock });
+  return <></>;
 };
 
 describe('useTransactions', () => {
@@ -50,5 +50,14 @@ describe('useTransactions', () => {
       variables: { startDate },
     } = extractQuery(mock);
     expect(startDate).toBe(value);
+  });
+
+  test.each(['foo', 'bar'])('uses end date %s', (value) => {
+    const mock = getMock();
+    render(<Component mock={mock} endDate={value} />);
+    const {
+      variables: { endDate },
+    } = extractQuery(mock);
+    expect(endDate).toBe(value);
   });
 });
