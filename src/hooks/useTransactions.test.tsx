@@ -1,4 +1,5 @@
-import '@testing-library/jest-dom/extend-expect';
+import React from 'react';
+import '@testing-library/jest-dom';
 import { render, screen } from '@testing-library/react';
 
 import useTransactions from 'hooks/useTransactions';
@@ -21,7 +22,7 @@ const extractQuery = (mock) => {
   return { fields, name, variables };
 };
 
-const Component = ({ endDate, mock, startDate }) => {
+const Component = ({ endDate, mock, startDate }: Props) => {
   const result = useTransactions({
     endDate,
     startDate,
@@ -30,66 +31,78 @@ const Component = ({ endDate, mock, startDate }) => {
   return <div aria-label="result">{result || 'empty'}</div>;
 };
 
+interface Props {
+  endDate: string;
+  mock: () => void;
+  startDate: string;
+}
+
 describe('useTransactions', () => {
-  test('uses correct query', () => {
-    const mock = getMock();
-    render(<Component mock={mock} />);
-    const { name } = extractQuery(mock);
-    expect(name).toBe('getTransactions');
+  describe('query details', () => {
+    test('uses correct query', () => {
+      const mock = getMock();
+      render(<Component mock={mock} />);
+      const { name } = extractQuery(mock);
+      expect(name).toBe('getTransactions');
+    });
+
+    test('queries correct values', () => {
+      const mock = getMock();
+      render(<Component mock={mock} />);
+      const { fields } = extractQuery(mock);
+      expect(fields).toContain('amount');
+      expect(fields).toContain('date');
+      expect(fields).toContain('name');
+    });
   });
 
-  test('queries correct values', () => {
-    const mock = getMock();
-    render(<Component mock={mock} />);
-    const { fields } = extractQuery(mock);
-    expect(fields).toContain('amount');
-    expect(fields).toContain('date');
-    expect(fields).toContain('name');
+  describe('variables', () => {
+    test.each(['foo', 'bar'])('uses start date %s', (value) => {
+      const mock = getMock();
+      render(<Component mock={mock} startDate={value} />);
+      const {
+        variables: { startDate },
+      } = extractQuery(mock);
+      expect(startDate).toBe(value);
+    });
+
+    test.each(['foo', 'bar'])('uses end date %s', (value) => {
+      const mock = getMock();
+      render(<Component mock={mock} endDate={value} />);
+      const {
+        variables: { endDate },
+      } = extractQuery(mock);
+      expect(endDate).toBe(value);
+    });
+
+    test('does not use start date if not provided', () => {
+      const mock = getMock();
+      render(<Component mock={mock} />);
+      const { variables } = extractQuery(mock);
+      expect(variables).not.toHaveProperty('startDate');
+    });
+
+    test('does not use end date if not provided', () => {
+      const mock = getMock();
+      render(<Component mock={mock} />);
+      const { variables } = extractQuery(mock);
+      expect(variables).not.toHaveProperty('endDate');
+    });
   });
 
-  test.each(['foo', 'bar'])('uses start date %s', (value) => {
-    const mock = getMock();
-    render(<Component mock={mock} startDate={value} />);
-    const {
-      variables: { startDate },
-    } = extractQuery(mock);
-    expect(startDate).toBe(value);
-  });
+  describe('result', () => {
+    test.each(['foo', 'bar'])('returns query result %s', (value) => {
+      const mock = getMock({ result: value });
+      render(<Component mock={mock} />);
+      const element = screen.getByRole('generic', { name: 'result' });
+      expect(element).toHaveTextContent(value);
+    });
 
-  test.each(['foo', 'bar'])('uses end date %s', (value) => {
-    const mock = getMock();
-    render(<Component mock={mock} endDate={value} />);
-    const {
-      variables: { endDate },
-    } = extractQuery(mock);
-    expect(endDate).toBe(value);
-  });
-
-  test('does not use start date if not provided', () => {
-    const mock = getMock();
-    render(<Component mock={mock} />);
-    const { variables } = extractQuery(mock);
-    expect(variables).not.toHaveProperty('startDate');
-  });
-
-  test('does not use end date if not provided', () => {
-    const mock = getMock();
-    render(<Component mock={mock} />);
-    const { variables } = extractQuery(mock);
-    expect(variables).not.toHaveProperty('endDate');
-  });
-
-  test.each(['foo', 'bar'])('returns query result %s', (value) => {
-    const mock = getMock({ result: value });
-    render(<Component mock={mock} />);
-    const element = screen.getByRole('generic', { name: 'result' });
-    expect(element).toHaveTextContent(value);
-  });
-
-  test('returns empty data %s', () => {
-    const mock = getMock({ isEmpty: true });
-    render(<Component mock={mock} />);
-    const element = screen.getByRole('generic', { name: 'result' });
-    expect(element).toHaveTextContent('empty');
+    test('returns empty data %s', () => {
+      const mock = getMock({ isEmpty: true });
+      render(<Component mock={mock} />);
+      const element = screen.getByRole('generic', { name: 'result' });
+      expect(element).toHaveTextContent('empty');
+    });
   });
 });

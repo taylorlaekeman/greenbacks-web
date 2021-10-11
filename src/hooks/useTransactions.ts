@@ -2,13 +2,21 @@ import gql from 'api/gql';
 
 import { useQuery as useApiQuery } from 'api';
 
-const useTransactions = ({ endDate, startDate, useQuery = useApiQuery }) => {
+const useTransactions = ({
+  endDate,
+  startDate,
+  useQuery = useApiQuery,
+}: Input): void => {
   const variables = {};
   if (endDate) variables.endDate = endDate;
   if (startDate) variables.startDate = startDate;
   const { data } = useQuery(query, { variables });
   return data?.getTransactions;
 };
+
+interface Input {
+  endDate: string;
+}
 
 const query = gql`
   {
