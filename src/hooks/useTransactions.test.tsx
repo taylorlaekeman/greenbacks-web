@@ -60,4 +60,18 @@ describe('useTransactions', () => {
     } = extractQuery(mock);
     expect(endDate).toBe(value);
   });
+
+  test('does not use start date if not provided', () => {
+    const mock = getMock();
+    render(<Component mock={mock} />);
+    const { variables } = extractQuery(mock);
+    expect(variables).not.toHaveProperty('startDate');
+  });
+
+  test('does not use end date if not provided', () => {
+    const mock = getMock();
+    render(<Component mock={mock} />);
+    const { variables } = extractQuery(mock);
+    expect(variables).not.toHaveProperty('endDate');
+  });
 });
