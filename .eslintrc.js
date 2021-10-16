@@ -40,7 +40,6 @@ module.exports = {
     'jest/prefer-to-have-length': 'warn',
     'jest/valid-expect': 'error',
     'no-use-before-define': 'off',
-    'no-console': 'error',
     'react/jsx-filename-extension': [1, { extensions: ['.ts', '.tsx'] }],
     'react-hooks/exhaustive-deps': 'error',
     'react-hooks/rules-of-hooks': 'error',

@@ -2,6 +2,8 @@ import React from 'react';
 import '@testing-library/jest-dom';
 import { render, screen } from '@testing-library/react';
 
+import type { DocumentNode } from 'api/gql';
+import type { QueryResult } from 'api/queries';
 import useTransactions from 'hooks/useTransactions';
 
 const getMock = ({ result = 'test', isEmpty = false } = {}) => {
@@ -11,12 +13,12 @@ const getMock = ({ result = 'test', isEmpty = false } = {}) => {
   return mock;
 };
 
-const extractQuery = (mock) => {
+const extractQuery = (mock: jest.Mock) => {
   const details = mock.mock.calls[0][0];
   const query = details.definitions[0].selectionSet.selections[0];
   const name = query.name.value;
   const fields = query.selectionSet.selections.map(
-    (selection) => selection.name.value
+    (selection: { name: { value: string } }) => selection.name.value
   );
   const { variables } = mock.mock.calls[0][1];
   return { fields, name, variables };
@@ -28,13 +30,23 @@ const Component = ({ endDate, mock, startDate }: Props) => {
     startDate,
     useQuery: mock,
   });
-  return <div aria-label="result">{result || 'empty'}</div>;
+  return (
+    <div aria-label="result">{result.length === 0 ? 'empty' : result}</div>
+  );
+};
+
+Component.defaultProps = {
+  endDate: null,
+  startDate: null,
 };
 
 interface Props {
-  endDate: string;
-  mock: () => void;
-  startDate: string;
+  endDate?: string;
+  mock: <QueryResults, Variables>(
+    query: DocumentNode,
+    config: { variables: Variables }
+  ) => QueryResult<QueryResults>;
+  startDate?: string;
 }
 
 describe('useTransactions', () => {

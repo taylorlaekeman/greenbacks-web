@@ -1,6 +1,7 @@
 import { gql } from '@apollo/client';
 
 export { useLazyQuery, useQuery } from '@apollo/client';
+export type { QueryResult } from '@apollo/client';
 
 export const queries = {
   getConnectionInitializationToken: gql`
