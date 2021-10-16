@@ -1,42 +1,26 @@
 version: 2.1
 
+orbs:
+  node: circleci/node@4.1
+
 executors:
   node:
     docker:
-      - image: circleci/node:12.2.0
+      - image: circleci/node:15.1
 
 jobs:
-  build_and_test:
+  test_pr:
     executor: node
     steps:
       - checkout
-      - restore_cache:
-          keys:
-            - dependencies-v1-{{ checksum "package.json" }}
-            - dependencies-v1
-      - run: make install
-      - save_cache:
-          key: dependencies-v1-{{ checksum "package.json" }}
-          paths:
-            - node_modules
-      - run: make lint
-
-  install:
-    docker:
-      - image: circleci/node:12.2.0
-    steps:
-      - checkout
-      - run: make install
-      - persist_to_workspace:
-          root: /home/circleci/project/
-          paths:
-            - node_modules
+      - node/install-packages
+      - run: npm run check
 
 workflows:
   version: 2
-  test_build_deploy:
+  test_pr:
     jobs:
-      - build_and_test:
+      - test_pr:
           filters:
             branches:
               ignore: main
