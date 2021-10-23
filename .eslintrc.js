@@ -44,6 +44,7 @@ module.exports = {
     'react-hooks/exhaustive-deps': 'error',
     'react-hooks/rules-of-hooks': 'error',
     '@typescript-eslint/explicit-module-boundary-types': 'error',
+    '@typescript-eslint/no-unused-vars': ['error', { varsIgnorePattern: '_' }],
   },
   settings: {
     'import/resolver': {
