@@ -6,24 +6,15 @@ const useTransactions = (
     useQuery: useApiQuery,
   }
 ): Transaction[] => {
-  const variables: Variables = {};
-  if (endDate) variables.endDate = endDate;
-  const { data } = useQuery<Results, Variables>(query, { variables });
+  const { data } = useQuery<Results, Record<string, never>>(query);
   const transactions = data?.getTransactions || [];
-  return filterTransactions({ startDate, transactions });
+  return filterTransactions({ endDate, startDate, transactions });
 };
 
 interface Input {
   endDate?: string;
   startDate?: string;
-  useQuery: <QueryResults, Variables>(
-    query: DocumentNode,
-    config: { variables: Variables }
-  ) => QueryResult<QueryResults>;
-}
-
-export interface Variables {
-  endDate?: string;
+  useQuery: <QueryResults, _>(query: DocumentNode) => QueryResult<QueryResults>;
 }
 
 export interface Results {
@@ -47,13 +38,20 @@ const query = gql`
 `;
 
 const filterTransactions = ({
+  endDate,
   startDate,
   transactions,
 }: {
+  endDate?: string;
   startDate?: string;
   transactions: Transaction[];
 }) => {
+  if (endDate && startDate)
+    return transactions.filter(
+      ({ date }) => date >= startDate && date <= endDate
+    );
   if (startDate) return transactions.filter(({ date }) => date >= startDate);
+  if (endDate) return transactions.filter(({ date }) => date <= endDate);
   return transactions;
 };
 

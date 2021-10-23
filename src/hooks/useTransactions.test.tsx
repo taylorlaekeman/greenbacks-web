@@ -26,8 +26,7 @@ const extractQuery = (mock: jest.Mock) => {
   const fields = query.selectionSet.selections.map(
     (selection: { name: { value: string } }) => selection.name.value
   );
-  const { variables } = mock.mock.calls[0][1];
-  return { fields, name, variables };
+  return { fields, name };
 };
 
 const Component = ({ endDate, mock, startDate }: Props) => {
@@ -57,10 +56,7 @@ Component.defaultProps = {
 
 interface Props {
   endDate?: string;
-  mock: <QueryResults, Variables>(
-    query: DocumentNode,
-    config: { variables: Variables }
-  ) => QueryResult<QueryResults>;
+  mock: <QueryResults, _>(query: DocumentNode) => QueryResult<QueryResults>;
   startDate?: string;
 }
 
@@ -80,24 +76,6 @@ describe('useTransactions', () => {
       expect(fields).toContain('amount');
       expect(fields).toContain('date');
       expect(fields).toContain('name');
-    });
-  });
-
-  describe('variables', () => {
-    test.each(['foo', 'bar'])('uses end date %s', (value) => {
-      const mock = getMock();
-      render(<Component mock={mock} endDate={value} />);
-      const {
-        variables: { endDate },
-      } = extractQuery(mock);
-      expect(endDate).toBe(value);
-    });
-
-    test('does not use end date if not provided', () => {
-      const mock = getMock();
-      render(<Component mock={mock} />);
-      const { variables } = extractQuery(mock);
-      expect(variables).not.toHaveProperty('endDate');
     });
   });
 
@@ -136,6 +114,24 @@ describe('useTransactions', () => {
       result: [{ date: '2020-01-01' }],
     });
     render(<Component mock={mock} startDate="2020-01-01" />);
+    const element = screen.getByRole('generic', { name: 'date' });
+    expect(element).toHaveTextContent('2020-01-01');
+  });
+
+  test('excludes results after end date', () => {
+    const mock = getMock({
+      result: [{ date: '2020-01-01' }, { date: '2021-01-01' }],
+    });
+    render(<Component mock={mock} endDate="2020-02-01" />);
+    const element = screen.getByRole('generic', { name: 'date' });
+    expect(element).toHaveTextContent('2020-01-01');
+  });
+
+  test('includes result matching end date', () => {
+    const mock = getMock({
+      result: [{ date: '2020-01-01' }],
+    });
+    render(<Component mock={mock} endDate="2020-01-01" />);
     const element = screen.getByRole('generic', { name: 'date' });
     expect(element).toHaveTextContent('2020-01-01');
   });
