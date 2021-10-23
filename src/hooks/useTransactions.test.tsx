@@ -6,7 +6,13 @@ import type { DocumentNode } from 'api/gql';
 import type { QueryResult } from 'api/queries';
 import useTransactions from 'hooks/useTransactions';
 
-const getMock = ({ result = 'test', isEmpty = false } = {}) => {
+const getMock = ({
+  result = [],
+  isEmpty = false,
+}: {
+  result?: { amount?: number; date?: string; name?: string }[];
+  isEmpty?: boolean;
+} = {}) => {
   const mock = jest.fn();
   mock.mockReturnValue({ data: { getTransactions: result } });
   if (isEmpty) mock.mockReturnValue({ data: null });
@@ -30,8 +36,17 @@ const Component = ({ endDate, mock, startDate }: Props) => {
     startDate,
     useQuery: mock,
   });
+  if (result.length === 0) return <div aria-label="empty">empty</div>;
   return (
-    <div aria-label="result">{result.length === 0 ? 'empty' : result}</div>
+    <>
+      {result.map(({ amount, date, name }) => (
+        <div key={`${amount}|${date}|${name}`}>
+          <div aria-label="amount">{amount}</div>
+          <div aria-label="date">{date}</div>
+          <div aria-label="name">{name}</div>
+        </div>
+      ))}
+    </>
   );
 };
 
@@ -103,18 +118,25 @@ describe('useTransactions', () => {
   });
 
   describe('result', () => {
-    test.each(['foo', 'bar'])('returns query result %s', (value) => {
-      const mock = getMock({ result: value });
+    test.each([1, 2])('returns amount %d', (value) => {
+      const mock = getMock({ result: [{ amount: value }] });
       render(<Component mock={mock} />);
-      const element = screen.getByRole('generic', { name: 'result' });
+      const element = screen.getByRole('generic', { name: 'amount' });
+      expect(element).toHaveTextContent(value.toString());
+    });
+
+    test.each(['foo', 'bar'])('returns date %s', (value) => {
+      const mock = getMock({ result: [{ date: value }] });
+      render(<Component mock={mock} />);
+      const element = screen.getByRole('generic', { name: 'date' });
       expect(element).toHaveTextContent(value);
     });
 
-    test('returns empty data %s', () => {
-      const mock = getMock({ isEmpty: true });
+    test.each(['foo', 'bar'])('returns name %s', (value) => {
+      const mock = getMock({ result: [{ name: value }] });
       render(<Component mock={mock} />);
-      const element = screen.getByRole('generic', { name: 'result' });
-      expect(element).toHaveTextContent('empty');
+      const element = screen.getByRole('generic', { name: 'name' });
+      expect(element).toHaveTextContent(value);
     });
   });
 });

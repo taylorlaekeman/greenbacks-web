@@ -34,6 +34,8 @@ export interface Results {
 
 interface Transaction {
   amount: number;
+  date: string;
+  name: string;
 }
 
 const query = gql`
