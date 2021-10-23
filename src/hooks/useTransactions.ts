@@ -1,5 +1,4 @@
 import gql, { DocumentNode } from 'api/gql';
-
 import { useQuery as useApiQuery, QueryResult } from 'api/queries';
 
 const useTransactions = (
@@ -9,9 +8,9 @@ const useTransactions = (
 ): Transaction[] => {
   const variables: Variables = {};
   if (endDate) variables.endDate = endDate;
-  if (startDate) variables.startDate = startDate;
   const { data } = useQuery<Results, Variables>(query, { variables });
-  return data?.getTransactions || [];
+  const transactions = data?.getTransactions || [];
+  return filterTransactions({ startDate, transactions });
 };
 
 interface Input {
@@ -25,7 +24,6 @@ interface Input {
 
 export interface Variables {
   endDate?: string;
-  startDate?: string;
 }
 
 export interface Results {
@@ -47,5 +45,16 @@ const query = gql`
     }
   }
 `;
+
+const filterTransactions = ({
+  startDate,
+  transactions,
+}: {
+  startDate?: string;
+  transactions: Transaction[];
+}) => {
+  if (startDate) return transactions.filter(({ date }) => date >= startDate);
+  return transactions;
+};
 
 export default useTransactions;
