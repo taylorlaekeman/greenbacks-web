@@ -14,7 +14,9 @@ const useMonthlyTotal = ({
     endDate,
     startDate,
   });
-  return transactions.reduce((total, { amount }) => total + amount, 0);
+  return transactions
+    .filter(({ amount }) => amount > 0)
+    .reduce((total, { amount }) => total + amount, 0);
 };
 
 export interface MonthlyTotalHookInput {

@@ -65,4 +65,17 @@ describe('useMonthlyTotal', () => {
     const element = screen.getByRole('generic', { name: 'result' });
     expect(element).toHaveTextContent('6');
   });
+
+  test('ignores negative transaction amounts', () => {
+    const mock = getMock([
+      { amount: 1, date: 'test', name: 'test' },
+      { amount: -1, date: 'test', name: 'test' },
+    ]);
+    const input = {
+      useTransactions: mock,
+    };
+    render(<Component input={input} />);
+    const element = screen.getByRole('generic', { name: 'result' });
+    expect(element).toHaveTextContent('1');
+  });
 });
