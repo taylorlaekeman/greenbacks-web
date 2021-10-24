@@ -1,21 +1,27 @@
 import gql, { DocumentNode } from 'api/gql';
-import { useQuery as useApiQuery, QueryResult } from 'api/queries';
+import { useQuery as useQueryDefault } from 'api/queries';
 
-const useTransactions = (
-  { endDate, startDate, useQuery }: Input = {
-    useQuery: useApiQuery,
-  }
-): Transaction[] => {
+const useTransactions: TransactionsHook = ({
+  endDate,
+  startDate,
+  useQuery = useQueryDefault,
+} = {}) => {
   const { data } = useQuery<Results, Record<string, never>>(query);
   const transactions = data?.getTransactions || [];
   return filterTransactions({ endDate, startDate, transactions });
 };
 
+export type TransactionsHook = (input?: Input) => Transaction[];
+
 interface Input {
   endDate?: string;
   startDate?: string;
-  useQuery: <QueryResults, _>(query: DocumentNode) => QueryResult<QueryResults>;
+  useQuery?: ApiQueryHook;
 }
+
+export type ApiQueryHook = (
+  query: DocumentNode
+) => { data: { getTransactions: Transaction[] } };
 
 export interface Results {
   getTransactions: Transaction[];
