@@ -1,12 +1,14 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import '@testing-library/jest-dom';
+import { render, screen } from '@testing-library/react';
 
 import useMonthlyTotal, { MonthlyTotalHookInput } from 'hooks/useMonthlyTotal';
+import type { Transaction } from 'hooks/useTransactions';
 import datetime from 'utils/datetime';
 
-const getMock = () => {
+const getMock = (result: Transaction[] = []): jest.Mock => {
   const mock = jest.fn();
-  mock.mockReturnValue([]);
+  mock.mockReturnValue(result);
   return mock;
 };
 
@@ -49,4 +51,18 @@ describe('useMonthlyTotal', () => {
       expect(args.endDate.slice(0, -6)).toBe(expectedEndDate);
     }
   );
+
+  test('correctly sums transactions', () => {
+    const mock = getMock([
+      { amount: 1, date: 'test', name: 'test' },
+      { amount: 2, date: 'test', name: 'test' },
+      { amount: 3, date: 'test', name: 'test' },
+    ]);
+    const input = {
+      useTransactions: mock,
+    };
+    render(<Component input={input} />);
+    const element = screen.getByRole('generic', { name: 'result' });
+    expect(element).toHaveTextContent('6');
+  });
 });

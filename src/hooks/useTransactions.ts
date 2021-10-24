@@ -27,7 +27,7 @@ export interface Results {
   getTransactions: Transaction[];
 }
 
-interface Transaction {
+export interface Transaction {
   amount: number;
   date: string;
   name: string;
