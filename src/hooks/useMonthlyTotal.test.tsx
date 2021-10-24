@@ -31,4 +31,22 @@ describe('useMonthlyTotal', () => {
     expect(args.startDate).toBe(now.startOf('month').toString());
     expect(args.endDate).toBe(now.endOf('month').toString());
   });
+
+  test.each([
+    ['2020-01', '2020-01-01T00:00:00.000', '2020-01-31T23:59:59.999'],
+    ['2021-02', '2021-02-01T00:00:00.000', '2021-02-28T23:59:59.999'],
+  ])(
+    'uses correct dates for month %s',
+    (month, expectedStartDate, expectedEndDate) => {
+      const mock = getMock();
+      const input = {
+        month,
+        useTransactions: mock,
+      };
+      render(<Component input={input} />);
+      const args = mock.mock.calls[0][0];
+      expect(args.startDate.slice(0, -6)).toBe(expectedStartDate);
+      expect(args.endDate.slice(0, -6)).toBe(expectedEndDate);
+    }
+  );
 });
