@@ -2,9 +2,7 @@ import React from 'react';
 import '@testing-library/jest-dom';
 import { render, screen } from '@testing-library/react';
 
-import type { DocumentNode } from 'api/gql';
-import type { QueryResult } from 'api/queries';
-import useTransactions from 'hooks/useTransactions';
+import useTransactions, { ApiQueryHook } from 'hooks/useTransactions';
 
 const getMock = ({
   result = [],
@@ -56,7 +54,7 @@ Component.defaultProps = {
 
 interface Props {
   endDate?: string;
-  mock: <QueryResults, _>(query: DocumentNode) => QueryResult<QueryResults>;
+  mock: ApiQueryHook;
   startDate?: string;
 }
 
