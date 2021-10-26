@@ -6,20 +6,33 @@ import TotalSpending from 'views/TotalSpending';
 
 describe('TotalSpending', () => {
   test.each([1, 2])('shows amount %d', (value) => {
-    render(<TotalSpending amount={value} />);
+    render(<TotalSpending amount={value} month="2020-01" />);
     const element = screen.getByTestId('total-spending-amount');
     expect(element).toHaveTextContent(`$${value}`);
   });
 
   test('amount defaults to 0', () => {
-    render(<TotalSpending />);
+    render(<TotalSpending month="2020-01" />);
     const element = screen.getByTestId('total-spending-amount');
     expect(element).toHaveTextContent('$0');
   });
 
-  test('month defaults to current', () => {
-    render(<TotalSpending />);
+  test.each([
+    ['01', 'January'],
+    ['02', 'February'],
+    ['03', 'March'],
+    ['04', 'April'],
+    ['05', 'May'],
+    ['06', 'June'],
+    ['07', 'July'],
+    ['08', 'August'],
+    ['09', 'September'],
+    ['10', 'October'],
+    ['11', 'November'],
+    ['12', 'December'],
+  ])('formats numeric month %s to %s', (monthNumber, monthName) => {
+    render(<TotalSpending month={`2020-${monthNumber}`} />);
     const element = screen.getByTestId('total-spending-month');
-    expect(element).toHaveTextContent('Spent this month');
+    expect(element).toHaveTextContent(`Spent in ${monthName}, 2020`);
   });
 });
