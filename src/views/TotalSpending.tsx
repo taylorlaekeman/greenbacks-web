@@ -5,7 +5,11 @@ const TotalSpending: FunctionComponent<Props> = ({ amount }: Props) => (
 );
 
 interface Props {
-  amount: number;
+  amount?: number;
 }
+
+TotalSpending.defaultProps = {
+  amount: 0,
+};
 
 export default TotalSpending;
