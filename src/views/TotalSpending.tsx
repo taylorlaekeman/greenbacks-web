@@ -1,7 +1,10 @@
 import React, { FunctionComponent } from 'react';
 
 const TotalSpending: FunctionComponent<Props> = ({ amount }: Props) => (
-  <p data-testid="total-spending-amount">{`$${amount}`}</p>
+  <article aria-label="total-spending">
+    <p data-testid="total-spending-amount">{`$${amount}`}</p>
+    <p data-testid="total-spending-month">Spent this month</p>
+  </article>
 );
 
 interface Props {

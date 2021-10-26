@@ -16,4 +16,10 @@ describe('TotalSpending', () => {
     const element = screen.getByTestId('total-spending-amount');
     expect(element).toHaveTextContent('$0');
   });
+
+  test('month defaults to current', () => {
+    render(<TotalSpending />);
+    const element = screen.getByTestId('total-spending-month');
+    expect(element).toHaveTextContent('Spent this month');
+  });
 });
