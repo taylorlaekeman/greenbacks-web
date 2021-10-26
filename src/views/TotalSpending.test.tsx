@@ -30,9 +30,15 @@ describe('TotalSpending', () => {
     ['10', 'October'],
     ['11', 'November'],
     ['12', 'December'],
-  ])('formats numeric month %s to %s', (monthNumber, monthName) => {
+  ])('includes numeric month %s as %s in label', (monthNumber, monthName) => {
     render(<TotalSpending month={`2020-${monthNumber}`} />);
     const element = screen.getByTestId('total-spending-month');
     expect(element).toHaveTextContent(`Spent in ${monthName}, 2020`);
+  });
+
+  test.each(['2020', '2021'])('includes year as %s in label', (value) => {
+    render(<TotalSpending month={`${value}-01`} />);
+    const element = screen.getByTestId('total-spending-month');
+    expect(element).toHaveTextContent(`Spent in January, ${value}`);
   });
 });

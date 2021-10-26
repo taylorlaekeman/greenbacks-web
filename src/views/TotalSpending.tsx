@@ -1,12 +1,12 @@
 import React, { FunctionComponent } from 'react';
 
 const TotalSpending: FunctionComponent<Props> = ({ amount, month }: Props) => {
-  const [_, monthNumber] = month.split('-');
+  const [year, monthNumber] = month.split('-');
   return (
     <article aria-label="total-spending">
       <p data-testid="total-spending-amount">{`$${amount}`}</p>
       <p data-testid="total-spending-month">
-        {`Spent in ${monthNamesByNumber[monthNumber]}, 2020`}
+        {`Spent in ${monthNamesByNumber[monthNumber]}, ${year}`}
       </p>
     </article>
   );
