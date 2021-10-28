@@ -36,9 +36,15 @@ describe('TotalSpending', () => {
     expect(element).toHaveTextContent(`Spent in ${monthName}, 2020`);
   });
 
-  test.each(['2020', '2021'])('includes year as %s in label', (value) => {
+  test.each(['2019', '2020'])('includes year as %s in label', (value) => {
     render(<TotalSpending month={`${value}-01`} />);
     const element = screen.getByTestId('total-spending-month');
     expect(element).toHaveTextContent(`Spent in January, ${value}`);
+  });
+
+  test('excludes current year', () => {
+    render(<TotalSpending month="2020-12" currentMonth="2020-01" />);
+    const element = screen.getByTestId('total-spending-month');
+    expect(element).toHaveTextContent(/^Spent in December$/);
   });
 });
