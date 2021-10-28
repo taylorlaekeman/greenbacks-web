@@ -54,6 +54,12 @@ describe('TotalSpending', () => {
     expect(element).toHaveTextContent('Spent so far this month');
   });
 
+  test('special text for last month', () => {
+    render(<TotalSpending month="2020-01" currentMonth="2020-02" />);
+    const element = screen.getByTestId('total-spending-text');
+    expect(element).toHaveTextContent('Spent last month');
+  });
+
   test('defaults to current month', () => {
     render(<TotalSpending />);
     const element = screen.getByTestId('total-spending-text');
