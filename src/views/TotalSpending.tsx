@@ -37,10 +37,12 @@ const generateMonthText = ({
   month: string;
 }) => {
   const [year, monthNumber] = month.split('-');
-  const [currentYear, _] = currentMonth.split('-');
-  if (currentYear === year)
-    return `Spent in ${monthNamesByNumber[monthNumber]}`;
-  return `Spent in ${monthNamesByNumber[monthNumber]}, ${year}`;
+  const [currentYear, currentMonthNumber] = currentMonth.split('-');
+  if (currentYear === year && currentMonthNumber === monthNumber)
+    return 'Spent so far this month';
+  const monthName = monthNamesByNumber[monthNumber];
+  if (currentYear === year) return `Spent in ${monthName}`;
+  return `Spent in ${monthName}, ${year}`;
 };
 
 const monthNamesByNumber: Record<string, string> = {
