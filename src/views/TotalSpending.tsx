@@ -8,11 +8,11 @@ const defaultCurrentMonth = `${now.year}-${now.month}`;
 const TotalSpending: FunctionComponent<Props> = ({
   amount,
   currentMonth = defaultCurrentMonth,
-  month,
+  month = defaultCurrentMonth,
 }: Props) => (
   <article aria-label="total-spending">
     <p data-testid="total-spending-amount">{`$${amount}`}</p>
-    <p data-testid="total-spending-month">
+    <p data-testid="total-spending-text">
       {generateMonthText({ currentMonth, month })}
     </p>
   </article>
@@ -21,12 +21,13 @@ const TotalSpending: FunctionComponent<Props> = ({
 interface Props {
   amount?: number;
   currentMonth?: string;
-  month: string;
+  month?: string;
 }
 
 TotalSpending.defaultProps = {
   amount: 0,
   currentMonth: defaultCurrentMonth,
+  month: defaultCurrentMonth,
 };
 
 const generateMonthText = ({

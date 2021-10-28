@@ -32,25 +32,31 @@ describe('TotalSpending', () => {
     ['12', 'December'],
   ])('includes numeric month %s as %s in label', (monthNumber, monthName) => {
     render(<TotalSpending month={`2020-${monthNumber}`} />);
-    const element = screen.getByTestId('total-spending-month');
+    const element = screen.getByTestId('total-spending-text');
     expect(element).toHaveTextContent(`Spent in ${monthName}, 2020`);
   });
 
   test.each(['2019', '2020'])('includes year as %s in label', (value) => {
     render(<TotalSpending month={`${value}-01`} />);
-    const element = screen.getByTestId('total-spending-month');
+    const element = screen.getByTestId('total-spending-text');
     expect(element).toHaveTextContent(`Spent in January, ${value}`);
   });
 
   test('excludes current year', () => {
     render(<TotalSpending month="2020-12" currentMonth="2020-01" />);
-    const element = screen.getByTestId('total-spending-month');
+    const element = screen.getByTestId('total-spending-text');
     expect(element).toHaveTextContent(/^Spent in December$/);
   });
 
   test('special text for current month', () => {
     render(<TotalSpending month="2020-01" currentMonth="2020-01" />);
-    const element = screen.getByTestId('total-spending-month');
+    const element = screen.getByTestId('total-spending-text');
+    expect(element).toHaveTextContent('Spent so far this month');
+  });
+
+  test('defaults to current month', () => {
+    render(<TotalSpending />);
+    const element = screen.getByTestId('total-spending-text');
     expect(element).toHaveTextContent('Spent so far this month');
   });
 });
