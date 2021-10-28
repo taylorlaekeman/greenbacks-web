@@ -41,10 +41,7 @@ const generateMonthText = ({
   const [currentYear, currentMonthNumber] = currentMonth.split('-');
   if (year === currentYear && monthNumber === currentMonthNumber)
     return 'Spent so far this month';
-  if (
-    year === currentYear &&
-    parseInt(monthNumber, 10) === parseInt(currentMonthNumber, 10) - 1
-  )
+  if (isLastMonth({ currentMonthNumber, currentYear, monthNumber, year }))
     return 'Spent last month';
   const monthName = monthNamesByNumber[monthNumber];
   if (currentYear === year) return `Spent in ${monthName}`;
@@ -64,6 +61,35 @@ const monthNamesByNumber: Record<string, string> = {
   '10': 'October',
   '11': 'November',
   '12': 'December',
+};
+
+const isLastMonth = ({
+  currentMonthNumber,
+  currentYear,
+  monthNumber,
+  year,
+}: {
+  currentMonthNumber: string;
+  currentYear: string;
+  monthNumber: string;
+  year: string;
+}) => {
+  const parsedCurrentMonthNumber = parseInt(currentMonthNumber, 10);
+  const parsedCurrentYear = parseInt(currentYear, 10);
+  const parsedMonthNumber = parseInt(monthNumber, 10);
+  const parsedYear = parseInt(year, 10);
+  if (
+    parsedYear === parsedCurrentYear &&
+    parsedMonthNumber === parsedCurrentMonthNumber - 1
+  )
+    return true;
+  if (
+    parsedYear === parsedCurrentYear - 1 &&
+    parsedMonthNumber === 12 &&
+    parsedCurrentMonthNumber === 1
+  )
+    return true;
+  return false;
 };
 
 export default TotalSpending;
