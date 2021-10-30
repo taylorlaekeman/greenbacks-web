@@ -21,9 +21,6 @@ const Greenbacks: FunctionComponent = () => {
       <Route path="/connections">
         <Connections />
       </Route>
-      <Route path="/asdf">
-        <Home />
-      </Route>
       <Route path="/">
         <Home />
       </Route>

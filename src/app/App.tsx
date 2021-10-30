@@ -3,7 +3,9 @@ import React, { FunctionComponent } from 'react';
 import { Provider as ApiProvider } from 'api';
 import AuthenticationBarrier from 'app/AuthenticationBarrier';
 import { Provider as AuthProvider } from 'auth';
+import GlobalStyle from 'styles/GlobalStyle';
 import Router from 'routing';
+import styled from 'utils/styled';
 import Greenbacks from 'views/Greenbacks';
 import Login from 'views/Login';
 
@@ -16,12 +18,19 @@ const App: FunctionComponent = () => (
   >
     <AuthenticationBarrier LoginComponent={Login}>
       <ApiProvider uri="http://localhost:8000/dev/graphql">
-        <Router>
-          <Greenbacks />
-        </Router>
+        <GlobalStyle />
+        <Wrapper>
+          <Router>
+            <Greenbacks />
+          </Router>
+        </Wrapper>
       </ApiProvider>
     </AuthenticationBarrier>
   </AuthProvider>
 );
+
+const Wrapper = styled.div`
+  height: 100vh;
+`;
 
 export default App;
