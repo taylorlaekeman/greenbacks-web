@@ -1,6 +1,7 @@
 import React, { FunctionComponent } from 'react';
 
 import datetime from 'utils/datetime';
+import styled from 'utils/styled';
 
 const now = datetime.now();
 const defaultCurrentMonth = `${now.year}-${now.month}`;
@@ -10,12 +11,12 @@ const TotalSpending: FunctionComponent<Props> = ({
   currentMonth = defaultCurrentMonth,
   month = defaultCurrentMonth,
 }: Props) => (
-  <article aria-label="total-spending">
-    <p data-testid="total-spending-amount">{`$${amount}`}</p>
-    <p data-testid="total-spending-text">
+  <Wrapper aria-label="total-spending">
+    <Amount data-testid="total-spending-amount">{`$${amount}`}</Amount>
+    <Month data-testid="total-spending-text">
       {generateMonthText({ currentMonth, month })}
-    </p>
-  </article>
+    </Month>
+  </Wrapper>
 );
 
 interface Props {
@@ -29,6 +30,25 @@ TotalSpending.defaultProps = {
   currentMonth: defaultCurrentMonth,
   month: defaultCurrentMonth,
 };
+
+const Wrapper = styled.article`
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-bottom: 100px;
+`;
+
+const Amount = styled.p`
+  font-size: 4rem;
+  margin: 0;
+  margin-bottom: 20px;
+`;
+
+const Month = styled.p`
+  font-size: 0.9rem;
+  margin: 0;
+`;
 
 const generateMonthText = ({
   currentMonth,

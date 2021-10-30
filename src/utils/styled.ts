@@ -1,1 +1,1 @@
-export { default } from 'styled-components';
+export { default, createGlobalStyle } from 'styled-components';
