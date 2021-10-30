@@ -11,6 +11,18 @@ describe('TotalSpending', () => {
     expect(element).toHaveTextContent(`$${value}`);
   });
 
+  test('adds trailing 0 to cents', () => {
+    render(<TotalSpending amount={1.1} month="2020-01" />);
+    const element = screen.getByTestId('total-spending-amount');
+    expect(element).toHaveTextContent('$1.10');
+  });
+
+  test('removes additional decimal places', () => {
+    render(<TotalSpending amount={1.101} month="2020-01" />);
+    const element = screen.getByTestId('total-spending-amount');
+    expect(element).toHaveTextContent('$1.10');
+  });
+
   test('amount defaults to 0', () => {
     render(<TotalSpending month="2020-01" />);
     const element = screen.getByTestId('total-spending-amount');

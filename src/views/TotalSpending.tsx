@@ -7,12 +7,14 @@ const now = datetime.now();
 const defaultCurrentMonth = `${now.year}-${now.month}`;
 
 const TotalSpending: FunctionComponent<Props> = ({
-  amount,
+  amount = 0,
   currentMonth = defaultCurrentMonth,
   month = defaultCurrentMonth,
 }: Props) => (
   <Wrapper aria-label="total-spending">
-    <Amount data-testid="total-spending-amount">{`$${amount}`}</Amount>
+    <Amount data-testid="total-spending-amount">
+      {currencyFormatter.format(amount)}
+    </Amount>
     <Month data-testid="total-spending-text">
       {generateMonthText({ currentMonth, month })}
     </Month>
@@ -44,6 +46,11 @@ const Amount = styled.p`
   margin: 0;
   margin-bottom: 20px;
 `;
+
+const currencyFormatter = new Intl.NumberFormat(undefined, {
+  style: 'currency',
+  currency: 'CAD',
+});
 
 const Month = styled.p`
   font-size: 0.9rem;
