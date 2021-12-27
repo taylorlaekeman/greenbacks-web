@@ -1,7 +1,7 @@
 import useQueryDefault, { IUseQuery } from 'hooks/useQuery';
 import gql from 'utils/gql';
 
-const useAccounts: IUseAccounts = ({ useQuery = useQueryDefault }) => {
+const useAccounts: IUseAccounts = ({ useQuery = useQueryDefault } = {}) => {
   const {
     data: initializationTokenData,
   } = useQuery<GetInitializationTokenResult>({
@@ -19,12 +19,12 @@ const useAccounts: IUseAccounts = ({ useQuery = useQueryDefault }) => {
 };
 
 export type IUseAccounts = (
-  input: UseAccountsInput
+  input?: UseAccountsInput
 ) => {
   initializationToken?: string;
 };
 
-interface UseAccountsInput {
+export interface UseAccountsInput {
   useQuery?: IUseQuery;
 }
 
