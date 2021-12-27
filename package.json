@@ -5,7 +5,7 @@
   "dependencies": {
     "@apollo/client": "^3.3.6",
     "@auth0/auth0-react": "^1.2.0",
-    "@testing-library/jest-dom": "^5.14.1",
+    "@testing-library/jest-dom": "^5.16.1",
     "@testing-library/react": "^9.5.0",
     "@testing-library/user-event": "^7.2.1",
     "@types/jest": "^24.9.1",
@@ -28,7 +28,7 @@
   },
   "scripts": {
     "build": "react-scripts build",
-    "check": "npm run lint && npm run test && npm run typecheck && npm run build",
+    "check": "npm run lint && npm run typecheck && npm run test && npm run build",
     "eject": "react-scripts eject",
     "lint": "npx eslint src && prettier --check .",
     "lint-fix": "npx eslint src --fix && prettier --write .",
