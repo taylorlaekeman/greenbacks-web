@@ -6,7 +6,7 @@ const getAccount = ({
 }: {
   id?: string;
   institution?: string;
-}): Account => ({
+} = {}): Account => ({
   id,
   institution: {
     name: institution,

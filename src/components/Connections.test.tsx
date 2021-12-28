@@ -58,4 +58,30 @@ describe('connections', () => {
     const element = screen.getByText(`${name} (${id})`);
     expect(element).toBeVisible();
   });
+
+  test('shows no accounts text when no accounts are connected', () => {
+    render(
+      <Router>
+        <Connections useAccounts={new UseAccountsStub().useAccounts} />
+      </Router>
+    );
+    const element = screen.getByText("You haven't connected any accounts yet");
+    expect(element).toBeVisible();
+  });
+
+  test('does not show no accounts text when accounts are connected', () => {
+    render(
+      <Router>
+        <Connections
+          useAccounts={
+            new UseAccountsStub({ accounts: [getAccount()] }).useAccounts
+          }
+        />
+      </Router>
+    );
+    const element = screen.queryByText(
+      "You haven't connected any accounts yet"
+    );
+    expect(element).toBeNull();
+  });
 });

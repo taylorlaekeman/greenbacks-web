@@ -21,6 +21,9 @@ const Connections: FunctionComponent<Props> = ({
     <>
       <Link to="/">home</Link>
       <h1>Connections</h1>
+      {accounts.length === 0 && (
+        <p>You haven&apos;t connected any accounts yet</p>
+      )}
       <ul>
         {accounts.map(({ id, institution: { name } }) => (
           <li key={id}>{`${name} (${id})`}</li>
