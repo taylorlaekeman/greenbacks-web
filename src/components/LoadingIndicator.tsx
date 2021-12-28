@@ -3,7 +3,11 @@ import styled from 'styled-components';
 
 import { ReactComponent as UnstyledCog } from 'assets/icons/cog.svg';
 
-const LoadingIndicator: FunctionComponent = () => <Cog />;
+const LoadingIndicator: FunctionComponent = () => (
+  <div aria-label="loading" role="status">
+    <Cog />
+  </div>
+);
 
 const Cog = styled(UnstyledCog)`
   animation: spin 2s linear infinite;
