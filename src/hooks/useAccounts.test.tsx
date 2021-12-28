@@ -4,23 +4,14 @@ import { render, screen } from '@testing-library/react';
 import useAccounts from 'hooks/useAccounts';
 import type { IUseQuery } from 'hooks/useQuery';
 import UseQueryStub from 'test/stubs/useQuery';
-import VisibleObject from 'test/utils/VisibleObject';
+import VisibleList from 'test/utils/VisibleList';
 
 const Component: FC<Props> = ({ useQuery = new UseQueryStub().useQuery }) => {
   const { accounts, initializationToken } = useAccounts({ useQuery });
   return (
     <>
       <p data-testid="token">{initializationToken}</p>
-      {accounts.map(({ id, institution: { name } }, index) => {
-        const key = `accounts-${index}`;
-        return (
-          <VisibleObject
-            id={key}
-            key={key}
-            object={{ id, institution: name }}
-          />
-        );
-      })}
+      <VisibleList id="accounts" list={accounts} />
     </>
   );
 };
@@ -74,17 +65,21 @@ describe('use accounts', () => {
       );
     });
 
-    test.each([
-      ['id', 'foo'],
-      ['id', 'bar'],
-      ['institution', 'foo'],
-      ['institution', 'bar'],
-    ])('returns %s %s', (key, value) => {
+    test.each(['foo', 'bar'])('returns id %s', (value) => {
       const stub = new UseQueryStub({
-        data: { getAccounts: [getAccount({ [key]: value })] },
+        data: { getAccounts: [getAccount({ id: value })] },
       });
       render(<Component useQuery={stub.useQuery} />);
-      const text = screen.getByTestId(`accounts-0-${key}`);
+      const text = screen.getByTestId('accounts-0-id');
+      expect(text).toHaveTextContent(value);
+    });
+
+    test.each(['foo', 'bar'])('returns institution name %s', (value) => {
+      const stub = new UseQueryStub({
+        data: { getAccounts: [getAccount({ institution: value })] },
+      });
+      render(<Component useQuery={stub.useQuery} />);
+      const text = screen.getByTestId('accounts-0-institution-name');
       expect(text).toHaveTextContent(value);
     });
   });

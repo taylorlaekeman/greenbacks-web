@@ -37,11 +37,11 @@ interface GetAccountsResult {
   getAccounts: Account[];
 }
 
-interface Account {
+type Account = {
   id: string;
   institution: {
     name: string;
   };
-}
+};
 
 export default useAccounts;
