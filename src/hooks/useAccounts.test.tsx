@@ -4,14 +4,14 @@ import { render, screen } from '@testing-library/react';
 import useAccounts from 'hooks/useAccounts';
 import type { IUseQuery } from 'hooks/useQuery';
 import UseQueryStub from 'test/stubs/useQuery';
-import VisibleList from 'test/utils/VisibleList';
+import VisibleObject from 'test/utils/VisibleObject';
 
 const Component: FC<Props> = ({ useQuery = new UseQueryStub().useQuery }) => {
   const { accounts, initializationToken } = useAccounts({ useQuery });
   return (
     <>
       <p data-testid="token">{initializationToken}</p>
-      <VisibleList id="accounts" list={accounts} />
+      <VisibleObject id="accounts" object={accounts} />
     </>
   );
 };
