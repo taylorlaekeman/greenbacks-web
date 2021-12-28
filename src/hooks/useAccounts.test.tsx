@@ -36,20 +36,13 @@ const getAccount = ({
     name: institution,
   },
 });
- */
 
 describe('use accounts', () => {
   describe('initialization token', () => {
     test('calls useQuery correctly', () => {
       const stub = new UseQueryStub();
       render(<Component useQuery={stub.useQuery} />);
-      expect(stub.useQueryCalls[0].query).toBe(
-        gql`
-          {
-            getInitializationToken
-          }
-        `
-      );
+      expect(stub.useQueryCalls[0].query).toBe('{ getInitializationToken }');
       expect(stub.useQueryCalls[0].fetchPolicy).toBe('network-only');
     });
 

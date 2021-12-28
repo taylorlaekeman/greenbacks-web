@@ -1,9 +1,9 @@
 import { useQuery as useQueryExternal } from '@apollo/client';
 
-import type { DocumentNode } from 'utils/gql';
+import gql from 'utils/gql';
 
 const useQuery: IUseQuery = ({ query }) => {
-  useQueryExternal(query);
+  useQueryExternal(gql(query));
   return {};
 };
 
@@ -15,7 +15,7 @@ export type IUseQuery = <TData>(
 
 export interface UseQueryInput {
   fetchPolicy?: 'network-only';
-  query: DocumentNode;
+  query: string;
 }
 
 export default useQuery;

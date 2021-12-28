@@ -1,16 +1,11 @@
 import useQueryDefault, { IUseQuery } from 'hooks/useQuery';
-import gql from 'utils/gql';
 
 const useAccounts: IUseAccounts = ({ useQuery = useQueryDefault } = {}) => {
   const {
     data: initializationTokenData,
   } = useQuery<GetInitializationTokenResult>({
     fetchPolicy: 'network-only',
-    query: gql`
-      {
-        getInitializationToken
-      }
-    `,
+    query: '{ getInitializationToken }',
   });
   const initializationToken = initializationTokenData?.getInitializationToken;
   return {
