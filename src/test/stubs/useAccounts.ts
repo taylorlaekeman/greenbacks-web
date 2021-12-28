@@ -11,6 +11,7 @@ class UseAccountsStub {
     this.useAccountsCalls.push(input);
     return {
       accounts: [],
+      isLoadingAccounts: false,
     };
   };
 }

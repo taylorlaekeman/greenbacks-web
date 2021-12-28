@@ -7,10 +7,13 @@ import UseQueryStub from 'test/stubs/useQuery';
 import VisibleObject from 'test/utils/VisibleObject';
 
 const Component: FC<Props> = ({ useQuery = new UseQueryStub().useQuery }) => {
-  const { accounts, initializationToken } = useAccounts({ useQuery });
+  const { accounts, initializationToken, isLoadingAccounts } = useAccounts({
+    useQuery,
+  });
   return (
     <>
       <p data-testid="token">{initializationToken}</p>
+      <p data-testid="is-loading-accounts">{isLoadingAccounts.toString()}</p>
       <VisibleObject id="accounts" object={accounts} />
     </>
   );
@@ -38,14 +41,16 @@ const getAccount = ({
 });
 
 describe('use accounts', () => {
-  describe('initialization token', () => {
+  describe('get initialization token', () => {
     test('calls useQuery correctly', () => {
       const stub = new UseQueryStub();
       render(<Component useQuery={stub.useQuery} />);
       expect(stub.useQueryCalls[0].query).toBe('{ getInitializationToken }');
       expect(stub.useQueryCalls[0].fetchPolicy).toBe('network-only');
     });
+  });
 
+  describe('initialization token', () => {
     test.each(['foo', 'bar'])('returns %s', (value) => {
       const stub = new UseQueryStub({
         data: { getInitializationToken: value },
@@ -64,7 +69,9 @@ describe('use accounts', () => {
         '{ getAccounts { id institution { name } } }'
       );
     });
+  });
 
+  describe('accounts', () => {
     test.each(['foo', 'bar'])('returns id %s', (value) => {
       const stub = new UseQueryStub({
         data: { getAccounts: [getAccount({ id: value })] },
@@ -81,6 +88,17 @@ describe('use accounts', () => {
       render(<Component useQuery={stub.useQuery} />);
       const text = screen.getByTestId('accounts-0-institution-name');
       expect(text).toHaveTextContent(value);
+    });
+  });
+
+  describe('is loading accounts', () => {
+    test.each([true, false])('returns %s', (value) => {
+      const stub = new UseQueryStub({
+        isLoading: value,
+      });
+      render(<Component useQuery={stub.useQuery} />);
+      const text = screen.getByTestId('is-loading-accounts');
+      expect(text).toHaveTextContent(value.toString());
     });
   });
 });

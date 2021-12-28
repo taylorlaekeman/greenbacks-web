@@ -8,13 +8,17 @@ const useAccounts: IUseAccounts = ({ useQuery = useQueryDefault } = {}) => {
     query: '{ getInitializationToken }',
   });
   const initializationToken = initializationTokenData?.getInitializationToken;
-  const { data: getAccountsResponse } = useQuery<GetAccountsResult>({
+  const {
+    data: getAccountsResponse,
+    isLoading: isLoadingAccounts,
+  } = useQuery<GetAccountsResult>({
     query: `{ getAccounts { id institution { name } } }`,
   });
   const accounts = getAccountsResponse?.getAccounts || [];
   return {
     accounts,
     initializationToken,
+    isLoadingAccounts,
   };
 };
 
@@ -23,6 +27,7 @@ export type IUseAccounts = (
 ) => {
   accounts: Account[];
   initializationToken?: string;
+  isLoadingAccounts: boolean;
 };
 
 export interface UseAccountsInput {
