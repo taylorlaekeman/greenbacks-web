@@ -4,13 +4,23 @@ import { render, screen } from '@testing-library/react';
 import useAccounts from 'hooks/useAccounts';
 import type { IUseQuery } from 'hooks/useQuery';
 import UseQueryStub from 'test/stubs/useQuery';
-import gql from 'utils/gql';
+import VisibleObject from 'test/utils/VisibleObject';
 
 const Component: FC<Props> = ({ useQuery = new UseQueryStub().useQuery }) => {
-  const { initializationToken } = useAccounts({ useQuery });
+  const { accounts, initializationToken } = useAccounts({ useQuery });
   return (
     <>
       <p data-testid="token">{initializationToken}</p>
+      {accounts.map(({ id, institution: { name } }, index) => {
+        const key = `accounts-${index}`;
+        return (
+          <VisibleObject
+            id={key}
+            key={key}
+            object={{ id, institution: name }}
+          />
+        );
+      })}
     </>
   );
 };
@@ -23,7 +33,6 @@ Component.defaultProps = {
   useQuery: new UseQueryStub().useQuery,
 };
 
-/*
 const getAccount = ({
   id = 'id',
   institution = 'institution',
@@ -56,8 +65,15 @@ describe('use accounts', () => {
     });
   });
 
-  /*
   describe('get accounts', () => {
+    test('calls useQuery correctly', () => {
+      const stub = new UseQueryStub();
+      render(<Component useQuery={stub.useQuery} />);
+      expect(stub.useQueryCalls[1].query).toBe(
+        '{ getAccounts { id institution { name } } }'
+      );
+    });
+
     test.each([
       ['id', 'foo'],
       ['id', 'bar'],
@@ -68,9 +84,8 @@ describe('use accounts', () => {
         data: { getAccounts: [getAccount({ [key]: value })] },
       });
       render(<Component useQuery={stub.useQuery} />);
-      const token = screen.getByTestId('token');
-      expect(token).toHaveTextContent(value);
+      const text = screen.getByTestId(`accounts-0-${key}`);
+      expect(text).toHaveTextContent(value);
     });
   });
-   */
 });

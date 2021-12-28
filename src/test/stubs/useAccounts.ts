@@ -9,7 +9,9 @@ class UseAccountsStub {
 
   useAccounts: IUseAccounts = (input) => {
     this.useAccountsCalls.push(input);
-    return {};
+    return {
+      accounts: [],
+    };
   };
 }
 
