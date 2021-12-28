@@ -8,7 +8,11 @@ import { Link } from 'routing';
 const Connections: FunctionComponent<Props> = ({
   useAccounts = useAccountsDefault,
 }) => {
-  const { isLoadingAccounts, isLoadingInitializationToken } = useAccounts();
+  const {
+    accounts,
+    isLoadingAccounts,
+    isLoadingInitializationToken,
+  } = useAccounts();
 
   if (isLoadingAccounts || isLoadingInitializationToken)
     return <LoadingIndicator />;
@@ -17,6 +21,11 @@ const Connections: FunctionComponent<Props> = ({
     <>
       <Link to="/">home</Link>
       <h1>Connections</h1>
+      <ul>
+        {accounts.map(({ id, institution: { name } }) => (
+          <li key={id}>{`${name} (${id})`}</li>
+        ))}
+      </ul>
       {/* <Connector initializationToken={initializationToken || ''} /> */}
     </>
   );
@@ -25,14 +34,5 @@ const Connections: FunctionComponent<Props> = ({
 interface Props {
   useAccounts?: IUseAccounts;
 }
-
-/*
-interface Connection {
-  id: string;
-  institution: {
-    name: string;
-  };
-}
- */
 
 export default Connections;

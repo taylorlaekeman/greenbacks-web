@@ -4,6 +4,7 @@ import { render, screen } from '@testing-library/react';
 import useAccounts from 'hooks/useAccounts';
 import type { IUseQuery } from 'hooks/useQuery';
 import UseQueryStub from 'test/stubs/useQuery';
+import getAccount from 'test/utils/getAccount';
 import VisibleObject from 'test/utils/VisibleObject';
 
 const Component: FC<Props> = ({ useQuery = new UseQueryStub().useQuery }) => {
@@ -34,19 +35,6 @@ interface Props {
 Component.defaultProps = {
   useQuery: new UseQueryStub().useQuery,
 };
-
-const getAccount = ({
-  id = 'id',
-  institution = 'institution',
-}: {
-  id?: string;
-  institution?: string;
-}) => ({
-  id,
-  institution: {
-    name: institution,
-  },
-});
 
 describe('use accounts', () => {
   describe('get initialization token', () => {

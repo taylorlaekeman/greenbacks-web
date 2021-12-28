@@ -45,7 +45,7 @@ interface GetAccountsResult {
   getAccounts: Account[];
 }
 
-type Account = {
+export type Account = {
   id: string;
   institution: {
     name: string;
