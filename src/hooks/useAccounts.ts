@@ -3,6 +3,7 @@ import useQueryDefault, { IUseQuery } from 'hooks/useQuery';
 const useAccounts: IUseAccounts = ({ useQuery = useQueryDefault } = {}) => {
   const {
     data: initializationTokenData,
+    isLoading: isLoadingInitializationToken,
   } = useQuery<GetInitializationTokenResult>({
     fetchPolicy: 'network-only',
     query: '{ getInitializationToken }',
@@ -19,6 +20,7 @@ const useAccounts: IUseAccounts = ({ useQuery = useQueryDefault } = {}) => {
     accounts,
     initializationToken,
     isLoadingAccounts,
+    isLoadingInitializationToken,
   };
 };
 
@@ -28,6 +30,7 @@ export type IUseAccounts = (
   accounts: Account[];
   initializationToken?: string;
   isLoadingAccounts: boolean;
+  isLoadingInitializationToken: boolean;
 };
 
 export interface UseAccountsInput {

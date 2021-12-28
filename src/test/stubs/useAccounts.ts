@@ -12,6 +12,7 @@ class UseAccountsStub {
     return {
       accounts: [],
       isLoadingAccounts: false,
+      isLoadingInitializationToken: false,
     };
   };
 }

@@ -7,13 +7,21 @@ import UseQueryStub from 'test/stubs/useQuery';
 import VisibleObject from 'test/utils/VisibleObject';
 
 const Component: FC<Props> = ({ useQuery = new UseQueryStub().useQuery }) => {
-  const { accounts, initializationToken, isLoadingAccounts } = useAccounts({
+  const {
+    accounts,
+    initializationToken,
+    isLoadingAccounts,
+    isLoadingInitializationToken,
+  } = useAccounts({
     useQuery,
   });
   return (
     <>
       <p data-testid="token">{initializationToken}</p>
       <p data-testid="is-loading-accounts">{isLoadingAccounts.toString()}</p>
+      <p data-testid="is-loading-initialization-token">
+        {isLoadingInitializationToken.toString()}
+      </p>
       <VisibleObject id="accounts" object={accounts} />
     </>
   );
@@ -61,6 +69,20 @@ describe('use accounts', () => {
     });
   });
 
+  describe.each([
+    ['accounts', 'accounts'],
+    ['initialization token', 'initialization-token'],
+  ])('is loading %s', (_readable, key) => {
+    test.each([true, false])('returns %s', (value) => {
+      const stub = new UseQueryStub({
+        isLoading: value,
+      });
+      render(<Component useQuery={stub.useQuery} />);
+      const text = screen.getByTestId(`is-loading-${key}`);
+      expect(text).toHaveTextContent(value.toString());
+    });
+  });
+
   describe('get accounts', () => {
     test('calls useQuery correctly', () => {
       const stub = new UseQueryStub();
@@ -88,17 +110,6 @@ describe('use accounts', () => {
       render(<Component useQuery={stub.useQuery} />);
       const text = screen.getByTestId('accounts-0-institution-name');
       expect(text).toHaveTextContent(value);
-    });
-  });
-
-  describe('is loading accounts', () => {
-    test.each([true, false])('returns %s', (value) => {
-      const stub = new UseQueryStub({
-        isLoading: value,
-      });
-      render(<Component useQuery={stub.useQuery} />);
-      const text = screen.getByTestId('is-loading-accounts');
-      expect(text).toHaveTextContent(value.toString());
     });
   });
 });
