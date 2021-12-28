@@ -1,8 +1,8 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 
+import Connections from 'components/Connections';
 import UseAccountsStub from 'test/stubs/useAccounts';
-import Connections from 'views/Connections';
 
 describe('connections', () => {
   describe('use accounts', () => {

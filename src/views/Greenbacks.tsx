@@ -1,8 +1,8 @@
 import React, { FunctionComponent } from 'react';
 
 import { useRedirectLocation } from 'auth';
+import Connections from 'components/Connections';
 import { Redirect, Route, Switch, useLocation } from 'routing';
-import Connections from 'views/Connections';
 import Home from 'views/Home';
 
 const Greenbacks: FunctionComponent = () => {
