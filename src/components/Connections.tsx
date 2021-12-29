@@ -1,15 +1,19 @@
-import React, { FunctionComponent } from 'react';
+import React, { FC } from 'react';
 
 import LoadingIndicator from 'components/LoadingIndicator';
 import useAccountsDefault, { IUseAccounts } from 'hooks/useAccounts';
 import { Link } from 'routing';
-// import Connector from 'views/Connector';
+import AccountConnectorDefault, {
+  Props as AccountConnectorProps,
+} from 'components/AccountConnector';
 
-const Connections: FunctionComponent<Props> = ({
+const Connections: FC<Props> = ({
+  AccountConnector = AccountConnectorDefault,
   useAccounts = useAccountsDefault,
 }) => {
   const {
     accounts,
+    initializationToken,
     isLoadingAccounts,
     isLoadingInitializationToken,
   } = useAccounts();
@@ -29,12 +33,13 @@ const Connections: FunctionComponent<Props> = ({
           <li key={id}>{`${name} (${id})`}</li>
         ))}
       </ul>
-      {/* <Connector initializationToken={initializationToken || ''} /> */}
+      {initializationToken && <AccountConnector token={initializationToken} />}
     </>
   );
 };
 
 interface Props {
+  AccountConnector?: FC<AccountConnectorProps>;
   useAccounts?: IUseAccounts;
 }
 

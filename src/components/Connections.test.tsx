@@ -3,6 +3,7 @@ import { render, screen } from '@testing-library/react';
 
 import Connections from 'components/Connections';
 import Router from 'routing';
+import AccountConnectorStub from 'test/stubs/AccountConnector';
 import UseAccountsStub from 'test/stubs/useAccounts';
 import getAccount from 'test/utils/getAccount';
 
@@ -83,5 +84,22 @@ describe('connections', () => {
       "You haven't connected any accounts yet"
     );
     expect(element).toBeNull();
+  });
+
+  test.each(['foo', 'bar'])('passes token %s to account connector', (value) => {
+    render(
+      <Router>
+        <Connections
+          AccountConnector={AccountConnectorStub}
+          useAccounts={
+            new UseAccountsStub({
+              initializationToken: value,
+            }).useAccounts
+          }
+        />
+      </Router>
+    );
+    const element = screen.getByTestId('token');
+    expect(element).toHaveTextContent(value);
   });
 });
