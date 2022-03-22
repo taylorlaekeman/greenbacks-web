@@ -6,8 +6,8 @@ const useAverageMonthlyExpenses = (): UseAverageMonthlyExpensesResult => {
   const { now } = useNow();
   const { endDate, startDate } = getDateRange({ now });
   const { isLoading, transactions } = useTransactions({ endDate, startDate });
-  const earnings = transactions.filter(({ amount }) => amount > 0);
-  const total = earnings.reduce((sum, { amount }) => sum + amount, 0);
+  const expenses = transactions.filter(({ amount }) => amount > 0);
+  const total = expenses.reduce((sum, { amount }) => sum + amount, 0);
   const averageMonthlyExpenses = total / 6;
   return {
     averageMonthlyExpenses,
