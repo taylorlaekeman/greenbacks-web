@@ -130,9 +130,7 @@ describe('greenbacks', () => {
       );
       await act(wait);
       const label = screen.getByTestId('average-monthly-earnings-label');
-      expect(label).toHaveTextContent(
-        'Average monthly earnings over the last 6 months'
-      );
+      expect(label).toHaveTextContent(/^Average monthly earnings$/);
     });
   });
 });

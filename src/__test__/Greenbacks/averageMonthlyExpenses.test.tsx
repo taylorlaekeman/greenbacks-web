@@ -130,7 +130,7 @@ describe('greenbacks', () => {
       );
       await act(wait);
       const label = screen.getByTestId('average-monthly-expenses-label');
-      expect(label).toHaveTextContent('Average monthly expenses');
+      expect(label).toHaveTextContent(/^Average monthly expenses$/);
     });
   });
 });

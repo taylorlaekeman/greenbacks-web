@@ -23,7 +23,7 @@ const Greenbacks: FC = () => {
       <NumericBadge
         amount={averageMonthlyEarnings}
         isLoading={isLoadingAverageEarnings}
-        label="Average monthly earnings over the last 6 months"
+        label="Average monthly earnings"
         name="average-monthly-earnings"
       />
       <NumericBadge
