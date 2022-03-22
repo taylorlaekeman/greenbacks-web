@@ -5,8 +5,8 @@ import React, { FunctionComponent } from 'react';
 import { PlaidLink } from 'react-plaid-link';
 // import noop from 'utils/noop';
 
-const AccountConnector: FunctionComponent<Props> = ({ token }) => (
-  <PlaidLink onSuccess={() => console.log('test')} token={token}>
+const AccountConnector: FunctionComponent<Props> = ({ onSuccess, token }) => (
+  <PlaidLink onSuccess={onSuccess} token={token}>
     Test
   </PlaidLink>
 );
@@ -28,6 +28,7 @@ const AccountConnector: FunctionComponent<Props> = ({ token }) => (
    */
 
 export interface Props {
+  onSuccess: (token: string) => void;
   token: string;
 }
 

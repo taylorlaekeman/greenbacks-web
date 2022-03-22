@@ -1,11 +1,26 @@
-import React, { FunctionComponent } from 'react';
+import React, { FC } from 'react';
 
 import { useRedirectLocation } from 'auth';
 import Connections from 'components/Connections';
+import Home from 'components/Home';
+import NumericBadge from 'components/NumericBadge';
+import useAverageMonthlyEarnings from 'hooks/useAverageMonthlyEarnings';
 import { Redirect, Route, Switch, useLocation } from 'routing';
-import Home from 'views/Home';
 
-const Greenbacks: FunctionComponent = () => {
+const Greenbacks: FC = () => {
+  const { averageMonthlyEarnings, isLoading } = useAverageMonthlyEarnings();
+
+  return (
+    <NumericBadge
+      amount={averageMonthlyEarnings}
+      isLoading={isLoading}
+      label="Average monthly earnings over the last 6 months"
+      name="average-monthly-earnings"
+    />
+  );
+};
+
+export const OldGreenbacks: FC = () => {
   const { clearRedirectLocation, getRedirectLocation } = useRedirectLocation();
   const { pathname } = useLocation();
 

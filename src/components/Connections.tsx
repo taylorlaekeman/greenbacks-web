@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 
 import LoadingIndicator from 'components/LoadingIndicator';
-import useAccountsDefault, { IUseAccounts } from 'hooks/useAccounts';
+import useAccountsDefault, { UseAccounts } from 'hooks/useAccounts';
 import { Link } from 'routing';
 import AccountConnectorDefault, {
   Props as AccountConnectorProps,
@@ -16,6 +16,7 @@ const Connections: FC<Props> = ({
     initializationToken,
     isLoadingAccounts,
     isLoadingInitializationToken,
+    saveAccount,
   } = useAccounts();
 
   if (isLoadingAccounts || isLoadingInitializationToken)
@@ -29,18 +30,25 @@ const Connections: FC<Props> = ({
         <p>You haven&apos;t connected any accounts yet</p>
       )}
       <ul>
-        {accounts.map(({ id, institution: { name } }) => (
-          <li key={id}>{`${name} (${id})`}</li>
+        {accounts.map(({ createdDate, id, institution: { name } }) => (
+          <li key={id}>{`${name} - ${createdDate}`}</li>
         ))}
       </ul>
-      {initializationToken && <AccountConnector token={initializationToken} />}
+      {initializationToken && (
+        <AccountConnector
+          onSuccess={(token) => {
+            saveAccount({ token });
+          }}
+          token={initializationToken}
+        />
+      )}
     </>
   );
 };
 
 interface Props {
   AccountConnector?: FC<AccountConnectorProps>;
-  useAccounts?: IUseAccounts;
+  useAccounts?: UseAccounts;
 }
 
 export default Connections;

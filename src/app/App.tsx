@@ -1,13 +1,14 @@
 import React, { FunctionComponent } from 'react';
 
-import { Provider as ApiProvider } from 'api';
+import GreenbacksApiProvider from 'context/GreenbacksApi';
 import AuthenticationBarrier from 'app/AuthenticationBarrier';
 import { Provider as AuthProvider } from 'auth';
+import Greenbacks from 'components/Greenbacks';
+import Login from 'components/Login';
+import env from 'env';
 import GlobalStyle from 'styles/GlobalStyle';
 import Router from 'routing';
 import styled from 'utils/styled';
-import Greenbacks from 'views/Greenbacks';
-import Login from 'views/Login';
 
 const App: FunctionComponent = () => (
   <AuthProvider
@@ -17,14 +18,14 @@ const App: FunctionComponent = () => (
     redirectUri={window.location.origin}
   >
     <AuthenticationBarrier LoginComponent={Login}>
-      <ApiProvider uri="http://localhost:8000/dev/graphql">
+      <GreenbacksApiProvider uri={`${env.apiHost}/graphql`}>
         <GlobalStyle />
         <Wrapper>
           <Router>
             <Greenbacks />
           </Router>
         </Wrapper>
-      </ApiProvider>
+      </GreenbacksApiProvider>
     </AuthenticationBarrier>
   </AuthProvider>
 );

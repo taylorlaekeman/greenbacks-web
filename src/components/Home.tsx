@@ -1,10 +1,10 @@
 import React, { FunctionComponent } from 'react';
 
+import TotalSpending from 'components/TotalSpending';
 import useMonthlyTotal from 'hooks/useMonthlyTotal';
 import { Link } from 'routing';
 import datetime from 'utils/datetime';
 import styled from 'utils/styled';
-import TotalSpending from 'views/TotalSpending';
 
 const Home: FunctionComponent = () => {
   const now = datetime.now();

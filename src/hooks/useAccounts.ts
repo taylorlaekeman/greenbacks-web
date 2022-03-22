@@ -1,40 +1,62 @@
-import useQueryDefault, { IUseQuery } from 'hooks/useQuery';
+import useMutation from 'hooks/useMutation';
+import useQuery from 'hooks/useQuery';
+import gql from 'utils/gql';
 
-const useAccounts: IUseAccounts = ({ useQuery = useQueryDefault } = {}) => {
+const useAccounts: UseAccounts = () => {
   const {
     data: initializationTokenData,
-    isLoading: isLoadingInitializationToken,
-  } = useQuery<GetInitializationTokenResult>({
-    fetchPolicy: 'network-only',
-    query: '{ getInitializationToken }',
-  });
+    loading: isLoadingInitializationToken,
+  } = useQuery<GetInitializationTokenResult>(
+    gql`
+      {
+        getInitializationToken
+      }
+    `,
+    {
+      fetchPolicy: 'network-only',
+    }
+  );
   const initializationToken = initializationTokenData?.getInitializationToken;
   const {
     data: getAccountsResponse,
-    isLoading: isLoadingAccounts,
-  } = useQuery<GetAccountsResult>({
-    query: `{ getAccounts { id institution { name } } }`,
-  });
+    loading: isLoadingAccounts,
+  } = useQuery<GetAccountsResult>(GET_ACCOUNTS_QUERY);
   const accounts = getAccountsResponse?.getAccounts || [];
+  const { mutate: saveAccount } = useMutation<SaveAccountVariables>({
+    mutation: SAVE_ACCOUNT_MUTATION,
+  });
   return {
     accounts,
     initializationToken,
     isLoadingAccounts,
     isLoadingInitializationToken,
+    saveAccount: ({ token }) => {
+      saveAccount({ variables: { token } });
+    },
   };
 };
 
-export type IUseAccounts = (
-  input?: UseAccountsInput
-) => {
+const GET_ACCOUNTS_QUERY = gql`
+  {
+    getAccounts {
+      createdDate
+      id
+      modifiedDate
+      institution {
+        name
+      }
+    }
+  }
+`;
+
+export type UseAccounts = () => UseAccountsResult;
+
+export interface UseAccountsResult {
   accounts: Account[];
   initializationToken?: string;
   isLoadingAccounts: boolean;
   isLoadingInitializationToken: boolean;
-};
-
-export interface UseAccountsInput {
-  useQuery?: IUseQuery;
+  saveAccount: (input: SaveAccountInput) => void;
 }
 
 interface GetInitializationTokenResult {
@@ -46,10 +68,28 @@ interface GetAccountsResult {
 }
 
 export type Account = {
+  createdDate: string;
   id: string;
+  modifiedDate: string;
   institution: {
     name: string;
   };
 };
+
+interface SaveAccountVariables {
+  token: string;
+}
+
+export interface SaveAccountInput {
+  token: string;
+}
+
+const SAVE_ACCOUNT_MUTATION = `
+mutation saveAccount($token: String!) {
+  saveAccount(input: { token: $token }) {
+    id
+  }
+}
+`;
 
 export default useAccounts;
