@@ -4,12 +4,7 @@ import LoadingIndicator from 'components/LoadingIndicator';
 import formatCurrency from 'utils/formatCurrency';
 import styled from 'utils/styled';
 
-const NumericBadge: FC<Props> = ({
-  amount,
-  isLoading = false,
-  label,
-  name,
-}) => {
+const AmountBadge: FC<Props> = ({ amount, isLoading = false, label, name }) => {
   if (isLoading) return <LoadingIndicator name={name} />;
 
   return (
@@ -46,4 +41,4 @@ const Label = styled.p`
   margin: 0;
 `;
 
-export default NumericBadge;
+export default AmountBadge;

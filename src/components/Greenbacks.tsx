@@ -3,7 +3,7 @@ import React, { FC } from 'react';
 import { useRedirectLocation } from 'auth';
 import Connections from 'components/Connections';
 import Home from 'components/Home';
-import NumericBadge from 'components/NumericBadge';
+import AmountBadge from 'components/AmountBadge';
 import useAverageMonthlyEarnings from 'hooks/useAverageMonthlyEarnings';
 import useAverageMonthlyExpenses from 'hooks/useAverageMonthlyExpenses';
 import { Redirect, Route, Switch, useLocation } from 'routing';
@@ -20,13 +20,13 @@ const Greenbacks: FC = () => {
 
   return (
     <>
-      <NumericBadge
+      <AmountBadge
         amount={averageMonthlyEarnings}
         isLoading={isLoadingAverageEarnings}
         label="Average monthly earnings"
         name="average-monthly-earnings"
       />
-      <NumericBadge
+      <AmountBadge
         amount={averageMonthlyExpenses}
         isLoading={isLoadingAverageExpenses}
         label="Average monthly expenses"
