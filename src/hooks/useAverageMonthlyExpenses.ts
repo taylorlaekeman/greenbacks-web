@@ -1,12 +1,11 @@
 import useNow from 'hooks/useNow';
-import useTransactions from 'hooks/useTransactions';
+import useExpenses from 'hooks/useExpenses';
 import datetime from 'utils/datetime';
 
 const useAverageMonthlyExpenses = (): UseAverageMonthlyExpensesResult => {
   const { now } = useNow();
   const { endDate, startDate } = getDateRange({ now });
-  const { isLoading, transactions } = useTransactions({ endDate, startDate });
-  const expenses = transactions.filter(({ amount }) => amount > 0);
+  const { expenses, isLoading } = useExpenses({ endDate, startDate });
   const total = expenses.reduce((sum, { amount }) => sum + amount, 0);
   const averageMonthlyExpenses = total / 6;
   return {

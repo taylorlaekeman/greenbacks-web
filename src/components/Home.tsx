@@ -1,5 +1,38 @@
-import React, { FunctionComponent } from 'react';
+import React, { FC } from 'react';
 
+import AmountBadge from 'components/AmountBadge';
+import useAverageMonthlyEarnings from 'hooks/useAverageMonthlyEarnings';
+import useAverageMonthlyExpenses from 'hooks/useAverageMonthlyExpenses';
+
+const Home: FC = () => {
+  const {
+    averageMonthlyEarnings,
+    isLoading: isLoadingAverageEarnings,
+  } = useAverageMonthlyEarnings();
+  const {
+    averageMonthlyExpenses,
+    isLoading: isLoadingAverageExpenses,
+  } = useAverageMonthlyExpenses();
+
+  return (
+    <>
+      <AmountBadge
+        amount={averageMonthlyEarnings}
+        isLoading={isLoadingAverageEarnings}
+        label="Average monthly earnings"
+        name="average-monthly-earnings"
+      />
+      <AmountBadge
+        amount={averageMonthlyExpenses}
+        isLoading={isLoadingAverageExpenses}
+        label="Average monthly expenses"
+        name="average-monthly-expenses"
+      />
+    </>
+  );
+};
+
+/*
 import TotalSpending from 'components/TotalSpending';
 import useMonthlyTotal from 'hooks/useMonthlyTotal';
 import { Link } from 'routing';
@@ -22,5 +55,6 @@ const Main = styled.main`
   grid-template-rows: max-content 1fr;
   height: 100%;
 `;
+*/
 
 export default Home;

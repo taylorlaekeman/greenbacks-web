@@ -58,7 +58,7 @@ export const TestGreenbacksApiProvider: FC<TestProviderProps> = ({
 }) => <MockedProvider mocks={mocks}>{children}</MockedProvider>;
 
 interface TestProviderProps {
-  mocks?: MockedResponse[];
+  mocks?: MockedApiResponse[];
 }
 
 export interface Transaction {
@@ -67,5 +67,7 @@ export interface Transaction {
   merchant: string;
   name: string;
 }
+
+export type MockedApiResponse = MockedResponse;
 
 export default GreenbacksApiProvider;

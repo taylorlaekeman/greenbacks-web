@@ -29,6 +29,7 @@ export interface UseTransactionsResult {
 export interface Transaction {
   amount: number;
   datetime: string;
+  id: string;
   merchant: string;
   name: string;
 }
@@ -47,6 +48,7 @@ export const GET_TRANSACTIONS_QUERY = gql`
     transactions(input: { startDate: $startDate, endDate: $endDate }) {
       amount
       datetime
+      id
       merchant
       name
     }

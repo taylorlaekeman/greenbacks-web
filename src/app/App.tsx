@@ -5,9 +5,9 @@ import AuthenticationBarrier from 'app/AuthenticationBarrier';
 import { Provider as AuthProvider } from 'auth';
 import Greenbacks from 'components/Greenbacks';
 import Login from 'components/Login';
+import RouteProvider from 'context/Route';
 import env from 'env';
 import GlobalStyle from 'styles/GlobalStyle';
-import Router from 'routing';
 import styled from 'utils/styled';
 
 const App: FunctionComponent = () => (
@@ -19,12 +19,12 @@ const App: FunctionComponent = () => (
   >
     <AuthenticationBarrier LoginComponent={Login}>
       <GreenbacksApiProvider uri={`${env.apiHost}/graphql`}>
-        <GlobalStyle />
-        <Wrapper>
-          <Router>
+        <RouteProvider>
+          <GlobalStyle />
+          <Wrapper>
             <Greenbacks />
-          </Router>
-        </Wrapper>
+          </Wrapper>
+        </RouteProvider>
       </GreenbacksApiProvider>
     </AuthenticationBarrier>
   </AuthProvider>

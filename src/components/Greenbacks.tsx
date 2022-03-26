@@ -1,40 +1,20 @@
 import React, { FC } from 'react';
+import { Route, Routes } from 'react-router-dom';
 
+import Expenses from 'components/Expenses';
+import Home from 'components/Home';
+
+const Greenbacks: FC = () => (
+  <Routes>
+    <Route path="/" element={<Home />} />
+    <Route path="/expenses/:month/" element={<Expenses />} />
+  </Routes>
+);
+
+/*
 import { useRedirectLocation } from 'auth';
 import Connections from 'components/Connections';
-import Home from 'components/Home';
-import AmountBadge from 'components/AmountBadge';
-import useAverageMonthlyEarnings from 'hooks/useAverageMonthlyEarnings';
-import useAverageMonthlyExpenses from 'hooks/useAverageMonthlyExpenses';
 import { Redirect, Route, Switch, useLocation } from 'routing';
-
-const Greenbacks: FC = () => {
-  const {
-    averageMonthlyEarnings,
-    isLoading: isLoadingAverageEarnings,
-  } = useAverageMonthlyEarnings();
-  const {
-    averageMonthlyExpenses,
-    isLoading: isLoadingAverageExpenses,
-  } = useAverageMonthlyExpenses();
-
-  return (
-    <>
-      <AmountBadge
-        amount={averageMonthlyEarnings}
-        isLoading={isLoadingAverageEarnings}
-        label="Average monthly earnings"
-        name="average-monthly-earnings"
-      />
-      <AmountBadge
-        amount={averageMonthlyExpenses}
-        isLoading={isLoadingAverageExpenses}
-        label="Average monthly expenses"
-        name="average-monthly-expenses"
-      />
-    </>
-  );
-};
 
 export const OldGreenbacks: FC = () => {
   const { clearRedirectLocation, getRedirectLocation } = useRedirectLocation();
@@ -58,5 +38,6 @@ export const OldGreenbacks: FC = () => {
     </Switch>
   );
 };
+*/
 
 export default Greenbacks;
