@@ -1,9 +1,20 @@
-import React, { FunctionComponent } from 'react';
+import React, { FC } from 'react';
 import styled from 'styled-components';
 
 import { ReactComponent as UnstyledCog } from 'assets/icons/cog.svg';
 
-const LoadingIndicator: FunctionComponent = () => <Cog />;
+const LoadingIndicator: FC<Props> = ({ name } = {}) => {
+  const testId = name ? `loading-indicator-${name}` : 'loading-indicator';
+  return (
+    <div aria-label="loading" role="status" data-testid={testId}>
+      <Cog />
+    </div>
+  );
+};
+
+interface Props {
+  name?: string;
+}
 
 const Cog = styled(UnstyledCog)`
   animation: spin 2s linear infinite;

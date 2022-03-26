@@ -1,64 +1,58 @@
-import gql, { DocumentNode } from 'api/gql';
-import { useQuery as useQueryDefault } from 'api/queries';
+import gql from 'utils/gql';
+import useQuery from 'hooks/useQuery';
 
-const useTransactions: TransactionsHook = ({
-  endDate,
-  startDate,
-  useQuery = useQueryDefault,
-} = {}) => {
-  const { data } = useQuery<Results, Record<string, never>>(query);
-  const transactions = data?.getTransactions || [];
-  return filterTransactions({ endDate, startDate, transactions });
+const useTransactions: UseTransactions = ({ endDate, startDate }) => {
+  const { data, loading: isLoading } = useQuery<QueryResult, QueryInput>(
+    GET_TRANSACTIONS_QUERY,
+    {
+      variables: { endDate, startDate },
+    }
+  );
+  const transactions = data?.transactions || [];
+  return { isLoading, transactions };
 };
 
-export type TransactionsHook = (input?: Input) => Transaction[];
+export type UseTransactions = (
+  input: UseTransactionsInput
+) => UseTransactionsResult;
 
-interface Input {
-  endDate?: string;
-  startDate?: string;
-  useQuery?: ApiQueryHook;
+export interface UseTransactionsInput {
+  endDate: string;
+  startDate: string;
 }
 
-export type ApiQueryHook = (
-  query: DocumentNode
-) => { data: { getTransactions: Transaction[] } };
-
-export interface Results {
-  getTransactions: Transaction[];
+export interface UseTransactionsResult {
+  isLoading: boolean;
+  transactions: Transaction[];
 }
 
 export interface Transaction {
   amount: number;
-  date: string;
+  datetime: string;
+  id: string;
+  merchant: string;
   name: string;
 }
 
-const query = gql`
-  {
-    getTransactions {
+interface QueryResult {
+  transactions: Transaction[];
+}
+
+interface QueryInput {
+  endDate: string;
+  startDate: string;
+}
+
+export const GET_TRANSACTIONS_QUERY = gql`
+  query GetTransactions($startDate: String!, $endDate: String!) {
+    transactions(input: { startDate: $startDate, endDate: $endDate }) {
       amount
-      date
+      datetime
+      id
+      merchant
       name
     }
   }
 `;
-
-const filterTransactions = ({
-  endDate,
-  startDate,
-  transactions,
-}: {
-  endDate?: string;
-  startDate?: string;
-  transactions: Transaction[];
-}) => {
-  if (endDate && startDate)
-    return transactions.filter(
-      ({ date }) => date >= startDate && date <= endDate
-    );
-  if (startDate) return transactions.filter(({ date }) => date >= startDate);
-  if (endDate) return transactions.filter(({ date }) => date <= endDate);
-  return transactions;
-};
 
 export default useTransactions;

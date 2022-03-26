@@ -13,7 +13,7 @@ const TotalSpending: FunctionComponent<Props> = ({
 }: Props) => (
   <Wrapper aria-label="total-spending">
     <Amount data-testid="total-spending-amount">
-      {currencyFormatter.format(amount)}
+      {currencyFormatter.format(amount / 100)}
     </Amount>
     <Month data-testid="total-spending-text">
       {generateMonthText({ currentMonth, month })}

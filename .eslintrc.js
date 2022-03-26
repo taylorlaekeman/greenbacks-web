@@ -41,6 +41,7 @@ module.exports = {
     'jest/valid-expect': 'error',
     'no-use-before-define': 'off',
     'react/jsx-filename-extension': [1, { extensions: ['.ts', '.tsx'] }],
+    'react/require-default-props': 'off',
     'react-hooks/exhaustive-deps': 'error',
     'react-hooks/rules-of-hooks': 'error',
     '@typescript-eslint/explicit-module-boundary-types': 'error',

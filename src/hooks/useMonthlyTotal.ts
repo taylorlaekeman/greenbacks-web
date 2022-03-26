@@ -1,16 +1,11 @@
-import useTransactionsDefault, {
-  TransactionsHook,
-} from 'hooks/useTransactions';
+import useTransactions from 'hooks/useTransactions';
 import datetime from 'utils/datetime';
 
-const useMonthlyTotal = ({
-  month,
-  useTransactions = useTransactionsDefault,
-}: MonthlyTotalHookInput = {}): number => {
+const useMonthlyTotal = ({ month }: MonthlyTotalHookInput = {}): number => {
   const parsedMonth = month ? datetime.fromISO(month) : datetime.now();
-  const startDate = parsedMonth.startOf('month').toString();
-  const endDate = parsedMonth.endOf('month').toString();
-  const transactions = useTransactions({
+  const startDate = parsedMonth.startOf('month').toFormat('yyyy-LL-dd');
+  const endDate = parsedMonth.endOf('month').toFormat('yyyy-LL-dd');
+  const { transactions } = useTransactions({
     endDate,
     startDate,
   });
@@ -21,7 +16,6 @@ const useMonthlyTotal = ({
 
 export interface MonthlyTotalHookInput {
   month?: string;
-  useTransactions?: TransactionsHook;
 }
 
 export default useMonthlyTotal;
