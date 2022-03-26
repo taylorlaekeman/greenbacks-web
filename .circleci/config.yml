@@ -43,3 +43,6 @@ workflows:
       - deploy:
           context:
             - aws
+          filters:
+            branches:
+              only: main
