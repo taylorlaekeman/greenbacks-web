@@ -21,7 +21,7 @@ jobs:
       - run: npm run check
 
   deploy:
-    executor: deployer
+    executor: node
     steps:
       - checkout
       - run: npm run build
