@@ -1,15 +1,17 @@
 import React, { FC } from 'react';
 
 import LoadingIndicator from 'components/LoadingIndicator';
-import formatCurrency from 'utils/formatCurrency';
+import useCurrencyFormatter from 'hooks/useCurrencyFormatter';
 import styled from 'utils/styled';
 
 const AmountBadge: FC<Props> = ({ amount, isLoading = false, label, name }) => {
+  const { format } = useCurrencyFormatter();
+
   if (isLoading) return <LoadingIndicator name={name} />;
 
   return (
     <Wrapper>
-      <Amount data-testid={name}>{formatCurrency({ cents: amount })}</Amount>
+      <Amount data-testid={name}>{format({ value: amount })}</Amount>
       <Label data-testid={`${name}-label`}>{label}</Label>
     </Wrapper>
   );
