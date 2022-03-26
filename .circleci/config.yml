@@ -7,7 +7,7 @@ orbs:
 executors:
   node:
     docker:
-      - image: circleci/node:15.1
+      - image: cimg/node:15.1
   deployer:
     docker:
       - image: cimg/python:3.6
@@ -40,4 +40,6 @@ workflows:
               ignore: main
   deploy:
     jobs:
-      - deploy
+      - deploy:
+          context:
+            - aws
