@@ -24,6 +24,7 @@ jobs:
     executor: node
     steps:
       - checkout
+      - node/install-packages
       - run: npm run build
       - aws-s3/sync:
           from: build
