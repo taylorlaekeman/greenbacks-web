@@ -1,5 +1,7 @@
+const { REACT_APP_API_HOST } = process.env;
+
 const env = {
-  apiHost: 'http://localhost:8000/dev',
+  apiHost: REACT_APP_API_HOST,
 };
 
 export default env;
