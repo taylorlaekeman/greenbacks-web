@@ -36,7 +36,7 @@ const useAccounts: UseAccounts = () => {
   };
 };
 
-const GET_ACCOUNTS_QUERY = gql`
+export const GET_ACCOUNTS_QUERY = gql`
   {
     getAccounts {
       createdDate
