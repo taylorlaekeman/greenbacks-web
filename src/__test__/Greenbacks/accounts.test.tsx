@@ -3,18 +3,18 @@ import { act, render, screen } from '@testing-library/react';
 
 import Greenbacks from 'components/Greenbacks';
 import { TestGreenbacksProvider } from 'context/Greenbacks';
-import { GET_ACCOUNTS_QUERY } from 'hooks/useAccounts';
+import { ACCOUNTS_QUERY } from 'hooks/useAccounts';
 import wait from 'utils/wait';
 
 test('shows loading indicator while transactions are loading', () => {
   const mocks = [
     {
       request: {
-        query: GET_ACCOUNTS_QUERY,
+        query: ACCOUNTS_QUERY,
       },
       result: {
         data: {
-          getAccounts: [],
+          accounts: [],
         },
       },
     },
@@ -32,11 +32,11 @@ test('shows account correctly', async () => {
   const mocks = [
     {
       request: {
-        query: GET_ACCOUNTS_QUERY,
+        query: ACCOUNTS_QUERY,
       },
       result: {
         data: {
-          getAccounts: [
+          accounts: [
             {
               createdDate: '',
               id: 'testId',
