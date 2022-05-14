@@ -45,6 +45,7 @@ export const ACCOUNTS_QUERY = gql`
       institution {
         name
       }
+      isReauthenticationRequired
     }
   }
 `;
@@ -67,14 +68,15 @@ interface AccountsResult {
   accounts: Account[];
 }
 
-export type Account = {
+export interface Account {
   createdDate: string;
   id: string;
   modifiedDate: string;
   institution: {
     name: string;
   };
-};
+  isReauthenticationRequired: boolean;
+}
 
 interface SaveAccountVariables {
   token: string;
