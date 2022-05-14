@@ -5,7 +5,7 @@ import { CurrencyLocalesContext } from 'context/CurrencyLocales';
 const useCurrencyFormatter = (): UseCurrencyFormatterResult => {
   const { locales } = useContext(CurrencyLocalesContext);
   return {
-    format: ({ currency = 'CAD', value }) => {
+    format: ({ currency = 'CAD', value = 0 }) => {
       const formatter = Intl.NumberFormat(locales, {
         currency,
         style: 'currency',
@@ -17,10 +17,10 @@ const useCurrencyFormatter = (): UseCurrencyFormatterResult => {
 
 const prepareValue = ({
   currency,
-  value,
+  value = 0,
 }: {
   currency: string;
-  value: number;
+  value?: number;
 }): number => {
   switch (currency) {
     case 'CAD':
@@ -42,7 +42,7 @@ type Format = (input: FormatInput) => string;
 
 interface FormatInput {
   currency?: string;
-  value: number;
+  value?: number;
 }
 
 export default useCurrencyFormatter;

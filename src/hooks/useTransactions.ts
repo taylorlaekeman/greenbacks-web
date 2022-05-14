@@ -1,15 +1,15 @@
 import gql from 'utils/gql';
-import useQuery from 'hooks/useQuery';
+import useQuery, { ApolloError } from 'hooks/useQuery';
 
 const useTransactions: UseTransactions = ({ endDate, startDate }) => {
-  const { data, loading: isLoading } = useQuery<QueryResult, QueryInput>(
+  const { data, error, loading: isLoading } = useQuery<QueryResult, QueryInput>(
     GET_TRANSACTIONS_QUERY,
     {
       variables: { endDate, startDate },
     }
   );
   const transactions = data?.transactions || [];
-  return { isLoading, transactions };
+  return { error, isLoading, transactions };
 };
 
 export type UseTransactions = (
@@ -22,8 +22,9 @@ export interface UseTransactionsInput {
 }
 
 export interface UseTransactionsResult {
+  error?: ApolloError;
   isLoading: boolean;
-  transactions: Transaction[];
+  transactions?: Transaction[];
 }
 
 export interface Transaction {

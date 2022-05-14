@@ -18,7 +18,7 @@ const AmountBadge: FC<Props> = ({ amount, isLoading = false, label, name }) => {
 };
 
 interface Props {
-  amount: number;
+  amount?: number;
   isLoading?: boolean;
   label: string;
   name?: string;

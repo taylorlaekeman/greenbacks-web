@@ -1,12 +1,16 @@
+import type { ApolloError } from 'hooks/useQuery';
 import useTransactions, { Transaction } from 'hooks/useTransactions';
 
 const useExpenses = ({
   endDate,
   startDate,
 }: UseExpensesInput): UseExpensesResult => {
-  const { isLoading, transactions } = useTransactions({ endDate, startDate });
-  const expenses = transactions.filter(({ amount }) => amount > 0);
-  return { expenses, isLoading };
+  const { error, isLoading, transactions } = useTransactions({
+    endDate,
+    startDate,
+  });
+  const expenses = transactions?.filter(({ amount }) => amount > 0);
+  return { error, expenses, isLoading };
 };
 
 export interface UseExpensesInput {
@@ -15,8 +19,9 @@ export interface UseExpensesInput {
 }
 
 export interface UseExpensesResult {
+  error?: ApolloError;
+  expenses?: Transaction[];
   isLoading: boolean;
-  expenses: Transaction[];
 }
 
 export default useExpenses;

@@ -106,6 +106,24 @@ test('shows label text', async () => {
   expect(label).toHaveTextContent(/^Average monthly expenses$/);
 });
 
+test('shows reauthentication required error when transactions endpoint returns reauthentication required error', async () => {
+  const mocks = [
+    buildApiTransactionsMock({
+      errors: ['Reauthentication required for a connected account'],
+    }),
+  ];
+  render(
+    <TestGreenbacksProvider mocks={mocks} now="2020-07-01">
+      <Greenbacks />
+    </TestGreenbacksProvider>
+  );
+  await act(wait);
+  const text = screen.getByText(
+    /At least one of your accounts needs reauthentication/
+  );
+  expect(text).toBeInTheDocument();
+});
+
 test.each(['/expenses/2020-01'])(
   'does not render at route %s',
   async (value) => {

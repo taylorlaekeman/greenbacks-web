@@ -1,19 +1,21 @@
 import useNow from 'hooks/useNow';
+import type { ApolloError } from 'hooks/useQuery';
 import useTransactions from 'hooks/useTransactions';
 import datetime from 'utils/datetime';
 
 const useAverageMonthlyEarnings: UseAverageMonthlyEarnings = () => {
   const { now } = useNow();
   const { endDate, startDate } = getDateRange({ now });
-  const { isLoading, transactions } = useTransactions({
+  const { error, isLoading, transactions } = useTransactions({
     endDate,
     startDate,
   });
-  const earnings = transactions.filter(({ amount }) => amount < 0);
-  const total = earnings.reduce((sum, { amount }) => sum + amount, 0);
-  const averageMonthlyEarnings = Math.abs(total) / 6;
+  const earnings = transactions?.filter(({ amount }) => amount < 0);
+  const total = earnings?.reduce((sum, { amount }) => sum + amount, 0);
+  const averageMonthlyEarnings = total && Math.abs(total) / 6;
   return {
     averageMonthlyEarnings,
+    error,
     isLoading,
   };
 };
@@ -31,7 +33,8 @@ const getDateRange = ({
 export type UseAverageMonthlyEarnings = () => UseAverageMonthlyEarningsResult;
 
 export interface UseAverageMonthlyEarningsResult {
-  averageMonthlyEarnings: number;
+  averageMonthlyEarnings?: number;
+  error?: ApolloError;
   isLoading: boolean;
 }
 
