@@ -1,6 +1,7 @@
 import React, { FC } from 'react';
 
 import AmountBadge from 'components/AmountBadge';
+import Link from 'components/Link';
 import useAverageMonthlyEarnings from 'hooks/useAverageMonthlyEarnings';
 import useAverageMonthlyExpenses from 'hooks/useAverageMonthlyExpenses';
 
@@ -21,7 +22,12 @@ const Home: FC = () => {
   if (error) {
     const { message } = error;
     if (message === 'Reauthentication required for a connected account') {
-      return <p>At least one of your accounts needs reauthentication</p>;
+      return (
+        <>
+          <p>At least one of your accounts needs reauthentication</p>
+          <Link href="accounts">Accounts</Link>
+        </>
+      );
     }
   }
 
