@@ -1,5 +1,6 @@
 import React, { FC } from 'react';
 
+import { TestAuthProvider } from 'context/Auth';
 import { TestCurrencyLocalesProvider } from 'context/CurrencyLocales';
 import {
   MockedApiResponse,
@@ -11,21 +12,25 @@ import { TestRouteProvider } from 'context/Route';
 export const TestGreenbacksProvider: FC<Props> = ({
   children,
   locales,
+  logout,
   mocks,
   now,
   route,
 }) => (
-  <TestGreenbacksApiProvider mocks={mocks}>
-    <TestNowProvider now={now}>
-      <TestCurrencyLocalesProvider locales={locales}>
-        <TestRouteProvider route={route}>{children}</TestRouteProvider>
-      </TestCurrencyLocalesProvider>
-    </TestNowProvider>
-  </TestGreenbacksApiProvider>
+  <TestAuthProvider logout={logout}>
+    <TestGreenbacksApiProvider mocks={mocks}>
+      <TestNowProvider now={now}>
+        <TestCurrencyLocalesProvider locales={locales}>
+          <TestRouteProvider route={route}>{children}</TestRouteProvider>
+        </TestCurrencyLocalesProvider>
+      </TestNowProvider>
+    </TestGreenbacksApiProvider>
+  </TestAuthProvider>
 );
 
 interface Props {
   locales?: string | string[];
+  logout?: () => void;
   mocks?: MockedApiResponse[];
   now?: string;
   route?: string;

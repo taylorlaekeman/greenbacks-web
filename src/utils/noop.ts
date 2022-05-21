@@ -1,4 +1,4 @@
-const noop: { (): void } = () => {
+const noop = (): void => {
   /* intentionally left blank */
 };
 

@@ -1,33 +1,36 @@
 import React, { FunctionComponent } from 'react';
 
-import GreenbacksApiProvider from 'context/GreenbacksApi';
+import { Provider as Auth0Provider } from 'auth';
 import AuthenticationBarrier from 'app/AuthenticationBarrier';
-import { Provider as AuthProvider } from 'auth';
 import Greenbacks from 'components/Greenbacks';
 import Login from 'components/Login';
+import AuthProvider from 'context/Auth';
+import GreenbacksApiProvider from 'context/GreenbacksApi';
 import RouteProvider from 'context/Route';
 import env from 'env';
 import GlobalStyle from 'styles/GlobalStyle';
 import styled from 'utils/styled';
 
 const App: FunctionComponent = () => (
-  <AuthProvider
+  <Auth0Provider
     audience="https://greenbacks"
     clientId="KO3di6CbUea9Cy6kafI5prCOsNPdZuEk"
     domain="dev-ql06dx5h.us.auth0.com"
     redirectUri={window.location.origin}
   >
-    <AuthenticationBarrier LoginComponent={Login}>
-      <GreenbacksApiProvider uri={`${env.apiHost}/graphql`}>
-        <RouteProvider>
-          <GlobalStyle />
-          <Wrapper>
-            <Greenbacks />
-          </Wrapper>
-        </RouteProvider>
-      </GreenbacksApiProvider>
-    </AuthenticationBarrier>
-  </AuthProvider>
+    <AuthProvider>
+      <AuthenticationBarrier LoginComponent={Login}>
+        <GreenbacksApiProvider uri={`${env.apiHost}/graphql`}>
+          <RouteProvider>
+            <GlobalStyle />
+            <Wrapper>
+              <Greenbacks />
+            </Wrapper>
+          </RouteProvider>
+        </GreenbacksApiProvider>
+      </AuthenticationBarrier>
+    </AuthProvider>
+  </Auth0Provider>
 );
 
 const Wrapper = styled.div`
