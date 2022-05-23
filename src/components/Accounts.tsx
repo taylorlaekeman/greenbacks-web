@@ -3,9 +3,12 @@ import React, { FC } from 'react';
 import Button from 'components/Button';
 import LoadingIndicator from 'components/LoadingIndicator';
 import useAccounts from 'hooks/useAccounts';
+import useUpdateAccountConnection from 'hooks/useUpdateAccountConnection';
 
 const Accounts: FC = () => {
   const { accounts, isLoadingAccounts: isLoading } = useAccounts();
+  const { update } = useUpdateAccountConnection();
+
   if (isLoading)
     return (
       <PageWrapper>
@@ -19,7 +22,11 @@ const Accounts: FC = () => {
           ({ id, institution: { name }, isReauthenticationRequired }) => (
             <li data-testid={`account-wrapper-${id}`} key={id}>
               {name}
-              {isReauthenticationRequired && <Button>Reauthenticate</Button>}
+              {isReauthenticationRequired && (
+                <Button onClick={() => update?.({ accountId: id })}>
+                  Reauthenticate
+                </Button>
+              )}
             </li>
           )
         )}

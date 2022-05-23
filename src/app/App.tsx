@@ -4,6 +4,7 @@ import { Provider as Auth0Provider } from 'auth';
 import AuthenticationBarrier from 'app/AuthenticationBarrier';
 import Greenbacks from 'components/Greenbacks';
 import Login from 'components/Login';
+import AccountConnectionProvider from 'context/AccountConnection';
 import AuthProvider from 'context/Auth';
 import GreenbacksApiProvider from 'context/GreenbacksApi';
 import RouteProvider from 'context/Route';
@@ -21,12 +22,14 @@ const App: FunctionComponent = () => (
     <AuthProvider>
       <AuthenticationBarrier LoginComponent={Login}>
         <GreenbacksApiProvider uri={`${env.apiHost}/graphql`}>
-          <RouteProvider>
-            <GlobalStyle />
-            <Wrapper>
-              <Greenbacks />
-            </Wrapper>
-          </RouteProvider>
+          <AccountConnectionProvider>
+            <RouteProvider>
+              <GlobalStyle />
+              <Wrapper>
+                <Greenbacks />
+              </Wrapper>
+            </RouteProvider>
+          </AccountConnectionProvider>
         </GreenbacksApiProvider>
       </AuthenticationBarrier>
     </AuthProvider>

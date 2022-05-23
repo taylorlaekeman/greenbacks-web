@@ -1,5 +1,6 @@
 import React, { FC } from 'react';
 
+import { TestAccountConnectionProvider } from 'context/AccountConnection';
 import { TestAuthProvider } from 'context/Auth';
 import { TestCurrencyLocalesProvider } from 'context/CurrencyLocales';
 import {
@@ -15,15 +16,20 @@ export const TestGreenbacksProvider: FC<Props> = ({
   logout,
   mocks,
   now,
+  onUpdateAccountConnection,
   route,
 }) => (
   <TestAuthProvider logout={logout}>
     <TestGreenbacksApiProvider mocks={mocks}>
-      <TestNowProvider now={now}>
-        <TestCurrencyLocalesProvider locales={locales}>
-          <TestRouteProvider route={route}>{children}</TestRouteProvider>
-        </TestCurrencyLocalesProvider>
-      </TestNowProvider>
+      <TestAccountConnectionProvider
+        onUpdateAccountConnection={onUpdateAccountConnection}
+      >
+        <TestNowProvider now={now}>
+          <TestCurrencyLocalesProvider locales={locales}>
+            <TestRouteProvider route={route}>{children}</TestRouteProvider>
+          </TestCurrencyLocalesProvider>
+        </TestNowProvider>
+      </TestAccountConnectionProvider>
     </TestGreenbacksApiProvider>
   </TestAuthProvider>
 );
@@ -33,6 +39,7 @@ interface Props {
   logout?: () => void;
   mocks?: MockedApiResponse[];
   now?: string;
+  onUpdateAccountConnection?: (input: { token: string }) => void;
   route?: string;
 }
 
