@@ -16,7 +16,7 @@ const Expenses: FC = () => {
   if (isLoading) return <LoadingIndicator name="expenses-list" />;
   return (
     <ul data-testid="monthly-expenses-list">
-      {expenses.map(({ amount, id, name }) => (
+      {expenses?.map(({ amount, id, name }) => (
         <li key={id}>
           {`${name} ${format({
             value: amount,

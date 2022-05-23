@@ -11,6 +11,8 @@ import { MockedProvider, MockedResponse } from '@apollo/client/testing';
 import { useAuth } from 'auth';
 import LoadingIndicator from 'components/LoadingIndicator';
 
+export { GraphQLError } from 'graphql';
+
 export const GreenbacksApiContext = React.createContext({});
 
 const GreenbacksApiProvider: FC<ProviderProps> = ({ children, uri }) => {

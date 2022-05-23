@@ -18,10 +18,10 @@ const useAccounts: UseAccounts = () => {
   );
   const initializationToken = initializationTokenData?.getInitializationToken;
   const {
-    data: getAccountsResponse,
+    data: accountsResponse,
     loading: isLoadingAccounts,
-  } = useQuery<GetAccountsResult>(GET_ACCOUNTS_QUERY);
-  const accounts = getAccountsResponse?.getAccounts || [];
+  } = useQuery<AccountsResult>(ACCOUNTS_QUERY);
+  const accounts = accountsResponse?.accounts || [];
   const { mutate: saveAccount } = useMutation<SaveAccountVariables>({
     mutation: SAVE_ACCOUNT_MUTATION,
   });
@@ -36,15 +36,16 @@ const useAccounts: UseAccounts = () => {
   };
 };
 
-const GET_ACCOUNTS_QUERY = gql`
+export const ACCOUNTS_QUERY = gql`
   {
-    getAccounts {
+    accounts {
       createdDate
       id
       modifiedDate
       institution {
         name
       }
+      isReauthenticationRequired
     }
   }
 `;
@@ -63,18 +64,19 @@ interface GetInitializationTokenResult {
   getInitializationToken: string;
 }
 
-interface GetAccountsResult {
-  getAccounts: Account[];
+interface AccountsResult {
+  accounts: Account[];
 }
 
-export type Account = {
+export interface Account {
   createdDate: string;
   id: string;
   modifiedDate: string;
   institution: {
     name: string;
   };
-};
+  isReauthenticationRequired: boolean;
+}
 
 interface SaveAccountVariables {
   token: string;

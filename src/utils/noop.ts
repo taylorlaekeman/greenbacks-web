@@ -1,5 +1,5 @@
-const noop: { (): void } = () => {
+function noop(): void {
   /* intentionally left blank */
-};
+}
 
 export default noop;

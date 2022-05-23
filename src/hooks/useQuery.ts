@@ -1,1 +1,1 @@
-export { useQuery as default } from '@apollo/client';
+export { ApolloError, useQuery as default } from '@apollo/client';
