@@ -2,6 +2,7 @@ import React, { FC } from 'react';
 
 import Button from 'components/Button';
 import LoadingIndicator from 'components/LoadingIndicator';
+import PageWrapper from 'components/PageWrapper';
 import useAccounts from 'hooks/useAccounts';
 import useUpdateAccountConnection from 'hooks/useUpdateAccountConnection';
 
@@ -11,12 +12,12 @@ const Accounts: FC = () => {
 
   if (isLoading)
     return (
-      <PageWrapper>
+      <PageWrapper name="accounts">
         <LoadingIndicator name="accounts" />
       </PageWrapper>
     );
   return (
-    <PageWrapper>
+    <PageWrapper name="accounts">
       <ul>
         {accounts.map(
           ({ id, institution: { name }, isReauthenticationRequired }) => (
@@ -34,9 +35,5 @@ const Accounts: FC = () => {
     </PageWrapper>
   );
 };
-
-const PageWrapper: FC = ({ children }) => (
-  <main data-testid="accounts-page">{children}</main>
-);
 
 export default Accounts;

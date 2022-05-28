@@ -5,14 +5,13 @@ import userEvent from '@testing-library/user-event';
 import Greenbacks from 'components/Greenbacks';
 import { TestGreenbacksProvider } from 'context/Greenbacks';
 
-test('logs out', () => {
+test('logs in and shows home page', () => {
   render(
-    <TestGreenbacksProvider isAuthenticated>
+    <TestGreenbacksProvider isAuthenticated={false}>
       <Greenbacks />
     </TestGreenbacksProvider>
   );
-  const logoutButton = screen.getByRole('button', { name: 'Logout' });
-  userEvent.click(logoutButton);
-  const loginButton = screen.getByRole('button', { name: 'Login' });
-  expect(loginButton).toBeInTheDocument();
+  const button = screen.getByRole('button', { name: 'Login' });
+  userEvent.click(button);
+  expect(screen.getByTestId('home-page')).toBeInTheDocument();
 });

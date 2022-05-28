@@ -1,13 +1,17 @@
-import React, { createContext, FC } from 'react';
+import React, { createContext, FC, useState } from 'react';
 import { Auth0Provider, useAuth0 } from '@auth0/auth0-react';
 
 import noop from 'utils/noop';
 
 interface AuthContext {
+  isAuthenticated: boolean;
+  login: () => void;
   logout: () => void;
 }
 
 export const AuthContext = createContext<AuthContext>({
+  isAuthenticated: false,
+  login: noop,
   logout: noop,
 });
 
@@ -23,21 +27,42 @@ const AuthProvider: FC = ({ children }) => (
 );
 
 const InnerProvider: FC = ({ children }) => {
-  const { logout } = useAuth0();
+  const { isAuthenticated, loginWithRedirect, logout } = useAuth0();
   return (
-    <AuthContext.Provider value={{ logout }}>{children}</AuthContext.Provider>
+    <AuthContext.Provider
+      value={{ isAuthenticated, login: loginWithRedirect, logout }}
+    >
+      {children}
+    </AuthContext.Provider>
   );
 };
 
 export const TestAuthProvider: FC<TestProps> = ({
   children,
-  logout = jest.fn(),
-}) => (
-  <AuthContext.Provider value={{ logout }}>{children}</AuthContext.Provider>
-);
+  isAuthenticated: isInitiallyAuthenticated = true,
+}) => {
+  const [isAuthenticated, setIsAuthenticated] = useState(
+    isInitiallyAuthenticated
+  );
+  return (
+    <AuthContext.Provider
+      value={{
+        isAuthenticated,
+        login: () => {
+          setIsAuthenticated(true);
+        },
+        logout: () => {
+          setIsAuthenticated(false);
+        },
+      }}
+    >
+      {children}
+    </AuthContext.Provider>
+  );
+};
 
 interface TestProps {
-  logout?: () => void;
+  isAuthenticated?: boolean;
 }
 
 export default AuthProvider;
