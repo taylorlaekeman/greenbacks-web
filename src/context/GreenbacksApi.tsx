@@ -4,36 +4,57 @@ import {
   ApolloProvider,
   createHttpLink,
   InMemoryCache,
+  NormalizedCacheObject,
 } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
 import { MockedProvider, MockedResponse } from '@apollo/client/testing';
 
 import { useAuth } from 'auth';
 import LoadingIndicator from 'components/LoadingIndicator';
+import useIsAuthenticated from 'hooks/useIsAuthenticated';
 
 export { GraphQLError } from 'graphql';
 
-export const GreenbacksApiContext = React.createContext({});
+interface ApiContext {
+  isReady: boolean;
+}
 
-const GreenbacksApiProvider: FC<ProviderProps> = ({ children, uri }) => {
+export const GreenbacksApiContext = React.createContext<ApiContext>({
+  isReady: false,
+});
+
+const GreenbacksApiProvider: FC<Props> = ({ children, uri }) => {
+  const { isAuthenticated } = useIsAuthenticated();
   const { getAccessTokenSilently } = useAuth();
-  const [token, setToken] = useState('');
-  const client = useMemo(() => getClient(uri, token), [uri, token]);
+  const [token, setToken] = useState<string>();
+
+  const client = useMemo(() => {
+    if (!token) return undefined;
+    return getClient(uri, token);
+  }, [uri, token]);
 
   useEffect(() => {
-    const saveToken = async () => {
-      const accessToken = await getAccessTokenSilently();
-      setToken(accessToken);
-    };
-    saveToken();
-  }, [getAccessTokenSilently]);
+    if (getAccessTokenSilently && isAuthenticated) {
+      const saveToken = async () => {
+        const accessToken = await getAccessTokenSilently();
+        setToken(accessToken);
+      };
+      saveToken();
+    }
+  }, [getAccessTokenSilently, isAuthenticated]);
 
-  if (!token) return <LoadingIndicator />;
+  if (!token) return <>{children}</>;
 
-  return <ApolloProvider client={client}>{children}</ApolloProvider>;
+  if (!client) return <LoadingIndicator />;
+
+  return (
+    <ApolloProvider client={client}>
+      <InnerProvider client={client}>{children}</InnerProvider>
+    </ApolloProvider>
+  );
 };
 
-interface ProviderProps {
+interface Props {
   uri: string;
 }
 
@@ -54,13 +75,49 @@ const getClient = (uri: string, token: string) => {
   });
 };
 
-export const TestGreenbacksApiProvider: FC<TestProviderProps> = ({
-  children,
-  mocks,
-}) => <MockedProvider mocks={mocks}>{children}</MockedProvider>;
+const InnerProvider: FC<InnerProps> = ({ children, client }) => {
+  const isReady = !!client;
+  return (
+    <GreenbacksApiContext.Provider
+      value={{
+        isReady,
+      }}
+    >
+      {children}
+    </GreenbacksApiContext.Provider>
+  );
+};
 
-interface TestProviderProps {
+interface InnerProps {
+  client?: ApolloClient<NormalizedCacheObject>;
+}
+
+export const TestGreenbacksApiProvider: FC<TestProps> = ({
+  children,
+  isReady,
+  mocks,
+}) => (
+  <MockedProvider mocks={mocks}>
+    <TestInnerProvider isReady={isReady}>{children}</TestInnerProvider>
+  </MockedProvider>
+);
+
+interface TestProps {
+  isReady?: boolean;
   mocks?: MockedApiResponse[];
+}
+
+const TestInnerProvider: FC<TestInnerProps> = ({
+  children,
+  isReady = true,
+}) => (
+  <GreenbacksApiContext.Provider value={{ isReady }}>
+    {children}
+  </GreenbacksApiContext.Provider>
+);
+
+interface TestInnerProps {
+  isReady?: boolean;
 }
 
 export interface Transaction {

@@ -12,15 +12,16 @@ import { TestRouteProvider } from 'context/Route';
 
 export const TestGreenbacksProvider: FC<Props> = ({
   children,
+  isApiReady,
+  isAuthenticated,
   locales,
-  logout,
   mocks,
   now,
   onUpdateAccountConnection,
   route,
 }) => (
-  <TestAuthProvider logout={logout}>
-    <TestGreenbacksApiProvider mocks={mocks}>
+  <TestAuthProvider isAuthenticated={isAuthenticated}>
+    <TestGreenbacksApiProvider isReady={isApiReady} mocks={mocks}>
       <TestAccountConnectionProvider
         onUpdateAccountConnection={onUpdateAccountConnection}
       >
@@ -35,8 +36,9 @@ export const TestGreenbacksProvider: FC<Props> = ({
 );
 
 interface Props {
+  isApiReady?: boolean;
+  isAuthenticated?: boolean;
   locales?: string | string[];
-  logout?: () => void;
   mocks?: MockedApiResponse[];
   now?: string;
   onUpdateAccountConnection?: (input: { token: string }) => void;

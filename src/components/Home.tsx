@@ -2,6 +2,7 @@ import React, { FC } from 'react';
 
 import AmountBadge from 'components/AmountBadge';
 import Link from 'components/Link';
+import PageWrapper from 'components/PageWrapper';
 import useAverageMonthlyEarnings from 'hooks/useAverageMonthlyEarnings';
 import useAverageMonthlyExpenses from 'hooks/useAverageMonthlyExpenses';
 
@@ -32,7 +33,7 @@ const Home: FC = () => {
   }
 
   return (
-    <>
+    <PageWrapper name="home">
       <AmountBadge
         amount={averageMonthlyEarnings}
         isLoading={isLoadingAverageEarnings}
@@ -45,7 +46,7 @@ const Home: FC = () => {
         label="Average monthly expenses"
         name="average-monthly-expenses"
       />
-    </>
+    </PageWrapper>
   );
 };
 
