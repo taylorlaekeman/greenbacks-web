@@ -78,8 +78,16 @@ test('excludes expenses', async () => {
   const mocks = [
     buildApiTransactionsMock({
       transactions: [
-        buildTransaction({ amount: -600, datetime: '2020-01-01' }),
-        buildTransaction({ amount: 600, datetime: '2020-01-01' }),
+        buildTransaction({
+          accountId: '1',
+          amount: -600,
+          datetime: '2020-01-01',
+        }),
+        buildTransaction({
+          accountId: '1',
+          amount: 600,
+          datetime: '2020-01-01',
+        }),
       ],
     }),
   ];

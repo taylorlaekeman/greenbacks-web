@@ -6,13 +6,13 @@ import datetime from 'utils/datetime';
 const useAverageMonthlyEarnings: UseAverageMonthlyEarnings = () => {
   const { now } = useNow();
   const { endDate, startDate } = getDateRange({ now });
-  const { error, isLoading, transactions } = useTransactions({
+  const { credits, error, isLoading } = useTransactions({
     endDate,
     startDate,
   });
-  const earnings = transactions?.filter(({ amount }) => amount < 0);
-  const total = earnings?.reduce((sum, { amount }) => sum + amount, 0);
-  const averageMonthlyEarnings = total && Math.abs(total) / 6;
+  if (!credits) return { error, isLoading };
+  const total = credits.reduce((sum, { amount }) => sum + amount, 0);
+  const averageMonthlyEarnings = total / 6;
   return {
     averageMonthlyEarnings,
     error,
