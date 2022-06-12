@@ -10,7 +10,9 @@ const useExpenses = ({
 }): { error?: ApolloError; expenses?: Transaction[]; isLoading: boolean } => {
   const { debits, error, isLoading } = useTransactions({ endDate, startDate });
   const expenses = debits?.filter(
-    ({ name }) => name !== 'EFT Withdrawal to CDN SHR INVEST'
+    ({ name }) =>
+      name !== 'EFT Withdrawal to CDN SHR INVEST' &&
+      name !== 'EFT Withdrawal to WSII'
   );
   return {
     error,
