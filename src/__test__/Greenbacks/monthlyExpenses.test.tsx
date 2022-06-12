@@ -83,3 +83,20 @@ test('exludes savings', async () => {
   ).not.toBeInTheDocument();
   expect(screen.queryByText(/EFT Withdrawal to WSII/)).not.toBeInTheDocument();
 });
+
+test('shows default label as current month', async () => {
+  const mocks = [
+    buildApiTransactionsMock({
+      endDate: '2020-01-31',
+      startDate: '2020-01-01',
+      transactions: [buildTransaction()],
+    }),
+  ];
+  render(
+    <TestGreenbacksProvider mocks={mocks} now="2020-01-01">
+      <Greenbacks />
+    </TestGreenbacksProvider>
+  );
+  await act(wait);
+  expect(screen.getByText(/January 2020/)).toBeInTheDocument();
+});
