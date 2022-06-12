@@ -91,6 +91,29 @@ test('excludes earnings', async () => {
   expect(text).toHaveTextContent('$1.00');
 });
 
+test('excludes savings', async () => {
+  const mocks = [
+    buildApiTransactionsMock({
+      transactions: [
+        buildTransaction({ amount: 600, datetime: '2020-01-01' }),
+        buildTransaction({
+          amount: 600,
+          datetime: '2020-01-01',
+          name: 'EFT Withdrawal to CDN SHR INVEST',
+        }),
+      ],
+    }),
+  ];
+  render(
+    <TestGreenbacksProvider mocks={mocks} now="2020-07-01">
+      <Greenbacks />
+    </TestGreenbacksProvider>
+  );
+  await act(wait);
+  const text = screen.getByTestId('average-monthly-expenses');
+  expect(text).toHaveTextContent('$1.00');
+});
+
 test('shows label text', async () => {
   const mocks = [
     buildApiTransactionsMock({
