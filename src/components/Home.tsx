@@ -6,6 +6,7 @@ import MonthlyExpenses from 'components/MonthlyExpenses';
 import PageWrapper from 'components/PageWrapper';
 import useAverageMonthlyEarnings from 'hooks/useAverageMonthlyEarnings';
 import useAverageMonthlyExpenses from 'hooks/useAverageMonthlyExpenses';
+import useAverageMonthlySavings from 'hooks/useAverageMonthlySavings';
 
 const Home: FC = () => {
   const {
@@ -18,8 +19,13 @@ const Home: FC = () => {
     error: expensesError,
     isLoading: isLoadingAverageExpenses,
   } = useAverageMonthlyExpenses();
+  const {
+    averageMonthlySavings,
+    error: savingsError,
+    isLoading: isLoadingAverageSavings,
+  } = useAverageMonthlySavings();
 
-  const error = earningsError || expensesError;
+  const error = earningsError || expensesError || savingsError;
 
   if (error) {
     const { message } = error;
@@ -46,6 +52,12 @@ const Home: FC = () => {
         isLoading={isLoadingAverageExpenses}
         label="Average monthly expenses"
         name="average-monthly-expenses"
+      />
+      <AmountBadge
+        amount={averageMonthlySavings}
+        isLoading={isLoadingAverageSavings}
+        label="Average monthly savings"
+        name="average-monthly-savings"
       />
       <MonthlyExpenses />
     </PageWrapper>

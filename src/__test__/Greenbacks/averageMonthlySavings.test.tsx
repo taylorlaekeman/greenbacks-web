@@ -16,12 +16,12 @@ test('shows loading indicator while transactions are loading', () => {
     </TestGreenbacksProvider>
   );
   const loadingIndicator = screen.getByTestId(
-    'loading-indicator-average-monthly-expenses'
+    'loading-indicator-average-monthly-savings'
   );
   expect(loadingIndicator).toBeInTheDocument();
 });
 
-test('shows zero without any expenses', async () => {
+test('shows zero without any savings', async () => {
   const mocks = [buildApiTransactionsMock()];
   render(
     <TestGreenbacksProvider mocks={mocks} now="2020-07-01">
@@ -29,20 +29,45 @@ test('shows zero without any expenses', async () => {
     </TestGreenbacksProvider>
   );
   await act(() => wait({ cycles: 2 }));
-  const text = screen.getByTestId('average-monthly-expenses');
+  const text = screen.getByTestId('average-monthly-savings');
   expect(text).toHaveTextContent('$0.00');
 });
 
-test('correctly averages transactions', async () => {
+test('correctly averages savings', async () => {
   const mocks = [
     buildApiTransactionsMock({
       transactions: [
-        buildTransaction({ amount: 100, datetime: '2020-01-01' }),
-        buildTransaction({ amount: 100, datetime: '2020-02-01' }),
-        buildTransaction({ amount: 100, datetime: '2020-03-01' }),
-        buildTransaction({ amount: 200, datetime: '2020-04-01' }),
-        buildTransaction({ amount: 200, datetime: '2020-05-01' }),
-        buildTransaction({ amount: 200, datetime: '2020-06-01' }),
+        buildTransaction({
+          amount: 100,
+          datetime: '2020-01-01',
+          name: 'EFT Withdrawal to CDN SHR INVEST',
+        }),
+        buildTransaction({
+          amount: 100,
+          datetime: '2020-02-01',
+          name: 'EFT Withdrawal to WSII',
+        }),
+        buildTransaction({
+          amount: 100,
+          datetime: '2020-03-01',
+          name:
+            'Recurring Internet Withdrawal to Tangerine Savings Account - Down Payment - 3037686588',
+        }),
+        buildTransaction({
+          amount: 200,
+          datetime: '2020-04-01',
+          name: 'EFT Withdrawal to CDN SHR INVEST',
+        }),
+        buildTransaction({
+          amount: 200,
+          datetime: '2020-05-01',
+          name: 'EFT Withdrawal to CDN SHR INVEST',
+        }),
+        buildTransaction({
+          amount: 200,
+          datetime: '2020-06-01',
+          name: 'EFT Withdrawal to CDN SHR INVEST',
+        }),
       ],
     }),
   ];
@@ -52,14 +77,20 @@ test('correctly averages transactions', async () => {
     </TestGreenbacksProvider>
   );
   await act(() => wait({ cycles: 2 }));
-  const text = screen.getByTestId('average-monthly-expenses');
+  const text = screen.getByTestId('average-monthly-savings');
   expect(text).toHaveTextContent('$1.50');
 });
 
-test('handles months without expenses', async () => {
+test('handles months without savings', async () => {
   const mocks = [
     buildApiTransactionsMock({
-      transactions: [buildTransaction({ amount: 600, datetime: '2020-01-01' })],
+      transactions: [
+        buildTransaction({
+          amount: 600,
+          datetime: '2020-01-01',
+          name: 'EFT Withdrawal to WSII',
+        }),
+      ],
     }),
   ];
   render(
@@ -68,7 +99,7 @@ test('handles months without expenses', async () => {
     </TestGreenbacksProvider>
   );
   await act(() => wait({ cycles: 2 }));
-  const text = screen.getByTestId('average-monthly-expenses');
+  const text = screen.getByTestId('average-monthly-savings');
   expect(text).toHaveTextContent('$1.00');
 });
 
@@ -77,7 +108,11 @@ test('excludes earnings', async () => {
     buildApiTransactionsMock({
       transactions: [
         buildTransaction({ amount: -600, datetime: '2020-01-01' }),
-        buildTransaction({ amount: 600, datetime: '2020-01-01' }),
+        buildTransaction({
+          amount: 600,
+          datetime: '2020-01-01',
+          name: 'EFT Withdrawal to CDN SHR INVEST',
+        }),
       ],
     }),
   ];
@@ -87,11 +122,11 @@ test('excludes earnings', async () => {
     </TestGreenbacksProvider>
   );
   await act(() => wait({ cycles: 2 }));
-  const text = screen.getByTestId('average-monthly-expenses');
+  const text = screen.getByTestId('average-monthly-savings');
   expect(text).toHaveTextContent('$1.00');
 });
 
-test('excludes savings', async () => {
+test('excludes expenses', async () => {
   const mocks = [
     buildApiTransactionsMock({
       transactions: [
@@ -101,17 +136,6 @@ test('excludes savings', async () => {
           datetime: '2020-01-01',
           name: 'EFT Withdrawal to CDN SHR INVEST',
         }),
-        buildTransaction({
-          amount: 600,
-          datetime: '2020-01-01',
-          name: 'EFT Withdrawal to WSII',
-        }),
-        buildTransaction({
-          amount: 600,
-          datetime: '2020-01-01',
-          name:
-            'Recurring Internet Withdrawal to Tangerine Savings Account - Down Payment - 3037686588',
-        }),
       ],
     }),
   ];
@@ -121,7 +145,7 @@ test('excludes savings', async () => {
     </TestGreenbacksProvider>
   );
   await act(() => wait({ cycles: 2 }));
-  const text = screen.getByTestId('average-monthly-expenses');
+  const text = screen.getByTestId('average-monthly-savings');
   expect(text).toHaveTextContent('$1.00');
 });
 
@@ -137,8 +161,8 @@ test('shows label text', async () => {
     </TestGreenbacksProvider>
   );
   await act(() => wait({ cycles: 2 }));
-  const label = screen.getByTestId('average-monthly-expenses-label');
-  expect(label).toHaveTextContent(/^Average monthly expenses$/);
+  const label = screen.getByTestId('average-monthly-savings-label');
+  expect(label).toHaveTextContent(/^Average monthly savings/);
 });
 
 test('shows reauthentication required error when transactions endpoint returns reauthentication required error', async () => {

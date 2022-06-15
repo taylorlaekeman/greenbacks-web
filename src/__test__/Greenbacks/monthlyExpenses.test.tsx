@@ -123,7 +123,7 @@ test('moves to previous month', async () => {
   await act(wait);
   const button = screen.getByRole('button', { name: 'Go to previous month' });
   userEvent.click(button);
-  await act(wait);
+  await act(() => wait({ cycles: 2 }));
   expect(screen.getByText(/December 2019/)).toBeInTheDocument();
   expect(screen.getByText(/\$13.37/)).toBeInTheDocument();
 });

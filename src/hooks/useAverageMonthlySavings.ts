@@ -1,19 +1,19 @@
-import useExpenses from 'hooks/useExpenses';
+import useSavings from 'hooks/useSavings';
 import usePreviousSixMonths from 'hooks/usePreviousSixMonths';
 import type { ApolloError } from 'hooks/useQuery';
 
 const useAverageMonthlyExpenses = (): {
-  averageMonthlyExpenses?: number;
+  averageMonthlySavings?: number;
   error?: ApolloError;
   isLoading: boolean;
 } => {
   const { endIso: endDate, startIso: startDate } = usePreviousSixMonths();
-  const { error, expenses, isLoading } = useExpenses({ endDate, startDate });
-  if (!expenses) return { error, isLoading };
-  const total = expenses.reduce((sum, { amount }) => sum + amount, 0);
-  const averageMonthlyExpenses = total && total / 6;
+  const { error, isLoading, savings } = useSavings({ endDate, startDate });
+  if (!savings) return { error, isLoading };
+  const total = savings.reduce((sum, { amount }) => sum + amount, 0);
+  const averageMonthlySavings = total && total / 6;
   return {
-    averageMonthlyExpenses,
+    averageMonthlySavings,
     error,
     isLoading,
   };
