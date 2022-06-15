@@ -1,5 +1,5 @@
-import useNow from 'hooks/useNow';
 import useExpenses from 'hooks/useExpenses';
+import useNow from 'hooks/useNow';
 import type { ApolloError } from 'hooks/useQuery';
 import datetime from 'utils/datetime';
 
@@ -7,7 +7,8 @@ const useAverageMonthlyExpenses = (): UseAverageMonthlyExpensesResult => {
   const { now } = useNow();
   const { endDate, startDate } = getDateRange({ now });
   const { expenses, error, isLoading } = useExpenses({ endDate, startDate });
-  const total = expenses?.reduce((sum, { amount }) => sum + amount, 0);
+  if (!expenses) return { error, isLoading };
+  const total = expenses.reduce((sum, { amount }) => sum + amount, 0);
   const averageMonthlyExpenses = total && total / 6;
   return {
     averageMonthlyExpenses,

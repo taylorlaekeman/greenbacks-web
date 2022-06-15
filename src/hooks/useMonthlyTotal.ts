@@ -7,12 +7,12 @@ const useMonthlyTotal = ({ month }: MonthlyTotalHookInput = {}):
   const parsedMonth = month ? datetime.fromISO(month) : datetime.now();
   const startDate = parsedMonth.startOf('month').toFormat('yyyy-LL-dd');
   const endDate = parsedMonth.endOf('month').toFormat('yyyy-LL-dd');
-  const { transactions } = useTransactions({
+  const { debits } = useTransactions({
     endDate,
     startDate,
   });
-  if (!transactions) return undefined;
-  return transactions
+  if (!debits) return undefined;
+  return debits
     .filter(({ amount }) => amount > 0)
     .reduce((total, { amount }) => total + amount, 0);
 };

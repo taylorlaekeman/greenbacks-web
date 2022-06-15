@@ -28,7 +28,7 @@ test('shows zero without any earnings', async () => {
       <Greenbacks />
     </TestGreenbacksProvider>
   );
-  await act(wait);
+  await act(() => wait({ cycles: 2 }));
   const text = screen.getByTestId('average-monthly-earnings');
   expect(text).toHaveTextContent('$0.00');
 });
@@ -51,7 +51,7 @@ test('correctly averages transactions', async () => {
       <Greenbacks />
     </TestGreenbacksProvider>
   );
-  await act(wait);
+  await act(() => wait({ cycles: 2 }));
   const text = screen.getByTestId('average-monthly-earnings');
   expect(text).toHaveTextContent('$1.50');
 });
@@ -69,7 +69,7 @@ test('handles months without earnings', async () => {
       <Greenbacks />
     </TestGreenbacksProvider>
   );
-  await act(wait);
+  await act(() => wait({ cycles: 2 }));
   const text = screen.getByTestId('average-monthly-earnings');
   expect(text).toHaveTextContent('$1.00');
 });
@@ -78,8 +78,16 @@ test('excludes expenses', async () => {
   const mocks = [
     buildApiTransactionsMock({
       transactions: [
-        buildTransaction({ amount: -600, datetime: '2020-01-01' }),
-        buildTransaction({ amount: 600, datetime: '2020-01-01' }),
+        buildTransaction({
+          accountId: '1',
+          amount: -600,
+          datetime: '2020-01-01',
+        }),
+        buildTransaction({
+          accountId: '1',
+          amount: 600,
+          datetime: '2020-01-01',
+        }),
       ],
     }),
   ];
@@ -88,7 +96,7 @@ test('excludes expenses', async () => {
       <Greenbacks />
     </TestGreenbacksProvider>
   );
-  await act(wait);
+  await act(() => wait({ cycles: 2 }));
   const text = screen.getByTestId('average-monthly-earnings');
   expect(text).toHaveTextContent('$1.00');
 });
@@ -106,7 +114,7 @@ test('shows label text', async () => {
       <Greenbacks />
     </TestGreenbacksProvider>
   );
-  await act(wait);
+  await act(() => wait({ cycles: 2 }));
   const label = screen.getByTestId('average-monthly-earnings-label');
   expect(label).toHaveTextContent(/^Average monthly earnings$/);
 });
@@ -122,7 +130,7 @@ test('shows reauthentication required error when transactions endpoint returns r
       <Greenbacks />
     </TestGreenbacksProvider>
   );
-  await act(wait);
+  await act(() => wait({ cycles: 2 }));
   const text = screen.getByText(
     /At least one of your accounts needs reauthentication/
   );
@@ -142,32 +150,9 @@ test('reauthentication required error link redirects to acounts page', async () 
       <Greenbacks />
     </TestGreenbacksProvider>
   );
-  await act(wait);
+  await act(() => wait({ cycles: 2 }));
   const link = screen.getByRole('link');
   userEvent.click(link);
   const pageWrapper = screen.getByTestId('accounts-page');
   expect(pageWrapper).toBeInTheDocument();
 });
-
-test.each(['/expenses/2020-01'])(
-  'does not render at route %s',
-  async (value) => {
-    const mocks = [
-      buildApiTransactionsMock({
-        transactions: [
-          buildTransaction({ amount: 600, datetime: '2020-01-01' }),
-        ],
-      }),
-    ];
-    render(
-      <TestGreenbacksProvider mocks={mocks} route={value}>
-        <Greenbacks />
-      </TestGreenbacksProvider>
-    );
-    await act(wait);
-    const text = screen.queryByTestId('average-monthly-earnings');
-    const label = screen.queryByTestId('average-monthly-earnings-label');
-    expect(text).not.toBeInTheDocument();
-    expect(label).not.toBeInTheDocument();
-  }
-);
