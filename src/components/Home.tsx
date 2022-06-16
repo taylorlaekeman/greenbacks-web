@@ -1,12 +1,14 @@
 import React, { FC } from 'react';
 
 import AmountBadge from 'components/AmountBadge';
+import PercentBadge from 'components/PercentBadge';
 import Link from 'components/Link';
 import MonthlyExpenses from 'components/MonthlyExpenses';
 import PageWrapper from 'components/PageWrapper';
 import useAverageMonthlyEarnings from 'hooks/useAverageMonthlyEarnings';
 import useAverageMonthlyExpenses from 'hooks/useAverageMonthlyExpenses';
 import useAverageMonthlySavings from 'hooks/useAverageMonthlySavings';
+import useSavingsRate from 'hooks/useSavingsRate';
 
 const Home: FC = () => {
   const {
@@ -24,8 +26,14 @@ const Home: FC = () => {
     error: savingsError,
     isLoading: isLoadingAverageSavings,
   } = useAverageMonthlySavings();
+  const {
+    savingsRate,
+    error: savingsRateError,
+    isLoading: isLoadingSavingsRate,
+  } = useSavingsRate();
 
-  const error = earningsError || expensesError || savingsError;
+  const error =
+    earningsError || expensesError || savingsError || savingsRateError;
 
   if (error) {
     const { message } = error;
@@ -58,6 +66,12 @@ const Home: FC = () => {
         isLoading={isLoadingAverageSavings}
         label="Average monthly savings"
         name="average-monthly-savings"
+      />
+      <PercentBadge
+        isLoading={isLoadingSavingsRate}
+        label="Savings rate"
+        name="average-savings-rate"
+        percent={savingsRate}
       />
       <MonthlyExpenses />
     </PageWrapper>
