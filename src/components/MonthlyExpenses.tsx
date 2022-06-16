@@ -12,8 +12,8 @@ import useReadableMonth from 'hooks/useReadableMonth';
 const MonthlyExpenses: FC = () => {
   const { iso: currentMonth } = useCurrentMonth();
   const [month, setMonth] = useState(currentMonth);
-  const { month: nextMonth } = useNextMonth({ iso: month });
-  const { month: previousMonth } = usePreviousMonth({ iso: month });
+  const { iso: nextMonth } = useNextMonth({ iso: month });
+  const { iso: previousMonth } = usePreviousMonth({ iso: month });
   const { month: readableMonth } = useReadableMonth({ iso: month });
   const { format } = useCurrencyFormatter();
   const { dailyExpenses, isLoading } = useDailyExpenses({

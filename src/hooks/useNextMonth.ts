@@ -1,7 +1,8 @@
-import datetime from 'utils/datetime';
+import useOffsetMonth from 'hooks/useOffsetMonth';
 
-const useNextMonth = ({ iso }: { iso: string }): { month: string } => ({
-  month: datetime.fromISO(iso).plus({ months: 1 }).startOf('month').toISO(),
-});
+const useNextMonth = ({ iso }: { iso?: string }): { iso: string } => {
+  const { iso: nextMonth } = useOffsetMonth({ iso, offset: 1 });
+  return { iso: nextMonth };
+};
 
 export default useNextMonth;
