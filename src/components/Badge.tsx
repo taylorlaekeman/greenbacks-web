@@ -25,17 +25,16 @@ const Wrapper = styled.article`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding-bottom: 100px;
 `;
 
 const Text = styled.p`
-  font-size: 4rem;
+  font-size: 1.4rem;
   margin: 0;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 `;
 
 const Label = styled.p`
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   margin: 0;
 `;
 
