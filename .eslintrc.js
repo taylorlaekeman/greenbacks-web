@@ -42,6 +42,7 @@ module.exports = {
     'max-classes-per-file': 'off',
     'no-use-before-define': 'off',
     'react/jsx-filename-extension': [1, { extensions: ['.ts', '.tsx'] }],
+    'react/jsx-props-no-spreading': 'off',
     'react/require-default-props': 'off',
     'react-hooks/exhaustive-deps': 'error',
     'react-hooks/rules-of-hooks': 'error',
