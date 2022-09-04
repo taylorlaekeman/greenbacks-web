@@ -1,12 +1,15 @@
 import React, { FC } from 'react';
 
 import AmountBadge from 'components/AmountBadge';
+import PercentBadge from 'components/PercentBadge';
 import Link from 'components/Link';
 import MonthlyExpenses from 'components/MonthlyExpenses';
 import PageWrapper from 'components/PageWrapper';
 import useAverageMonthlyEarnings from 'hooks/useAverageMonthlyEarnings';
 import useAverageMonthlyExpenses from 'hooks/useAverageMonthlyExpenses';
 import useAverageMonthlySavings from 'hooks/useAverageMonthlySavings';
+import useSavingsRate from 'hooks/useSavingsRate';
+import styled from 'utils/styled';
 
 const Home: FC = () => {
   const {
@@ -24,8 +27,14 @@ const Home: FC = () => {
     error: savingsError,
     isLoading: isLoadingAverageSavings,
   } = useAverageMonthlySavings();
+  const {
+    savingsRate,
+    error: savingsRateError,
+    isLoading: isLoadingSavingsRate,
+  } = useSavingsRate();
 
-  const error = earningsError || expensesError || savingsError;
+  const error =
+    earningsError || expensesError || savingsError || savingsRateError;
 
   if (error) {
     const { message } = error;
@@ -41,52 +50,42 @@ const Home: FC = () => {
 
   return (
     <PageWrapper name="home">
-      <AmountBadge
-        amount={averageMonthlyEarnings}
-        isLoading={isLoadingAverageEarnings}
-        label="Average monthly earnings"
-        name="average-monthly-earnings"
-      />
-      <AmountBadge
-        amount={averageMonthlyExpenses}
-        isLoading={isLoadingAverageExpenses}
-        label="Average monthly expenses"
-        name="average-monthly-expenses"
-      />
-      <AmountBadge
-        amount={averageMonthlySavings}
-        isLoading={isLoadingAverageSavings}
-        label="Average monthly savings"
-        name="average-monthly-savings"
-      />
+      <BadgeGrid>
+        <AmountBadge
+          amount={averageMonthlyEarnings}
+          isLoading={isLoadingAverageEarnings}
+          label="Average monthly earnings"
+          name="average-monthly-earnings"
+        />
+        <AmountBadge
+          amount={averageMonthlyExpenses}
+          isLoading={isLoadingAverageExpenses}
+          label="Average monthly expenses"
+          name="average-monthly-expenses"
+        />
+        <AmountBadge
+          amount={averageMonthlySavings}
+          isLoading={isLoadingAverageSavings}
+          label="Average monthly savings"
+          name="average-monthly-savings"
+        />
+        <PercentBadge
+          isLoading={isLoadingSavingsRate}
+          label="Savings rate"
+          name="average-savings-rate"
+          percent={savingsRate}
+        />
+      </BadgeGrid>
       <MonthlyExpenses />
     </PageWrapper>
   );
 };
 
-/*
-import TotalSpending from 'components/TotalSpending';
-import useMonthlyTotal from 'hooks/useMonthlyTotal';
-import { Link } from 'routing';
-import datetime from 'utils/datetime';
-import styled from 'utils/styled';
-
-const Home: FunctionComponent = () => {
-  const now = datetime.now();
-  const total = useMonthlyTotal();
-  return (
-    <Main>
-      <Link to="/connections">connections</Link>
-      <TotalSpending amount={total} month={`${now.year}-${now.month}`} />
-    </Main>
-  );
-};
-
-const Main = styled.main`
+const BadgeGrid = styled.section`
   display: grid;
-  grid-template-rows: max-content 1fr;
-  height: 100%;
+  grid-gap: 30px 0;
+  grid-template-columns: 1fr 1fr;
+  margin-bottom: 50px;
 `;
-*/
 
 export default Home;
