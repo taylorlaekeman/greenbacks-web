@@ -58,6 +58,17 @@ const FILTERS = [
   },
   {
     categoryToAssign: Category.Saving,
+    id: 'test-filter-id-2',
+    matchers: [
+      {
+        expectedValue: 'EFT Withdrawal to WS Investments',
+        property: 'name' as keyof Transaction,
+      },
+    ],
+    tagToAssign: 'retirement',
+  },
+  {
+    categoryToAssign: Category.Saving,
     id: 'test-filter-id-3',
     matchers: [
       {

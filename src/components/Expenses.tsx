@@ -12,11 +12,11 @@ const Expenses: FC = () => {
   const parsedMonth = datetime.fromISO(month || '2020-01');
   const startDate = parsedMonth.startOf('month').toISODate();
   const endDate = parsedMonth.endOf('month').toISODate();
-  const { debits, isLoading } = useTransactions({ endDate, startDate });
+  const { expenses, isLoading } = useTransactions({ endDate, startDate });
   if (isLoading) return <LoadingIndicator name="expenses-list" />;
   return (
     <ul data-testid="monthly-expenses-list">
-      {debits?.map(({ amount, id, name }) => (
+      {expenses?.map(({ amount, id, name }) => (
         <li key={id}>
           {`${name} ${format({
             value: amount,

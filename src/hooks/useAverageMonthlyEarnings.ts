@@ -8,12 +8,11 @@ const useAverageMonthlyEarnings = (): {
   isLoading: boolean;
 } => {
   const { endIso: endDate, startIso: startDate } = usePreviousSixMonths();
-  const { credits, error, isLoading } = useTransactions({
+  const { earnings, error, isLoading } = useTransactions({
     endDate,
     startDate,
   });
-  if (!credits) return { error, isLoading };
-  const total = credits.reduce((sum, { amount }) => sum + amount, 0);
+  const total = earnings?.reduce((sum, { amount }) => sum + amount, 0) || 0;
   const averageMonthlyEarnings = total / 6;
   return {
     averageMonthlyEarnings,

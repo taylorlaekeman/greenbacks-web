@@ -1,5 +1,5 @@
 import { GraphQLError, MockedApiResponse } from 'context/GreenbacksApi';
-import { GET_TRANSACTIONS_QUERY } from 'hooks/useTransactions';
+import { GET_TRANSACTIONS_QUERY } from 'hooks/useRawTransactions';
 import Transaction from 'types/unfilteredTransaction';
 
 const buildApiTransactionsMock = ({

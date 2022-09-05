@@ -6,6 +6,8 @@ import Greenbacks from 'components/Greenbacks';
 import { TestGreenbacksProvider } from 'context/Greenbacks';
 import buildApiTransactionsMock from '__test__/utils/buildApiTransactionsMock';
 import buildTransaction from '__test__/utils/buildTransaction';
+import Category from 'types/category';
+import Transaction from 'types/unfilteredTransaction';
 import wait from 'utils/wait';
 
 test('shows loading indicator while expenses are loading', () => {
@@ -65,24 +67,31 @@ test('exludes savings', async () => {
       startDate: '2020-01-01',
       transactions: [
         buildTransaction({
-          name: 'EFT Withdrawal to CDN SHR INVEST',
-        }),
-        buildTransaction({
-          name: 'EFT Withdrawal to WSII',
+          name: 'SAVINGS!',
         }),
       ],
     }),
   ];
+  const filters = [
+    {
+      categoryToAssign: Category.Saving,
+      id: 'test-filter-id',
+      matchers: [
+        {
+          expectedValue: 'SAVINGS!',
+          property: 'name' as keyof Transaction,
+        },
+      ],
+      tagToAssign: 'retirement',
+    },
+  ];
   render(
-    <TestGreenbacksProvider mocks={mocks} now="2020-01-01">
+    <TestGreenbacksProvider filters={filters} mocks={mocks} now="2020-01-01">
       <Greenbacks />
     </TestGreenbacksProvider>
   );
   await act(wait);
-  expect(
-    screen.queryByText(/EFT Withdrawal to CDN SHR INVEST/)
-  ).not.toBeInTheDocument();
-  expect(screen.queryByText(/EFT Withdrawal to WSII/)).not.toBeInTheDocument();
+  expect(screen.queryByText(/SAVINGS!/)).not.toBeInTheDocument();
 });
 
 test('shows default label as current month', async () => {

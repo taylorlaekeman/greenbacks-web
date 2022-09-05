@@ -6,6 +6,8 @@ import Greenbacks from 'components/Greenbacks';
 import { TestGreenbacksProvider } from 'context/Greenbacks';
 import buildApiTransactionsMock from '__test__/utils/buildApiTransactionsMock';
 import buildTransaction from '__test__/utils/buildTransaction';
+import Category from 'types/category';
+import Transaction from 'types/unfilteredTransaction';
 import wait from 'utils/wait';
 
 test('shows loading indicator while transactions are loading', () => {
@@ -99,24 +101,36 @@ test('excludes savings', async () => {
         buildTransaction({
           amount: 600,
           datetime: '2020-01-01',
-          name: 'EFT Withdrawal to CDN SHR INVEST',
+          name: 'SAVINGS!',
         }),
         buildTransaction({
           amount: 600,
           datetime: '2020-01-01',
-          name: 'EFT Withdrawal to WSII',
+          name: 'SAVINGS!',
         }),
         buildTransaction({
           amount: 600,
           datetime: '2020-01-01',
-          name:
-            'Recurring Internet Withdrawal to Tangerine Savings Account - Down Payment - 3037686588',
+          name: 'SAVINGS!',
         }),
       ],
     }),
   ];
+  const filters = [
+    {
+      categoryToAssign: Category.Saving,
+      id: 'test-filter-id',
+      matchers: [
+        {
+          expectedValue: 'SAVINGS!',
+          property: 'name' as keyof Transaction,
+        },
+      ],
+      tagToAssign: 'retirement',
+    },
+  ];
   render(
-    <TestGreenbacksProvider mocks={mocks} now="2020-07-01">
+    <TestGreenbacksProvider filters={filters} mocks={mocks} now="2020-07-01">
       <Greenbacks />
     </TestGreenbacksProvider>
   );
