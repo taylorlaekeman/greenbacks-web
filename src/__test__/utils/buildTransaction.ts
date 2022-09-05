@@ -1,5 +1,5 @@
-import type { Transaction } from 'hooks/useTransactions';
 import uuid from 'utils/uuid';
+import Transaction from 'types/unfilteredTransaction';
 
 const buildTransaction = ({
   accountId = 'accountId',

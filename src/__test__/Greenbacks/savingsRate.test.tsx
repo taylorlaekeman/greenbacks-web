@@ -6,6 +6,8 @@ import Greenbacks from 'components/Greenbacks';
 import { TestGreenbacksProvider } from 'context/Greenbacks';
 import buildApiTransactionsMock from '__test__/utils/buildApiTransactionsMock';
 import buildTransaction from '__test__/utils/buildTransaction';
+import Category from 'types/category';
+import Transaction from 'types/unfilteredTransaction';
 import wait from 'utils/wait';
 
 test('shows loading indicator while transactions are loading', () => {
@@ -41,43 +43,56 @@ test('correctly calculates savings rate', async () => {
         buildTransaction({
           amount: 50,
           datetime: '2020-01-01',
-          name: 'EFT Withdrawal to WSII',
+          name: 'SAVINGS!',
         }),
         buildTransaction({ amount: -100, datetime: '2020-02-01' }),
         buildTransaction({
           amount: 50,
           datetime: '2020-02-01',
-          name: 'EFT Withdrawal to WSII',
+          name: 'SAVINGS!',
         }),
         buildTransaction({ amount: -100, datetime: '2020-03-01' }),
         buildTransaction({
           amount: 50,
           datetime: '2020-03-01',
-          name: 'EFT Withdrawal to WSII',
+          name: 'SAVINGS!',
         }),
         buildTransaction({ amount: -200, datetime: '2020-04-01' }),
         buildTransaction({
           amount: 100,
           datetime: '2020-04-01',
-          name: 'EFT Withdrawal to WSII',
+          name: 'SAVINGS!',
         }),
         buildTransaction({ amount: -200, datetime: '2020-05-01' }),
         buildTransaction({
           amount: 100,
           datetime: '2020-05-01',
-          name: 'EFT Withdrawal to WSII',
+          name: 'SAVINGS!',
         }),
         buildTransaction({ amount: -200, datetime: '2020-06-01' }),
         buildTransaction({
           amount: 100,
           datetime: '2020-06-01',
-          name: 'EFT Withdrawal to WSII',
+          name: 'SAVINGS!',
         }),
       ],
     }),
   ];
+  const filters = [
+    {
+      categoryToAssign: Category.Saving,
+      id: 'test-filter-id',
+      matchers: [
+        {
+          expectedValue: 'SAVINGS!',
+          property: 'name' as keyof Transaction,
+        },
+      ],
+      tagToAssign: 'retirement',
+    },
+  ];
   render(
-    <TestGreenbacksProvider mocks={mocks} now="2020-07-01">
+    <TestGreenbacksProvider filters={filters} mocks={mocks} now="2020-07-01">
       <Greenbacks />
     </TestGreenbacksProvider>
   );

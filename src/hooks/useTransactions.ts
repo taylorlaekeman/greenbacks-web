@@ -1,5 +1,7 @@
-import gql from 'utils/gql';
 import useQuery, { ApolloError } from 'hooks/useQuery';
+import CoreTransaction from 'types/coreTransaction';
+import UnfilteredTransaction from 'types/unfilteredTransaction';
+import gql from 'utils/gql';
 
 const useTransactions = ({
   endDate,
@@ -8,14 +10,14 @@ const useTransactions = ({
   endDate: string;
   startDate: string;
 }): {
-  credits?: Transaction[];
-  debits?: Transaction[];
+  credits?: UnfilteredTransaction[];
+  debits?: UnfilteredTransaction[];
   error?: ApolloError;
   isLoading: boolean;
   transfers?: Transfer[];
 } => {
   const { data, error, loading: isLoading } = useQuery<
-    { transactions: Transaction[] },
+    { transactions: UnfilteredTransaction[] },
     { endDate: string; startDate: string }
   >(GET_TRANSACTIONS_QUERY, {
     variables: { endDate, startDate },
@@ -25,18 +27,6 @@ const useTransactions = ({
   });
   return { error, isLoading, credits, debits, transfers };
 };
-
-interface CoreTransaction {
-  amount: number;
-  datetime: string;
-  id: string;
-  merchant: string;
-  name: string;
-}
-
-export interface Transaction extends CoreTransaction {
-  accountId: string;
-}
 
 interface Transfer extends CoreTransaction {
   destinationAccountId: string;
@@ -59,15 +49,15 @@ export const GET_TRANSACTIONS_QUERY = gql`
 export const categorizeTransactions = ({
   transactions,
 }: {
-  transactions?: Transaction[];
+  transactions?: UnfilteredTransaction[];
 } = {}): {
-  credits?: Transaction[];
-  debits?: Transaction[];
+  credits?: UnfilteredTransaction[];
+  debits?: UnfilteredTransaction[];
   transfers?: Transfer[];
 } => {
   if (!transactions) return {};
   const transfers: Transfer[] = [];
-  const debitsToReturn: Transaction[] = [];
+  const debitsToReturn: UnfilteredTransaction[] = [];
   const credits = transactions
     .filter(({ amount }) => amount < 0)
     .map(({ amount, ...rest }) => ({ ...rest, amount: -amount }));
@@ -96,10 +86,13 @@ export const categorizeTransactions = ({
 const getTransactionsByAmount = ({
   transactions,
 }: {
-  transactions: Transaction[];
-}): Record<number, Transaction[]> =>
+  transactions: UnfilteredTransaction[];
+}): Record<number, UnfilteredTransaction[]> =>
   transactions.reduce(
-    (result: Record<number, Transaction[]>, transaction: Transaction) => {
+    (
+      result: Record<number, UnfilteredTransaction[]>,
+      transaction: UnfilteredTransaction
+    ) => {
       const { amount } = transaction;
       const existingTransactions = result[amount] || [];
       return {
@@ -114,11 +107,11 @@ const categorizeTransaction = ({
   creditsByAmount,
   debit,
 }: {
-  creditsByAmount: Record<number, Transaction[]>;
-  debit: Transaction;
+  creditsByAmount: Record<number, UnfilteredTransaction[]>;
+  debit: UnfilteredTransaction;
 }): {
-  creditsByAmount: Record<number, Transaction[]>;
-  debit?: Transaction;
+  creditsByAmount: Record<number, UnfilteredTransaction[]>;
+  debit?: UnfilteredTransaction;
   transfer?: Transfer;
 } => {
   const { accountId: debitedAccountId, amount, ...rest } = debit;

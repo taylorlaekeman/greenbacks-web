@@ -1,5 +1,6 @@
 import { GraphQLError, MockedApiResponse } from 'context/GreenbacksApi';
-import { GET_TRANSACTIONS_QUERY, Transaction } from 'hooks/useTransactions';
+import { GET_TRANSACTIONS_QUERY } from 'hooks/useTransactions';
+import Transaction from 'types/unfilteredTransaction';
 
 const buildApiTransactionsMock = ({
   endDate = '2020-06-30',
