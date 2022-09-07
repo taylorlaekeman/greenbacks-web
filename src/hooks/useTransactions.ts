@@ -76,7 +76,7 @@ const categorizeTransaction = ({
     return {
       categorizedTransaction: {
         ...transaction,
-        category: Category.Uncategorized,
+        category: Category.Spending,
       },
     };
   const { categoryToAssign, tagToAssign } = matchingFilter;

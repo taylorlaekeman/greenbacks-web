@@ -162,3 +162,77 @@ test('moves to next month', async () => {
   expect(screen.getByText(/February 2020/)).toBeInTheDocument();
   expect(screen.getByText(/\$13.37/)).toBeInTheDocument();
 });
+
+test('shows spending category for matched transaction', async () => {
+  const mocks = [
+    buildApiTransactionsMock({
+      endDate: '2020-01-31',
+      startDate: '2020-01-01',
+      transactions: [buildTransaction({ name: 'test-name' })],
+    }),
+  ];
+  const filters = [
+    {
+      categoryToAssign: Category.Spending,
+      id: 'test-filter-id',
+      matchers: [
+        {
+          expectedValue: 'test-name',
+          property: 'name' as keyof Transaction,
+        },
+      ],
+      tagToAssign: 'test-tag',
+    },
+  ];
+  render(
+    <TestGreenbacksProvider filters={filters} mocks={mocks} now="2020-01-01">
+      <Greenbacks />
+    </TestGreenbacksProvider>
+  );
+  expect(await screen.findByText(/Spending/)).toBeVisible();
+});
+
+test('shows spending category for uncategorized transaction', async () => {
+  const mocks = [
+    buildApiTransactionsMock({
+      endDate: '2020-01-31',
+      startDate: '2020-01-01',
+      transactions: [buildTransaction({ name: 'test-name' })],
+    }),
+  ];
+  render(
+    <TestGreenbacksProvider mocks={mocks} now="2020-01-01">
+      <Greenbacks />
+    </TestGreenbacksProvider>
+  );
+  expect(await screen.findByText(/Spending/)).toBeVisible();
+});
+
+test('shows tag if present', async () => {
+  const mocks = [
+    buildApiTransactionsMock({
+      endDate: '2020-01-31',
+      startDate: '2020-01-01',
+      transactions: [buildTransaction({ name: 'test-name' })],
+    }),
+  ];
+  const filters = [
+    {
+      categoryToAssign: Category.Spending,
+      id: 'test-filter-id',
+      matchers: [
+        {
+          expectedValue: 'test-name',
+          property: 'name' as keyof Transaction,
+        },
+      ],
+      tagToAssign: 'Food',
+    },
+  ];
+  render(
+    <TestGreenbacksProvider filters={filters} mocks={mocks} now="2020-01-01">
+      <Greenbacks />
+    </TestGreenbacksProvider>
+  );
+  expect(await screen.findByText(/Food/)).toBeVisible();
+});

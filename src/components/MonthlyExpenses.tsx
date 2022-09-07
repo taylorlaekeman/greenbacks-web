@@ -33,7 +33,7 @@ const MonthlyExpenses: FC = () => {
         <Fragment key={day}>
           <p>{day}</p>
           <ul>
-            {expenses?.map(({ amount, id, merchant, name }) => {
+            {expenses?.map(({ amount, category, id, merchant, name, tag }) => {
               const formattedAmount = format({ value: amount });
               return (
                 <li key={id}>
@@ -43,6 +43,10 @@ const MonthlyExpenses: FC = () => {
                   &nbsp; &#40;
                   {name}
                   &#41;
+                  &nbsp;
+                  {category}
+                  &nbsp;
+                  {tag}
                 </li>
               );
             })}

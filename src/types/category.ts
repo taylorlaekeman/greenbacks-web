@@ -1,7 +1,6 @@
 enum Category {
-  Saving = 'SAVING',
-  Spending = 'SPENDING',
-  Uncategorized = 'UNCATEGORIZED',
+  Saving = 'Saving',
+  Spending = 'Spending',
 }
 
 export default Category;

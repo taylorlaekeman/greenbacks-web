@@ -1,6 +1,6 @@
 import type { ApolloError } from 'hooks/useQuery';
 import useTransactions from 'hooks/useTransactions';
-import Transaction from 'types/unfilteredTransaction';
+import Transaction from 'types/transaction';
 
 const useExpenses = ({
   endDate,

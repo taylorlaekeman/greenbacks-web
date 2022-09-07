@@ -1,6 +1,6 @@
 import useExpenses from 'hooks/useExpenses';
 import type { ApolloError } from 'hooks/useQuery';
-import Transaction from 'types/unfilteredTransaction';
+import Transaction from 'types/transaction';
 import datetime from 'utils/datetime';
 
 const useDailyExpenses = ({
