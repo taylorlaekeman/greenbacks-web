@@ -79,8 +79,8 @@ const Home: FC = () => {
         />
       </BadgeGrid>
       <MonthSelector />
-      <MonthlyExpenses />
       <TransactionsByTag />
+      <MonthlyExpenses />
     </PageWrapper>
   );
 };
