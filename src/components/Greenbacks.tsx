@@ -26,6 +26,7 @@ const Greenbacks: FC = () => {
       <Button onClick={logout}>Logout</Button>
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/months/:month/" element={<Home />} />
         <Route path="/accounts" element={<Accounts />} />
         <Route path="/expenses/:month/" element={<Expenses />} />
       </Routes>

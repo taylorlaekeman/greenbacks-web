@@ -4,6 +4,7 @@ import AmountBadge from 'components/AmountBadge';
 import PercentBadge from 'components/PercentBadge';
 import Link from 'components/Link';
 import MonthlyExpenses from 'components/MonthlyExpenses';
+import MonthSelector from 'components/MonthSelector';
 import PageWrapper from 'components/PageWrapper';
 import TransactionsByTag from 'components/TransactionsByTag';
 import useAverageMonthlyEarnings from 'hooks/useAverageMonthlyEarnings';
@@ -77,6 +78,7 @@ const Home: FC = () => {
           percent={savingsRate}
         />
       </BadgeGrid>
+      <MonthSelector />
       <MonthlyExpenses />
       <TransactionsByTag />
     </PageWrapper>

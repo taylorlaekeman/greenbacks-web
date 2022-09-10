@@ -1,6 +1,7 @@
 import React, { FC } from 'react';
 
 import LoadingIndicator from 'components/LoadingIndicator';
+import SectionContainer from 'components/SectionContainer';
 import useCurrencyFormatter from 'hooks/useCurrencyFormatter';
 import useMonth from 'hooks/useMonth';
 import useTransactionsByTag from 'hooks/useTransactionsByTag';
@@ -12,13 +13,13 @@ const TransactionsByTag: FC = () => {
 
   if (isLoading)
     return (
-      <SectionContainer>
+      <SectionContainer id="transactions-by-tag" title="Transactions by Tag">
         <LoadingIndicator name="transactions-by-tag" />
       </SectionContainer>
     );
 
   return (
-    <SectionContainer>
+    <SectionContainer id="transactions-by-tag" title="Transactions by Tag">
       <ul>
         {Object.values(expenses).map(({ tag, totalAmount }) => (
           <li key={tag}>{`${tag}: ${format({ value: totalAmount })}`}</li>
@@ -27,12 +28,5 @@ const TransactionsByTag: FC = () => {
     </SectionContainer>
   );
 };
-
-const SectionContainer: FC = ({ children }) => (
-  <section data-testid="transactions-by-tag">
-    <h3>Transactions by Tag</h3>
-    {children}
-  </section>
-);
 
 export default TransactionsByTag;

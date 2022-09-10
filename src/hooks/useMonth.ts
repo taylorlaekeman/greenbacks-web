@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useParams as useRouteParams } from 'react-router-dom';
 
 import useCurrentMonth from 'hooks/useCurrentMonth';
 import useFirstDayOfMonth from 'hooks/useFirstDayOfMonth';
@@ -10,13 +10,14 @@ import useReadableMonth from 'hooks/useReadableMonth';
 const useMonth = (): {
   endDate: string;
   iso: string;
-  next: () => void;
-  previous: () => void;
+  nextMonth: string;
+  previousMonth: string;
   readable: string;
   startDate: string;
 } => {
+  const { month: monthInRoute } = useRouteParams();
   const { iso: currentMonth } = useCurrentMonth();
-  const [month, setMonth] = useState(currentMonth);
+  const month = monthInRoute || currentMonth;
   const { iso: nextMonth } = useNextMonth({ iso: month });
   const { iso: previousMonth } = usePreviousMonth({ iso: month });
   const { month: readableMonth } = useReadableMonth({ iso: month });
@@ -25,8 +26,8 @@ const useMonth = (): {
   return {
     endDate,
     iso: month,
-    next: () => setMonth(nextMonth),
-    previous: () => setMonth(previousMonth),
+    nextMonth,
+    previousMonth,
     readable: readableMonth,
     startDate,
   };

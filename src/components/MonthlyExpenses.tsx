@@ -1,34 +1,27 @@
-import React, { FC, Fragment, useState } from 'react';
+import React, { FC, Fragment } from 'react';
 
-import Button from 'components/Button';
 import LoadingIndicator from 'components/LoadingIndicator';
+import SectionContainer from 'components/SectionContainer';
 import useCurrencyFormatter from 'hooks/useCurrencyFormatter';
-import useCurrentMonth from 'hooks/useCurrentMonth';
 import useDailyExpenses from 'hooks/useDailyExpenses';
-import useNextMonth from 'hooks/useNextMonth';
-import usePreviousMonth from 'hooks/usePreviousMonth';
-import useReadableMonth from 'hooks/useReadableMonth';
+import useMonth from 'hooks/useMonth';
 
 const MonthlyExpenses: FC = () => {
-  const { iso: currentMonth } = useCurrentMonth();
-  const [month, setMonth] = useState(currentMonth);
-  const { iso: nextMonth } = useNextMonth({ iso: month });
-  const { iso: previousMonth } = usePreviousMonth({ iso: month });
-  const { month: readableMonth } = useReadableMonth({ iso: month });
+  const { iso: month } = useMonth();
   const { format } = useCurrencyFormatter();
   const { dailyExpenses, isLoading } = useDailyExpenses({
     month,
   });
 
-  if (isLoading) return <LoadingIndicator name="monthly-expenses" />;
+  if (isLoading)
+    return (
+      <SectionContainer id="monthly-expenses" title="Expenses">
+        <LoadingIndicator name="monthly-expenses" />
+      </SectionContainer>
+    );
 
   return (
-    <>
-      <p>{readableMonth}</p>
-      <Button onClick={() => setMonth(previousMonth)}>
-        Go to previous month
-      </Button>
-      <Button onClick={() => setMonth(nextMonth)}>Go to next month</Button>
+    <SectionContainer id="monthly-expenses" title="Expenses">
       {Object.entries(dailyExpenses || {}).map(([day, expenses]) => (
         <Fragment key={day}>
           <p>{day}</p>
@@ -52,7 +45,7 @@ const MonthlyExpenses: FC = () => {
           </ul>
         </Fragment>
       ))}
-    </>
+    </SectionContainer>
   );
 };
 

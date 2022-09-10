@@ -79,6 +79,39 @@ const FILTERS = [
     ],
     tagToAssign: 'down payment',
   },
+  {
+    categoryToAssign: Category.Spending,
+    id: 'test-filter-id-4',
+    matchers: [
+      {
+        expectedValue: 'FARM BOY',
+        property: 'name' as keyof Transaction,
+      },
+    ],
+    tagToAssign: 'Groceries',
+  },
+  {
+    categoryToAssign: Category.Spending,
+    id: 'test-filter-id-5',
+    matchers: [
+      {
+        expectedValue: 'METRO',
+        property: 'name' as keyof Transaction,
+      },
+    ],
+    tagToAssign: 'Groceries',
+  },
+  {
+    categoryToAssign: Category.Spending,
+    id: 'test-filter-id-5',
+    matchers: [
+      {
+        expectedValue: 'INTERAC e-Transfer To: Avrom Sud',
+        property: 'name' as keyof Transaction,
+      },
+    ],
+    tagToAssign: 'Rent',
+  },
 ];
 
 export default App;

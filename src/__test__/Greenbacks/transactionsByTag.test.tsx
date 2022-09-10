@@ -1,5 +1,6 @@
 import React from 'react';
 import { render, screen, within } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 import Greenbacks from 'components/Greenbacks';
 import { TestGreenbacksProvider } from 'context/Greenbacks';
@@ -52,7 +53,47 @@ test('shows current month by default', async () => {
       <Greenbacks />
     </TestGreenbacksProvider>
   );
-  const container = await screen.findByTestId('transactions-by-tag');
+  const container = await screen.findByTestId('section-transactions-by-tag');
+  expect(within(container).getByText(/test tag/)).toBeVisible();
+});
+
+test('shows month from url', async () => {
+  const apiMocks = [
+    buildApiTransactionsMock({
+      endDate: '2020-01-31',
+      startDate: '2020-01-01',
+      transactions: [
+        buildTransaction({
+          amount: 100,
+          name: 'test name',
+        }),
+      ],
+    }),
+  ];
+  const filters = [
+    {
+      categoryToAssign: Category.Spending,
+      id: 'test-filter-id',
+      matchers: [
+        {
+          expectedValue: 'test name',
+          property: 'name' as keyof Transaction,
+        },
+      ],
+      tagToAssign: 'test tag',
+    },
+  ];
+  render(
+    <TestGreenbacksProvider
+      filters={filters}
+      mocks={apiMocks}
+      now="2020-02-01"
+      route="/months/2020-01/"
+    >
+      <Greenbacks />
+    </TestGreenbacksProvider>
+  );
+  const container = await screen.findByTestId('section-transactions-by-tag');
   expect(within(container).getByText(/test tag/)).toBeVisible();
 });
 
@@ -130,7 +171,7 @@ test('groups transactions by tag', async () => {
     </TestGreenbacksProvider>
   );
   const { getByText } = within(
-    await screen.findByTestId('transactions-by-tag')
+    await screen.findByTestId('section-transactions-by-tag')
   );
   expect(getByText(/first tag: \$3.00/)).toBeVisible();
   expect(getByText(/second tag: \$2.00/)).toBeVisible();
@@ -182,7 +223,109 @@ test('groups untagged transactions', async () => {
     </TestGreenbacksProvider>
   );
   const { getByText } = within(
-    await screen.findByTestId('transactions-by-tag')
+    await screen.findByTestId('section-transactions-by-tag')
   );
   expect(getByText(/Untagged: \$2.00/)).toBeVisible();
+});
+
+test('moves to previous month', async () => {
+  const apiMocks = [
+    buildApiTransactionsMock({
+      endDate: '2020-01-31',
+      startDate: '2020-01-01',
+      transactions: [],
+    }),
+    buildApiTransactionsMock({
+      endDate: '2019-12-31',
+      startDate: '2019-12-01',
+      transactions: [
+        buildTransaction({
+          amount: 100,
+          name: 'test name',
+        }),
+        buildTransaction({
+          amount: 100,
+          name: 'test name',
+        }),
+      ],
+    }),
+  ];
+  const filters = [
+    {
+      categoryToAssign: Category.Spending,
+      id: 'test-filter-id-1',
+      matchers: [
+        {
+          expectedValue: 'test name',
+          property: 'name' as keyof Transaction,
+        },
+      ],
+      tagToAssign: 'test tag',
+    },
+  ];
+  render(
+    <TestGreenbacksProvider filters={filters} mocks={apiMocks} now="2020-01-01">
+      <Greenbacks />
+    </TestGreenbacksProvider>
+  );
+  const button = await screen.findByRole('link', {
+    name: 'Go to previous month',
+  });
+  userEvent.click(button);
+  expect(await screen.findByText(/December 2019/)).toBeVisible();
+  const { getByText } = within(
+    screen.getByTestId('section-transactions-by-tag')
+  );
+  expect(getByText(/test tag: \$2.00/)).toBeInTheDocument();
+});
+
+test('moves to next month', async () => {
+  const apiMocks = [
+    buildApiTransactionsMock({
+      endDate: '2020-01-31',
+      startDate: '2020-01-01',
+      transactions: [],
+    }),
+    buildApiTransactionsMock({
+      endDate: '2020-02-29',
+      startDate: '2020-02-01',
+      transactions: [
+        buildTransaction({
+          amount: 100,
+          name: 'test name',
+        }),
+        buildTransaction({
+          amount: 100,
+          name: 'test name',
+        }),
+      ],
+    }),
+  ];
+  const filters = [
+    {
+      categoryToAssign: Category.Spending,
+      id: 'test-filter-id-1',
+      matchers: [
+        {
+          expectedValue: 'test name',
+          property: 'name' as keyof Transaction,
+        },
+      ],
+      tagToAssign: 'test tag',
+    },
+  ];
+  render(
+    <TestGreenbacksProvider filters={filters} mocks={apiMocks} now="2020-01-01">
+      <Greenbacks />
+    </TestGreenbacksProvider>
+  );
+  const button = await screen.findByRole('link', {
+    name: 'Go to next month',
+  });
+  userEvent.click(button);
+  expect(await screen.findByText(/February 2020/)).toBeVisible();
+  const { getByText } = within(
+    screen.getByTestId('section-transactions-by-tag')
+  );
+  expect(getByText(/test tag: \$2.00/)).toBeInTheDocument();
 });
