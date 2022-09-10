@@ -113,7 +113,7 @@ test('groups transactions by tag', async () => {
         }),
         buildTransaction({
           amount: 100,
-          name: 'first name',
+          name: 'second name',
         }),
         buildTransaction({
           amount: 100,
@@ -170,12 +170,13 @@ test('groups transactions by tag', async () => {
       <Greenbacks />
     </TestGreenbacksProvider>
   );
-  const { getByText } = within(
+  const { getAllByRole } = within(
     await screen.findByTestId('section-transactions-by-tag')
   );
-  expect(getByText(/first tag: \$3.00/)).toBeVisible();
-  expect(getByText(/second tag: \$2.00/)).toBeVisible();
-  expect(getByText(/third tag: \$1.00/)).toBeVisible();
+  const items = getAllByRole('listitem');
+  expect(items[0]).toHaveTextContent(/second tag: \$3.00/);
+  expect(items[1]).toHaveTextContent(/first tag: \$2.00/);
+  expect(items[2]).toHaveTextContent(/third tag: \$1.00/);
 });
 
 test('groups untagged transactions', async () => {

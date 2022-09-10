@@ -7,18 +7,21 @@ const useTransactionsByTag = ({
 }: {
   endDate: string;
   startDate: string;
-}): { expenses: Record<string, TagGroup>; isLoading: boolean } => {
+}): { expenses: TagGroup[]; isLoading: boolean } => {
   const { expenses, isLoading } = useTransactions({ endDate, startDate });
   const expensesByTag = groupByTag({ transactions: expenses });
-  return { expenses: expensesByTag, isLoading };
+  return {
+    expenses: expensesByTag,
+    isLoading,
+  };
 };
 
 const groupByTag = ({
   transactions = [],
 }: {
   transactions?: Transaction[];
-} = {}): Record<string, TagGroup> =>
-  transactions.reduce(
+} = {}): TagGroup[] => {
+  const groupsByTag = transactions.reduce(
     (
       tagGroups: Record<string, TagGroup>,
       transaction
@@ -37,6 +40,12 @@ const groupByTag = ({
     },
     {}
   );
+  return Object.values(
+    groupsByTag
+  ).sort(({ totalAmount: firstAmount }, { totalAmount: secondAmount }) =>
+    firstAmount > secondAmount ? -1 : 1
+  );
+};
 
 interface TagGroup {
   tag: string;

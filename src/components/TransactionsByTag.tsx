@@ -21,7 +21,7 @@ const TransactionsByTag: FC = () => {
   return (
     <SectionContainer id="transactions-by-tag" title="Transactions by Tag">
       <ul>
-        {Object.values(expenses).map(({ tag, totalAmount }) => (
+        {expenses.map(({ tag, totalAmount }) => (
           <li key={tag}>{`${tag}: ${format({ value: totalAmount })}`}</li>
         ))}
       </ul>
