@@ -42,8 +42,7 @@ const MonthlyExpenses: FC = () => {
                   {merchant || 'no merchant'}
                   &nbsp; &#40;
                   {name}
-                  &#41;
-                  &nbsp;
+                  &#41; &nbsp;
                   {category}
                   &nbsp;
                   {tag}

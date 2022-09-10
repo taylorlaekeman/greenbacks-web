@@ -234,5 +234,5 @@ test('shows tag if present', async () => {
       <Greenbacks />
     </TestGreenbacksProvider>
   );
-  expect(await screen.findByText(/Food/)).toBeVisible();
+  expect(await screen.findByText(/Food$/)).toBeVisible();
 });
