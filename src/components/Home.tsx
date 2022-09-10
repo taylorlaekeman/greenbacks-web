@@ -5,6 +5,7 @@ import PercentBadge from 'components/PercentBadge';
 import Link from 'components/Link';
 import MonthlyExpenses from 'components/MonthlyExpenses';
 import PageWrapper from 'components/PageWrapper';
+import TransactionsByTag from 'components/TransactionsByTag';
 import useAverageMonthlyEarnings from 'hooks/useAverageMonthlyEarnings';
 import useAverageMonthlyExpenses from 'hooks/useAverageMonthlyExpenses';
 import useAverageMonthlySavings from 'hooks/useAverageMonthlySavings';
@@ -77,6 +78,7 @@ const Home: FC = () => {
         />
       </BadgeGrid>
       <MonthlyExpenses />
+      <TransactionsByTag />
     </PageWrapper>
   );
 };
