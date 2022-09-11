@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
-import { Link } from 'react-router-dom';
 
+import Link from 'components/Link';
 import useMonth from 'hooks/useMonth';
 
 const MonthSelector: FC = () => {
@@ -8,8 +8,8 @@ const MonthSelector: FC = () => {
   return (
     <>
       <p>{readableMonth}</p>
-      <Link to={`/months/${previousMonth}/`}>Go to previous month</Link>
-      <Link to={`/months/${nextMonth}/`}>Go to next month</Link>
+      <Link href={`/months/${previousMonth}/`}>Go to previous month</Link>
+      <Link href={`/months/${nextMonth}/`}>Go to next month</Link>
     </>
   );
 };
