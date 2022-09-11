@@ -1,6 +1,5 @@
 import React from 'react';
-import { act, render, screen, within } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { act, render, screen } from '@testing-library/react';
 
 import Greenbacks from 'components/Greenbacks';
 import { TestGreenbacksProvider } from 'context/Greenbacks';
@@ -94,7 +93,7 @@ test('exludes savings', async () => {
   expect(screen.queryByText(/SAVINGS!/)).not.toBeInTheDocument();
 });
 
-test('shows current month by default', async () => {
+test('shows current month when no month is present in route', async () => {
   const apiMocks = [
     buildApiTransactionsMock({
       endDate: '2020-01-31',
@@ -128,62 +127,6 @@ test('shows month from url', async () => {
     </TestGreenbacksProvider>
   );
   expect(await screen.findByText(/January 2020/)).toBeInTheDocument();
-});
-
-test('moves to previous month', async () => {
-  const mocks = [
-    buildApiTransactionsMock({
-      endDate: '2020-01-31',
-      startDate: '2020-01-01',
-      transactions: [buildTransaction()],
-    }),
-    buildApiTransactionsMock({
-      endDate: '2019-12-31',
-      startDate: '2019-12-01',
-      transactions: [buildTransaction({ amount: 1337 })],
-    }),
-  ];
-  render(
-    <TestGreenbacksProvider mocks={mocks} now="2020-01-01">
-      <Greenbacks />
-    </TestGreenbacksProvider>
-  );
-  const button = await screen.findByRole('link', {
-    name: 'Go to previous month',
-  });
-  userEvent.click(button);
-  await act(wait);
-  expect(await screen.findByText(/December 2019/)).toBeVisible();
-  const { getByText } = within(screen.getByTestId('section-monthly-expenses'));
-  expect(getByText(/\$13.37/)).toBeInTheDocument();
-});
-
-test('moves to next month', async () => {
-  const mocks = [
-    buildApiTransactionsMock({
-      endDate: '2020-01-31',
-      startDate: '2020-01-01',
-      transactions: [buildTransaction()],
-    }),
-    buildApiTransactionsMock({
-      endDate: '2020-02-29',
-      startDate: '2020-02-01',
-      transactions: [buildTransaction({ amount: 1337 })],
-    }),
-  ];
-  render(
-    <TestGreenbacksProvider mocks={mocks} now="2020-01-01">
-      <Greenbacks />
-    </TestGreenbacksProvider>
-  );
-  const button = await screen.findByRole('link', {
-    name: 'Go to next month',
-  });
-  userEvent.click(button);
-  await act(wait);
-  expect(await screen.findByText(/February 2020/)).toBeVisible();
-  const { getByText } = within(screen.getByTestId('section-monthly-expenses'));
-  expect(getByText(/\$13.37/)).toBeInTheDocument();
 });
 
 test('shows spending category for matched transaction', async () => {
