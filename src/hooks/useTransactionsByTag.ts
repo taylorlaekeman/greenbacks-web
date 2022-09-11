@@ -53,7 +53,7 @@ interface TagGroup {
   transactions: Transaction[];
 }
 
-const UNTAGGED = 'Untagged';
+export const UNTAGGED = 'Untagged';
 
 const EMPTY_TAG_GROUP = {
   totalAmount: 0,

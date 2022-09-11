@@ -1,5 +1,5 @@
 import React from 'react';
-import { act, render, screen } from '@testing-library/react';
+import { act, render, screen, within } from '@testing-library/react';
 
 import Greenbacks from 'components/Greenbacks';
 import { TestGreenbacksProvider } from 'context/Greenbacks';
@@ -48,15 +48,17 @@ test('shows expenses', async () => {
       <Greenbacks />
     </TestGreenbacksProvider>
   );
-  await act(wait);
-  expect(screen.getByText(/first merchant/)).toBeInTheDocument();
-  expect(screen.getByText(/first name/)).toBeInTheDocument();
-  expect(screen.getByText(/\$1.00/)).toBeInTheDocument();
-  expect(screen.getByText(/2020-01-01/)).toBeInTheDocument();
-  expect(screen.getByText(/second merchant/)).toBeInTheDocument();
-  expect(screen.getByText(/second name/)).toBeInTheDocument();
-  expect(screen.getByText(/\$2.00/)).toBeInTheDocument();
-  expect(screen.getByText(/2020-01-15/)).toBeInTheDocument();
+  const { getByText } = within(
+    await screen.findByTestId('section-monthly-expenses')
+  );
+  expect(getByText(/first merchant/)).toBeInTheDocument();
+  expect(getByText(/first name/)).toBeInTheDocument();
+  expect(getByText(/\$1.00/)).toBeInTheDocument();
+  expect(getByText(/2020-01-01/)).toBeInTheDocument();
+  expect(getByText(/second merchant/)).toBeInTheDocument();
+  expect(getByText(/second name/)).toBeInTheDocument();
+  expect(getByText(/\$2.00/)).toBeInTheDocument();
+  expect(getByText(/2020-01-15/)).toBeInTheDocument();
 });
 
 test('exludes savings', async () => {
