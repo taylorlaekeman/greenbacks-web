@@ -28,6 +28,8 @@ const UntaggedTransactions: FC = () => {
               {name}
               &#41;&mdash;
               {datetime}
+              &nbsp;
+              {id}
             </li>
           )
         )}

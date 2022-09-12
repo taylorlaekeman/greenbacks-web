@@ -6,6 +6,7 @@ import { TestGreenbacksProvider } from 'context/Greenbacks';
 import buildApiTransactionsMock from '__test__/utils/buildApiTransactionsMock';
 import buildTransaction from '__test__/utils/buildTransaction';
 import Category from 'types/category';
+import { Comparator } from 'types/matcher';
 import Transaction from 'types/unfilteredTransaction';
 import wait from 'utils/wait';
 
@@ -203,4 +204,147 @@ test('shows tag if present', async () => {
     </TestGreenbacksProvider>
   );
   expect(await screen.findByText(/Food$/)).toBeVisible();
+});
+
+test('shows tag from id filter', async () => {
+  const apiMocks = [
+    buildApiTransactionsMock({
+      endDate: '2020-01-31',
+      startDate: '2020-01-01',
+      transactions: [buildTransaction({ id: 'test-id' })],
+    }),
+  ];
+  const idFilters = [
+    {
+      categoryToAssign: Category.Spending,
+      id: 'test-filter-id',
+      matchers: [
+        {
+          expectedValue: 'test-id',
+          property: 'id' as keyof Transaction,
+        },
+      ],
+      tagToAssign: 'test tag',
+    },
+  ];
+  render(
+    <TestGreenbacksProvider
+      idFilters={idFilters}
+      mocks={apiMocks}
+      now="2020-01-01"
+    >
+      <Greenbacks />
+    </TestGreenbacksProvider>
+  );
+  const { getByText } = within(
+    await screen.findByTestId('section-monthly-expenses')
+  );
+  expect(getByText(/test tag/)).toBeVisible();
+});
+
+test('shows tag from filter with greater than comparator', async () => {
+  const apiMocks = [
+    buildApiTransactionsMock({
+      endDate: '2020-01-31',
+      startDate: '2020-01-01',
+      transactions: [buildTransaction({ amount: 101 })],
+    }),
+  ];
+  const filters = [
+    {
+      categoryToAssign: Category.Spending,
+      id: 'test-filter-id',
+      matchers: [
+        {
+          comparator: Comparator.GreaterThan,
+          expectedValue: '100',
+          property: 'amount' as keyof Transaction,
+        },
+      ],
+      tagToAssign: 'test tag',
+    },
+  ];
+  render(
+    <TestGreenbacksProvider filters={filters} mocks={apiMocks} now="2020-01-01">
+      <Greenbacks />
+    </TestGreenbacksProvider>
+  );
+  const { getByText } = within(
+    await screen.findByTestId('section-monthly-expenses')
+  );
+  expect(getByText(/test tag/)).toBeVisible();
+});
+
+test('shows tag from filter with less than comparator', async () => {
+  const apiMocks = [
+    buildApiTransactionsMock({
+      endDate: '2020-01-31',
+      startDate: '2020-01-01',
+      transactions: [buildTransaction({ amount: 99 })],
+    }),
+  ];
+  const filters = [
+    {
+      categoryToAssign: Category.Spending,
+      id: 'test-filter-id',
+      matchers: [
+        {
+          comparator: Comparator.LessThan,
+          expectedValue: '100',
+          property: 'amount' as keyof Transaction,
+        },
+      ],
+      tagToAssign: 'test tag',
+    },
+  ];
+  render(
+    <TestGreenbacksProvider filters={filters} mocks={apiMocks} now="2020-01-01">
+      <Greenbacks />
+    </TestGreenbacksProvider>
+  );
+  const { getByText } = within(
+    await screen.findByTestId('section-monthly-expenses')
+  );
+  expect(getByText(/test tag/)).toBeVisible();
+});
+
+test('shows tag from filter multiple matchers', async () => {
+  const apiMocks = [
+    buildApiTransactionsMock({
+      endDate: '2020-01-31',
+      startDate: '2020-01-01',
+      transactions: [
+        buildTransaction({ amount: 101, name: 'test name' }),
+        buildTransaction({ amount: 99, name: 'test name' }),
+      ],
+    }),
+  ];
+  const filters = [
+    {
+      categoryToAssign: Category.Spending,
+      id: 'test-filter-id',
+      matchers: [
+        {
+          comparator: Comparator.GreaterThan,
+          expectedValue: '100',
+          property: 'amount' as keyof Transaction,
+        },
+        {
+          comparator: Comparator.Equals,
+          expectedValue: 'test name',
+          property: 'name' as keyof Transaction,
+        },
+      ],
+      tagToAssign: 'test tag',
+    },
+  ];
+  render(
+    <TestGreenbacksProvider filters={filters} mocks={apiMocks} now="2020-01-01">
+      <Greenbacks />
+    </TestGreenbacksProvider>
+  );
+  const { getByText } = within(
+    await screen.findByTestId('section-monthly-expenses')
+  );
+  expect(getByText(/test tag/)).toBeVisible(); // only found once, second transaction does not have tag
 });

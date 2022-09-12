@@ -4,12 +4,14 @@ import Filter from 'types/filter';
 
 const FiltersContext = createContext<{
   filters: Filter[];
-}>({ filters: [] });
+  idFilters: Filter[];
+}>({ filters: [], idFilters: [] });
 
 export const FiltersProvider: FC<{
   filters?: Filter[];
-}> = ({ children, filters = [] }) => (
-  <FiltersContext.Provider value={{ filters }}>
+  idFilters?: Filter[];
+}> = ({ children, filters = [], idFilters = [] }) => (
+  <FiltersContext.Provider value={{ filters, idFilters }}>
     {children}
   </FiltersContext.Provider>
 );

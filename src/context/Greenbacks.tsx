@@ -15,6 +15,7 @@ import Filter from 'types/filter';
 export const TestGreenbacksProvider: FC<Props> = ({
   children,
   filters,
+  idFilters,
   isApiReady,
   isAuthenticated,
   locales,
@@ -31,7 +32,9 @@ export const TestGreenbacksProvider: FC<Props> = ({
         <TestNowProvider now={now}>
           <TestCurrencyLocalesProvider locales={locales}>
             <TestRouteProvider route={route}>
-              <FiltersProvider filters={filters}>{children}</FiltersProvider>
+              <FiltersProvider filters={filters} idFilters={idFilters}>
+                {children}
+              </FiltersProvider>
             </TestRouteProvider>
           </TestCurrencyLocalesProvider>
         </TestNowProvider>
@@ -42,6 +45,7 @@ export const TestGreenbacksProvider: FC<Props> = ({
 
 interface Props {
   filters?: Filter[];
+  idFilters?: Filter[];
   isApiReady?: boolean;
   isAuthenticated?: boolean;
   locales?: string | string[];

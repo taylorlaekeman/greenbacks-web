@@ -3,7 +3,7 @@ import type { ApolloError } from 'hooks/useQuery';
 import useRawTransactions from 'hooks/useRawTransactions';
 import Category from 'types/category';
 import Filter from 'types/filter';
-import Matcher from 'types/matcher';
+import Matcher, { Comparator } from 'types/matcher';
 import Transaction from 'types/transaction';
 import UnfilteredTransaction from 'types/unfilteredTransaction';
 
@@ -101,11 +101,22 @@ const isFilterMatch = ({
   );
 
 const isMatcherMatch = ({
-  matcher: { expectedValue, property },
+  matcher: { comparator = Comparator.Equals, expectedValue, property },
   transaction,
 }: {
   matcher: Matcher;
   transaction: UnfilteredTransaction;
-}): boolean => transaction[property] === expectedValue;
+}): boolean => {
+  switch (comparator) {
+    case Comparator.Equals:
+      return transaction[property] === expectedValue;
+    case Comparator.GreaterThan:
+      return transaction[property] > expectedValue;
+    case Comparator.LessThan:
+      return transaction[property] < expectedValue;
+    default:
+      return false;
+  }
+};
 
 export default useTransactions;

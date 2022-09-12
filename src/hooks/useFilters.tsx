@@ -9,8 +9,8 @@ const useFilters = (): {
   filters: Filter[];
   isLoading: boolean;
 } => {
-  const { filters } = useContext(FiltersContext);
-  return { filters, isLoading: false };
+  const { filters, idFilters } = useContext(FiltersContext);
+  return { filters: [...idFilters, ...filters], isLoading: false };
 };
 
 export default useFilters;
