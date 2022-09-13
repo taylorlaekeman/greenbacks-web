@@ -5,8 +5,7 @@ import Greenbacks from 'components/Greenbacks';
 import { TestGreenbacksProvider } from 'context/Greenbacks';
 import buildApiTransactionsMock from '__test__/utils/buildApiTransactionsMock';
 import buildTransaction from '__test__/utils/buildTransaction';
-import Category from 'types/category';
-import Transaction from 'types/unfilteredTransaction';
+import { Category, CoreTransaction } from 'types/transaction';
 
 test('shows loading indicator while transactions are loading', () => {
   const mocks = [buildApiTransactionsMock()];
@@ -61,7 +60,7 @@ test('groups transactions by tag', async () => {
       matchers: [
         {
           expectedValue: 'first name',
-          property: 'name' as keyof Transaction,
+          property: 'name' as keyof CoreTransaction,
         },
       ],
       tagToAssign: 'first tag',
@@ -72,7 +71,7 @@ test('groups transactions by tag', async () => {
       matchers: [
         {
           expectedValue: 'second name',
-          property: 'name' as keyof Transaction,
+          property: 'name' as keyof CoreTransaction,
         },
       ],
       tagToAssign: 'second tag',
@@ -83,7 +82,7 @@ test('groups transactions by tag', async () => {
       matchers: [
         {
           expectedValue: 'third name',
-          property: 'name' as keyof Transaction,
+          property: 'name' as keyof CoreTransaction,
         },
       ],
       tagToAssign: 'third tag',
@@ -127,7 +126,7 @@ test('groups untagged transactions', async () => {
       matchers: [
         {
           expectedValue: 'first name',
-          property: 'name' as keyof Transaction,
+          property: 'name' as keyof CoreTransaction,
         },
       ],
     },
@@ -137,7 +136,7 @@ test('groups untagged transactions', async () => {
       matchers: [
         {
           expectedValue: 'second name',
-          property: 'name' as keyof Transaction,
+          property: 'name' as keyof CoreTransaction,
         },
       ],
     },
@@ -173,7 +172,7 @@ test('shows current month when no month is present in route', async () => {
       matchers: [
         {
           expectedValue: 'test name',
-          property: 'name' as keyof Transaction,
+          property: 'name' as keyof CoreTransaction,
         },
       ],
       tagToAssign: 'test tag',

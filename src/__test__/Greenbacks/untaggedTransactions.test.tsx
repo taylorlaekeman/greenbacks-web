@@ -4,9 +4,9 @@ import { render, screen, within } from '@testing-library/react';
 import Greenbacks from 'components/Greenbacks';
 import { TestGreenbacksProvider } from 'context/Greenbacks';
 import buildApiTransactionsMock from '__test__/utils/buildApiTransactionsMock';
+import buildFilter, { buildMatcher } from '__test__/utils/buildFilter';
 import buildTransaction from '__test__/utils/buildTransaction';
-import Category from 'types/category';
-import Transaction from 'types/unfilteredTransaction';
+import { Category } from 'types/transaction';
 
 test('shows untagged transactions', async () => {
   const apiMocks = [
@@ -72,17 +72,16 @@ test('section is not present when no untagged transactions exist', async () => {
     }),
   ];
   const filters = [
-    {
+    buildFilter({
       categoryToAssign: Category.Spending,
-      id: 'test-filter-id-1',
       matchers: [
-        {
+        buildMatcher({
           expectedValue: 'test name',
-          property: 'name' as keyof Transaction,
-        },
+          property: 'name',
+        }),
       ],
       tagToAssign: 'test tag',
-    },
+    }),
   ];
   render(
     <TestGreenbacksProvider filters={filters} mocks={apiMocks}>

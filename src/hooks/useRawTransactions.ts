@@ -1,6 +1,5 @@
 import useQuery, { ApolloError } from 'hooks/useQuery';
-import CoreTransaction from 'types/coreTransaction';
-import UnfilteredTransaction from 'types/unfilteredTransaction';
+import type { CoreTransaction } from 'types/transaction';
 import gql from 'utils/gql';
 
 const useRawTransactions = ({
@@ -10,14 +9,14 @@ const useRawTransactions = ({
   endDate: string;
   startDate: string;
 }): {
-  credits?: UnfilteredTransaction[];
-  debits?: UnfilteredTransaction[];
+  credits?: CoreTransaction[];
+  debits?: CoreTransaction[];
   error?: ApolloError;
   isLoading: boolean;
   transfers?: Transfer[];
 } => {
   const { data, error, loading: isLoading } = useQuery<
-    { transactions: UnfilteredTransaction[] },
+    { transactions: CoreTransaction[] },
     { endDate: string; startDate: string }
   >(GET_TRANSACTIONS_QUERY, {
     variables: { endDate, startDate },
@@ -49,15 +48,15 @@ export const GET_TRANSACTIONS_QUERY = gql`
 export const categorizeTransactions = ({
   transactions,
 }: {
-  transactions?: UnfilteredTransaction[];
+  transactions?: CoreTransaction[];
 } = {}): {
-  credits?: UnfilteredTransaction[];
-  debits?: UnfilteredTransaction[];
+  credits?: CoreTransaction[];
+  debits?: CoreTransaction[];
   transfers?: Transfer[];
 } => {
   if (!transactions) return {};
   const transfers: Transfer[] = [];
-  const debitsToReturn: UnfilteredTransaction[] = [];
+  const debitsToReturn: CoreTransaction[] = [];
   const credits = transactions
     .filter(({ amount }) => amount < 0)
     .map(({ amount, ...rest }) => ({ ...rest, amount: -amount }));
@@ -86,12 +85,12 @@ export const categorizeTransactions = ({
 const getTransactionsByAmount = ({
   transactions,
 }: {
-  transactions: UnfilteredTransaction[];
-}): Record<number, UnfilteredTransaction[]> =>
+  transactions: CoreTransaction[];
+}): Record<number, CoreTransaction[]> =>
   transactions.reduce(
     (
-      result: Record<number, UnfilteredTransaction[]>,
-      transaction: UnfilteredTransaction
+      result: Record<number, CoreTransaction[]>,
+      transaction: CoreTransaction
     ) => {
       const { amount } = transaction;
       const existingTransactions = result[amount] || [];
@@ -107,11 +106,11 @@ const categorizeTransaction = ({
   creditsByAmount,
   debit,
 }: {
-  creditsByAmount: Record<number, UnfilteredTransaction[]>;
-  debit: UnfilteredTransaction;
+  creditsByAmount: Record<number, CoreTransaction[]>;
+  debit: CoreTransaction;
 }): {
-  creditsByAmount: Record<number, UnfilteredTransaction[]>;
-  debit?: UnfilteredTransaction;
+  creditsByAmount: Record<number, CoreTransaction[]>;
+  debit?: CoreTransaction;
   transfer?: Transfer;
 } => {
   const { accountId: debitedAccountId, amount, ...rest } = debit;
@@ -132,6 +131,7 @@ const categorizeTransaction = ({
     },
     transfer: {
       ...rest,
+      accountId: 'temp',
       amount,
       destinationAccountId: creditedAccountId,
       sourceAccountId: debitedAccountId,

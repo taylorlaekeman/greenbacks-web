@@ -1,5 +1,5 @@
 import uuid from 'utils/uuid';
-import Transaction from 'types/unfilteredTransaction';
+import { CoreTransaction } from 'types/transaction';
 
 const buildTransaction = ({
   accountId = 'accountId',
@@ -15,7 +15,7 @@ const buildTransaction = ({
   id?: string;
   merchant?: string;
   name?: string;
-} = {}): Transaction => ({
+} = {}): CoreTransaction => ({
   accountId,
   amount,
   datetime,

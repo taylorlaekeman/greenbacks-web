@@ -6,8 +6,7 @@ import Greenbacks from 'components/Greenbacks';
 import { TestGreenbacksProvider } from 'context/Greenbacks';
 import buildApiTransactionsMock from '__test__/utils/buildApiTransactionsMock';
 import buildTransaction from '__test__/utils/buildTransaction';
-import Category from 'types/category';
-import Transaction from 'types/unfilteredTransaction';
+import { Category, CoreTransaction } from 'types/transaction';
 import wait from 'utils/wait';
 
 test('shows loading indicator while transactions are loading', () => {
@@ -85,7 +84,7 @@ test('correctly calculates savings rate', async () => {
       matchers: [
         {
           expectedValue: 'SAVINGS!',
-          property: 'name' as keyof Transaction,
+          property: 'name' as keyof CoreTransaction,
         },
       ],
       tagToAssign: 'retirement',

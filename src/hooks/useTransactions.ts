@@ -1,11 +1,8 @@
 import useFilters from 'hooks/useFilters';
 import type { ApolloError } from 'hooks/useQuery';
 import useRawTransactions from 'hooks/useRawTransactions';
-import Category from 'types/category';
-import Filter from 'types/filter';
-import Matcher, { Comparator } from 'types/matcher';
-import Transaction from 'types/transaction';
-import UnfilteredTransaction from 'types/unfilteredTransaction';
+import Filter, { Comparator, Matcher } from 'types/filter';
+import Transaction, { Category, CoreTransaction } from 'types/transaction';
 
 const useTransactions = ({
   endDate,
@@ -67,7 +64,7 @@ const categorizeTransaction = ({
   transaction,
 }: {
   filters: Filter[];
-  transaction: UnfilteredTransaction;
+  transaction: CoreTransaction;
 }): { categorizedTransaction: Transaction } => {
   const matchingFilter = filters.find((filter) =>
     isFilterMatch({ filter, transaction })
@@ -94,7 +91,7 @@ const isFilterMatch = ({
   transaction,
 }: {
   filter: Filter;
-  transaction: UnfilteredTransaction;
+  transaction: CoreTransaction;
 }): boolean =>
   matchers.every((matcher: Matcher) =>
     isMatcherMatch({ matcher, transaction })
@@ -105,7 +102,7 @@ const isMatcherMatch = ({
   transaction,
 }: {
   matcher: Matcher;
-  transaction: UnfilteredTransaction;
+  transaction: CoreTransaction;
 }): boolean => {
   switch (comparator) {
     case Comparator.Equals:

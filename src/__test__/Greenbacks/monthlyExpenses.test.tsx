@@ -5,9 +5,8 @@ import Greenbacks from 'components/Greenbacks';
 import { TestGreenbacksProvider } from 'context/Greenbacks';
 import buildApiTransactionsMock from '__test__/utils/buildApiTransactionsMock';
 import buildTransaction from '__test__/utils/buildTransaction';
-import Category from 'types/category';
-import { Comparator } from 'types/matcher';
-import Transaction from 'types/unfilteredTransaction';
+import { Comparator } from 'types/filter';
+import { Category, CoreTransaction } from 'types/transaction';
 
 test('shows loading indicator while expenses are loading', () => {
   const mocks = [buildApiTransactionsMock()];
@@ -80,7 +79,7 @@ test('excludes savings', async () => {
       matchers: [
         {
           expectedValue: 'SAVINGS!',
-          property: 'name' as keyof Transaction,
+          property: 'name' as keyof CoreTransaction,
         },
       ],
       tagToAssign: 'retirement',
@@ -148,7 +147,7 @@ test('shows spending category for matched transaction', async () => {
       matchers: [
         {
           expectedValue: 'test-name',
-          property: 'name' as keyof Transaction,
+          property: 'name' as keyof CoreTransaction,
         },
       ],
       tagToAssign: 'test-tag',
@@ -199,7 +198,7 @@ test('shows tag if present', async () => {
       matchers: [
         {
           expectedValue: 'test-name',
-          property: 'name' as keyof Transaction,
+          property: 'name' as keyof CoreTransaction,
         },
       ],
       tagToAssign: 'Food',
@@ -228,7 +227,7 @@ test('shows tag from id filter', async () => {
       matchers: [
         {
           expectedValue: 'test-id',
-          property: 'id' as keyof Transaction,
+          property: 'id' as keyof CoreTransaction,
         },
       ],
       tagToAssign: 'test tag',
@@ -265,7 +264,7 @@ test('shows tag from filter with greater than comparator', async () => {
         {
           comparator: Comparator.GreaterThan,
           expectedValue: '100',
-          property: 'amount' as keyof Transaction,
+          property: 'amount' as keyof CoreTransaction,
         },
       ],
       tagToAssign: 'test tag',
@@ -298,7 +297,7 @@ test('shows tag from filter with less than comparator', async () => {
         {
           comparator: Comparator.LessThan,
           expectedValue: '100',
-          property: 'amount' as keyof Transaction,
+          property: 'amount' as keyof CoreTransaction,
         },
       ],
       tagToAssign: 'test tag',
@@ -334,12 +333,12 @@ test('shows tag from filter multiple matchers', async () => {
         {
           comparator: Comparator.GreaterThan,
           expectedValue: '100',
-          property: 'amount' as keyof Transaction,
+          property: 'amount' as keyof CoreTransaction,
         },
         {
           comparator: Comparator.Equals,
           expectedValue: 'test name',
-          property: 'name' as keyof Transaction,
+          property: 'name' as keyof CoreTransaction,
         },
       ],
       tagToAssign: 'test tag',
