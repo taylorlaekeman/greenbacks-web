@@ -7,34 +7,35 @@ import useMonth from 'hooks/useMonth';
 import useTransactions from 'hooks/useTransactions';
 import getTransactionsByDate from 'utils/getTransactionsByDate';
 
-const MonthlyEarnings: FC = () => {
+const MonthlySavings: FC = () => {
   const { endDate, startDate } = useMonth();
-  const { earnings, isLoading } = useTransactions({ endDate, startDate });
+  const { isLoading, savings } = useTransactions({ endDate, startDate });
   const { format } = useCurrencyFormatter();
 
-  const earningsByDate = getTransactionsByDate({ transactions: earnings });
+  const savingsByDate = getTransactionsByDate({ transactions: savings });
 
   if (isLoading)
     return (
-      <SectionContainer id="monthly-earnings" title="Earnings">
-        <LoadingIndicator name="monthly-earnings" />
+      <SectionContainer id="monthly-savings" title="Savings">
+        <LoadingIndicator name="monthly-savings" />
       </SectionContainer>
     );
 
   return (
-    <SectionContainer id="monthly-earnings" title="Earnings">
-      {earningsByDate.map(({ date, transactions }) => (
+    <SectionContainer id="monthly-savings" title="Savings">
+      {savingsByDate.map(({ date, transactions }) => (
         <Fragment key={date}>
           <p>{date}</p>
           <ul>
-            {transactions.map(({ amount, id, merchant, name }) => (
+            {transactions.map(({ amount, id, merchant, name, tag }) => (
               <li key={id}>
                 {format({ value: amount })}
                 &mdash;
                 {merchant}
                 &nbsp;&#40;
                 {name}
-                &#41;
+                &#41;&nbsp;
+                {tag}
               </li>
             ))}
           </ul>
@@ -44,4 +45,4 @@ const MonthlyEarnings: FC = () => {
   );
 };
 
-export default MonthlyEarnings;
+export default MonthlySavings;

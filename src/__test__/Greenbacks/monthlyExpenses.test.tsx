@@ -1,5 +1,5 @@
 import React from 'react';
-import { act, render, screen, within } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 
 import Greenbacks from 'components/Greenbacks';
 import { TestGreenbacksProvider } from 'context/Greenbacks';
@@ -8,7 +8,6 @@ import buildTransaction from '__test__/utils/buildTransaction';
 import Category from 'types/category';
 import { Comparator } from 'types/matcher';
 import Transaction from 'types/unfilteredTransaction';
-import wait from 'utils/wait';
 
 test('shows loading indicator while expenses are loading', () => {
   const mocks = [buildApiTransactionsMock()];
@@ -62,7 +61,7 @@ test('shows expenses', async () => {
   expect(getByText(/2020-01-15/)).toBeInTheDocument();
 });
 
-test('exludes savings', async () => {
+test('excludes savings', async () => {
   const mocks = [
     buildApiTransactionsMock({
       endDate: '2020-01-31',
@@ -92,8 +91,10 @@ test('exludes savings', async () => {
       <Greenbacks />
     </TestGreenbacksProvider>
   );
-  await act(wait);
-  expect(screen.queryByText(/SAVINGS!/)).not.toBeInTheDocument();
+  const { queryByText } = within(
+    await screen.findByTestId('section-monthly-expenses')
+  );
+  expect(queryByText(/SAVINGS!/)).not.toBeInTheDocument();
 });
 
 test('shows current month when no month is present in route', async () => {
