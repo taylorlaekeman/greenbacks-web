@@ -158,7 +158,10 @@ test('shows spending category for matched transaction', async () => {
       <Greenbacks />
     </TestGreenbacksProvider>
   );
-  expect(await screen.findByText(/Spending/)).toBeVisible();
+  const { findByText } = within(
+    await screen.findByTestId('section-monthly-expenses')
+  );
+  expect(await findByText(/Spending/)).toBeVisible();
 });
 
 test('shows spending category for uncategorized transaction', async () => {
@@ -174,7 +177,10 @@ test('shows spending category for uncategorized transaction', async () => {
       <Greenbacks />
     </TestGreenbacksProvider>
   );
-  expect(await screen.findByText(/Spending/)).toBeVisible();
+  const { findByText } = within(
+    await screen.findByTestId('section-monthly-expenses')
+  );
+  expect(await findByText(/Spending/)).toBeVisible();
 });
 
 test('shows tag if present', async () => {

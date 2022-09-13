@@ -1,6 +1,7 @@
 import React, { FC } from 'react';
 
 import ArticleContainer from 'components/ArticleContainer';
+import MonthlyEarnings from 'components/MonthlyEarnings';
 import MonthlyExpenses from 'components/MonthlyExpenses';
 import MonthlyOverview from 'components/MonthlyOverview';
 import MonthSelector from 'components/MonthSelector';
@@ -13,6 +14,7 @@ const MonthlySummary: FC = () => (
     <MonthlyOverview />
     <TransactionsByTag />
     <UntaggedTransactions />
+    <MonthlyEarnings />
     <MonthlyExpenses />
   </ArticleContainer>
 );
