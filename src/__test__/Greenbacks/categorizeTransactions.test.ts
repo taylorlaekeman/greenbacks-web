@@ -1,4 +1,4 @@
-import { categorizeTransactions } from 'hooks/useRawTransactions';
+import { categorizeTransactions } from 'hooks/useTransactions';
 import buildTransaction from '__test__/utils/buildTransaction';
 
 test('returns undefined if transactions are undefined', () => {
