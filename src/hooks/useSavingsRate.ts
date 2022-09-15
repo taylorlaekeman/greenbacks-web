@@ -1,5 +1,5 @@
-import useAverageMonthlyEarnings from 'hooks/useAverageMonthlyEarnings';
-import useAverageMonthlySavings from 'hooks/useAverageMonthlySavings';
+import useAverageMonthlyEarning from 'hooks/useAverageMonthlyEarning';
+import useAverageMonthlySaving from 'hooks/useAverageMonthlySaving';
 import type { ApolloError } from 'hooks/useQuery';
 
 const useSavingsRate = (): {
@@ -8,23 +8,20 @@ const useSavingsRate = (): {
   savingsRate?: number;
 } => {
   const {
-    averageMonthlyEarnings,
+    averageMonthlyEarning,
     error: earningsError,
     isLoading: isLoadingEarnings,
-  } = useAverageMonthlyEarnings();
+  } = useAverageMonthlyEarning();
   const {
-    averageMonthlySavings,
+    averageMonthlySaving,
     error: savingsError,
     isLoading: isLoadingSavings,
-  } = useAverageMonthlySavings();
+  } = useAverageMonthlySaving();
   const error = earningsError || savingsError;
   const isLoading = isLoadingEarnings || isLoadingSavings;
-  if (
-    averageMonthlyEarnings === undefined ||
-    averageMonthlySavings === undefined
-  )
+  if (averageMonthlyEarning === undefined || averageMonthlySaving === undefined)
     return { error, isLoading };
-  const savingsRate = averageMonthlySavings / averageMonthlyEarnings;
+  const savingsRate = averageMonthlySaving / averageMonthlyEarning;
   return { error, isLoading, savingsRate };
 };
 

@@ -1,6 +1,5 @@
 import React from 'react';
 import { act, render, screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 
 import Greenbacks from 'components/Greenbacks';
 import { TestGreenbacksProvider } from 'context/Greenbacks';
@@ -113,42 +112,4 @@ test('shows label text', async () => {
   );
   await act(() => wait({ cycles: 2 }));
   expect(screen.getByText(/Savings rate/)).toBeInTheDocument();
-});
-
-test('shows reauthentication required error when transactions endpoint returns reauthentication required error', async () => {
-  const mocks = [
-    buildApiTransactionsMock({
-      errors: ['Reauthentication required for a connected account'],
-    }),
-  ];
-  render(
-    <TestGreenbacksProvider mocks={mocks} now="2020-07-01">
-      <Greenbacks />
-    </TestGreenbacksProvider>
-  );
-  await act(() => wait({ cycles: 2 }));
-  const text = screen.getByText(
-    /At least one of your accounts needs reauthentication/
-  );
-  const link = screen.getByRole('link');
-  expect(text).toBeInTheDocument();
-  expect(link).toBeInTheDocument();
-});
-
-test('reauthentication required error link redirects to acounts page', async () => {
-  const mocks = [
-    buildApiTransactionsMock({
-      errors: ['Reauthentication required for a connected account'],
-    }),
-  ];
-  render(
-    <TestGreenbacksProvider mocks={mocks} now="2020-07-01">
-      <Greenbacks />
-    </TestGreenbacksProvider>
-  );
-  await act(() => wait({ cycles: 2 }));
-  const link = screen.getByRole('link');
-  userEvent.click(link);
-  const pageWrapper = screen.getByTestId('accounts-page');
-  expect(pageWrapper).toBeInTheDocument();
 });

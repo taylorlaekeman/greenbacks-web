@@ -2,17 +2,20 @@ import React, { FC, Fragment } from 'react';
 
 import LoadingIndicator from 'components/LoadingIndicator';
 import SectionContainer from 'components/SectionContainer';
+import useCategorizedTransactions from 'hooks/useCategorizedTransactions';
 import useCurrencyFormatter from 'hooks/useCurrencyFormatter';
 import useMonth from 'hooks/useMonth';
-import useTransactions from 'hooks/useTransactions';
 import getTransactionsByDate from 'utils/getTransactionsByDate';
 
 const MonthlySavings: FC = () => {
   const { endDate, startDate } = useMonth();
-  const { isLoading, savings } = useTransactions({ endDate, startDate });
+  const { isLoading, saving } = useCategorizedTransactions({
+    endDate,
+    startDate,
+  });
   const { format } = useCurrencyFormatter();
 
-  const savingsByDate = getTransactionsByDate({ transactions: savings });
+  const savingByDate = getTransactionsByDate({ transactions: saving });
 
   if (isLoading)
     return (
@@ -23,7 +26,7 @@ const MonthlySavings: FC = () => {
 
   return (
     <SectionContainer id="monthly-savings" title="Savings">
-      {savingsByDate.map(({ date, transactions }) => (
+      {savingByDate.map(({ date, transactions }) => (
         <Fragment key={date}>
           <p>{date}</p>
           <ul>

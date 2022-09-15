@@ -1,4 +1,4 @@
-import useTransactions from 'hooks/useTransactions';
+import useCategorizedTransactions from 'hooks/useCategorizedTransactions';
 
 const useTotalSaving = ({
   endDate,
@@ -7,8 +7,11 @@ const useTotalSaving = ({
   endDate: string;
   startDate: string;
 }): { isLoading: boolean; totalSaving?: number } => {
-  const { isLoading, savings } = useTransactions({ endDate, startDate });
-  const totalSaving = savings?.reduce((sum, { amount }) => sum + amount, 0);
+  const { isLoading, saving } = useCategorizedTransactions({
+    endDate,
+    startDate,
+  });
+  const totalSaving = saving?.reduce((sum, { amount }) => sum + amount, 0);
   return { isLoading, totalSaving };
 };
 

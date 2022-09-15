@@ -1,7 +1,12 @@
 import useFilters from 'hooks/useFilters';
 import useQuery, { ApolloError } from 'hooks/useQuery';
 import Filter, { Comparator, Matcher } from 'types/filter';
-import Transaction, { Category, CoreTransaction } from 'types/transaction';
+import Transaction, {
+  Category,
+  ConnectedTransaction,
+  CoreTransaction,
+  TransactionType,
+} from 'types/transaction';
 import gql from 'utils/gql';
 
 const useTransactions = ({
@@ -11,55 +16,36 @@ const useTransactions = ({
   endDate: string;
   startDate: string;
 }): {
-  earnings?: Transaction[];
+  credits?: Transaction[];
+  debits?: Transaction[];
+  // earnings?: Transaction[];
   error?: ApolloError;
-  expenses?: Transaction[];
+  // expenses?: Transaction[];
   isLoading: boolean;
-  savings?: Transaction[];
+  // savings?: Transaction[];
+  transfers?: ConnectedTransaction[];
 } => {
-  const {
-    data,
-    error: transactionsError,
-    loading: isLoadingTransactions,
-  } = useQuery<
-    { transactions: CoreTransaction[] },
-    { endDate: string; startDate: string }
-  >(GET_TRANSACTIONS_QUERY, {
-    variables: { endDate, startDate },
-  });
-  const { credits, debits } = categorizeTransactions({
-    transactions: data?.transactions,
-  });
   const {
     error: filtersError,
     filters,
     isLoading: isLoadingFilters,
   } = useFilters();
-  const earnings: Transaction[] = [];
-  const expenses: Transaction[] = [];
-  const savings: Transaction[] = [];
-  debits?.forEach((debit) => {
-    const { categorizedTransaction } = categorizeTransactionWithFilters({
-      filters,
-      transaction: debit,
-    });
-    const { category } = categorizedTransaction;
-    if (category === Category.Saving) savings.push(categorizedTransaction);
-    else expenses.push(categorizedTransaction);
+  const { data, error, loading: isLoading } = useQuery<
+    { transactions: CoreTransaction[] },
+    { endDate: string; startDate: string }
+  >(GET_TRANSACTIONS_QUERY, {
+    variables: { endDate, startDate },
   });
-  credits?.forEach((credit) => {
-    const { categorizedTransaction } = categorizeTransactionWithFilters({
-      filters,
-      transaction: credit,
-    });
-    earnings.push(categorizedTransaction);
+  const { credits, debits, transfers } = categorizeTransactions({
+    filters,
+    transactions: data?.transactions,
   });
   return {
-    earnings,
-    error: transactionsError || filtersError,
-    expenses,
-    isLoading: isLoadingTransactions || isLoadingFilters,
-    savings,
+    credits,
+    debits,
+    error: error || filtersError,
+    isLoading: isLoading || isLoadingFilters,
+    transfers,
   };
 };
 
@@ -77,128 +63,82 @@ export const GET_TRANSACTIONS_QUERY = gql`
 `;
 
 export const categorizeTransactions = ({
+  filters,
   transactions,
 }: {
+  filters?: Filter[];
   transactions?: CoreTransaction[];
 } = {}): {
-  credits?: CoreTransaction[];
-  debits?: CoreTransaction[];
-  transfers?: Transfer[];
+  credits?: Transaction[];
+  debits?: Transaction[];
+  transfers?: ConnectedTransaction[];
 } => {
   if (!transactions) return {};
-  const transfers: Transfer[] = [];
-  const debitsToReturn: CoreTransaction[] = [];
-  const credits = transactions
-    .filter(({ amount }) => amount < 0)
-    .map(({ amount, ...rest }) => ({ ...rest, amount: -amount }));
-  const debits = transactions.filter(({ amount }) => amount > 0);
-  let creditsByAmount = getTransactionsByAmount({ transactions: credits });
-  debits.forEach((debit) => {
-    const {
-      debit: debitToReturn,
-      creditsByAmount: newCreditsByAmount,
-      transfer,
-    } = categorizeTransaction({
-      creditsByAmount,
-      debit,
+  const transfers: ConnectedTransaction[] = [];
+  const credits: Transaction[] = [];
+  const debits: Transaction[] = [];
+  transactions.forEach((coreTransaction) => {
+    const { transaction } = applyFilters({
+      filters,
+      transaction: coreTransaction,
     });
-    creditsByAmount = newCreditsByAmount;
-    if (debitToReturn) debitsToReturn.push(debitToReturn);
-    if (transfer) transfers.push(transfer);
+    if (transaction.type === TransactionType.Debit) debits.push(transaction);
+    else credits.push(transaction);
   });
-  return {
-    credits: Object.values(creditsByAmount).flat(),
-    debits: debitsToReturn,
-    transfers,
-  };
+  return { credits, debits, transfers };
 };
 
-interface Transfer extends CoreTransaction {
-  destinationAccountId: string;
-  sourceAccountId: string;
-}
-
-const getTransactionsByAmount = ({
-  transactions,
-}: {
-  transactions: CoreTransaction[];
-}): Record<number, CoreTransaction[]> =>
-  transactions.reduce(
-    (
-      result: Record<number, CoreTransaction[]>,
-      transaction: CoreTransaction
-    ) => {
-      const { amount } = transaction;
-      const existingTransactions = result[amount] || [];
-      return {
-        ...result,
-        [amount]: [...existingTransactions, transaction],
-      };
-    },
-    {}
-  );
-
-const categorizeTransaction = ({
-  creditsByAmount,
-  debit,
-}: {
-  creditsByAmount: Record<number, CoreTransaction[]>;
-  debit: CoreTransaction;
-}): {
-  creditsByAmount: Record<number, CoreTransaction[]>;
-  debit?: CoreTransaction;
-  transfer?: Transfer;
-} => {
-  const { accountId: debitedAccountId, amount, ...rest } = debit;
-  if (!(amount in creditsByAmount)) return { creditsByAmount, debit };
-  const creditsWithAmount = creditsByAmount[amount];
-  const creditIndex = creditsWithAmount.findIndex(
-    ({ accountId: creditedAccountId }) => creditedAccountId !== debitedAccountId
-  );
-  if (creditIndex === -1) return { creditsByAmount, debit };
-  const { accountId: creditedAccountId } = creditsWithAmount[creditIndex];
-  return {
-    creditsByAmount: {
-      ...creditsByAmount,
-      [amount]: [
-        ...creditsWithAmount.slice(0, creditIndex),
-        ...creditsWithAmount.slice(creditIndex + 1),
-      ],
-    },
-    transfer: {
-      ...rest,
-      accountId: 'temp',
-      amount,
-      destinationAccountId: creditedAccountId,
-      sourceAccountId: debitedAccountId,
-    },
-  };
-};
-
-const categorizeTransactionWithFilters = ({
-  filters,
+const applyFilters = ({
+  filters = [],
   transaction,
 }: {
-  filters: Filter[];
+  filters?: Filter[];
   transaction: CoreTransaction;
-}): { categorizedTransaction: Transaction } => {
+}): { transaction: Transaction } => {
+  const {
+    amount: newAmount,
+    defaultCategory,
+    type,
+  } = getAmountTypeAndDefaultCategory({ transaction });
   const matchingFilter = filters.find((filter) =>
     isFilterMatch({ filter, transaction })
   );
   if (!matchingFilter)
     return {
-      categorizedTransaction: {
+      transaction: {
         ...transaction,
-        category: Category.Spending,
+        amount: newAmount,
+        category: defaultCategory,
+        type,
       },
     };
   const { categoryToAssign, tagToAssign } = matchingFilter;
   return {
-    categorizedTransaction: {
+    transaction: {
       ...transaction,
+      amount: newAmount,
       category: categoryToAssign,
       tag: tagToAssign,
+      type,
     },
+  };
+};
+
+const getAmountTypeAndDefaultCategory = ({
+  transaction: { amount },
+}: {
+  transaction: CoreTransaction;
+}): { amount: number; defaultCategory: Category; type: TransactionType } => {
+  if (amount >= 0)
+    return {
+      amount,
+      defaultCategory: Category.Spending,
+      type: TransactionType.Debit,
+    };
+  return {
+    amount: -amount,
+    defaultCategory: Category.Earning,
+    type: TransactionType.Credit,
   };
 };
 

@@ -8,7 +8,7 @@ import useTransactionsByTag from 'hooks/useTransactionsByTag';
 
 const TransactionsByTag: FC = () => {
   const { endDate, startDate } = useMonth();
-  const { expenses, isLoading } = useTransactionsByTag({ endDate, startDate });
+  const { isLoading, spending } = useTransactionsByTag({ endDate, startDate });
   const { format } = useCurrencyFormatter();
 
   if (isLoading)
@@ -21,7 +21,7 @@ const TransactionsByTag: FC = () => {
   return (
     <SectionContainer id="transactions-by-tag" title="Transactions by Tag">
       <ul>
-        {expenses.map(({ tag, totalAmount }) => (
+        {spending.map(({ tag, totalAmount }) => (
           <li key={tag}>{`${tag}: ${format({ value: totalAmount })}`}</li>
         ))}
       </ul>

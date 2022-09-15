@@ -4,15 +4,18 @@ import LoadingIndicator from 'components/LoadingIndicator';
 import SectionContainer from 'components/SectionContainer';
 import useCurrencyFormatter from 'hooks/useCurrencyFormatter';
 import useMonth from 'hooks/useMonth';
-import useTransactions from 'hooks/useTransactions';
+import useCategorizedTransactions from 'hooks/useCategorizedTransactions';
 import getTransactionsByDate from 'utils/getTransactionsByDate';
 
 const MonthlyEarnings: FC = () => {
   const { endDate, startDate } = useMonth();
-  const { earnings, isLoading } = useTransactions({ endDate, startDate });
+  const { earning, isLoading } = useCategorizedTransactions({
+    endDate,
+    startDate,
+  });
   const { format } = useCurrencyFormatter();
 
-  const earningsByDate = getTransactionsByDate({ transactions: earnings });
+  const earningsByDate = getTransactionsByDate({ transactions: earning });
 
   if (isLoading)
     return (

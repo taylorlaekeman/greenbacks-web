@@ -132,57 +132,6 @@ test('shows month from url', async () => {
   expect(await screen.findByText(/January 2020/)).toBeInTheDocument();
 });
 
-test('shows spending category for matched transaction', async () => {
-  const mocks = [
-    buildApiTransactionsMock({
-      endDate: '2020-01-31',
-      startDate: '2020-01-01',
-      transactions: [buildTransaction({ name: 'test-name' })],
-    }),
-  ];
-  const filters = [
-    {
-      categoryToAssign: Category.Spending,
-      id: 'test-filter-id',
-      matchers: [
-        {
-          expectedValue: 'test-name',
-          property: 'name' as keyof CoreTransaction,
-        },
-      ],
-      tagToAssign: 'test-tag',
-    },
-  ];
-  render(
-    <TestGreenbacksProvider filters={filters} mocks={mocks} now="2020-01-01">
-      <Greenbacks />
-    </TestGreenbacksProvider>
-  );
-  const { findByText } = within(
-    await screen.findByTestId('section-monthly-expenses')
-  );
-  expect(await findByText(/Spending/)).toBeVisible();
-});
-
-test('shows spending category for uncategorized transaction', async () => {
-  const mocks = [
-    buildApiTransactionsMock({
-      endDate: '2020-01-31',
-      startDate: '2020-01-01',
-      transactions: [buildTransaction({ name: 'test-name' })],
-    }),
-  ];
-  render(
-    <TestGreenbacksProvider mocks={mocks} now="2020-01-01">
-      <Greenbacks />
-    </TestGreenbacksProvider>
-  );
-  const { findByText } = within(
-    await screen.findByTestId('section-monthly-expenses')
-  );
-  expect(await findByText(/Spending/)).toBeVisible();
-});
-
 test('shows tag if present', async () => {
   const mocks = [
     buildApiTransactionsMock({

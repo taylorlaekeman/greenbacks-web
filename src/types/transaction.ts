@@ -10,6 +10,7 @@ export interface CoreTransaction {
 interface Transaction extends CoreTransaction {
   category: Category;
   tag?: string;
+  type: TransactionType;
 }
 
 export interface ConnectedTransaction {
@@ -20,8 +21,14 @@ export interface ConnectedTransaction {
 }
 
 export enum Category {
+  Earning = 'Earning',
   Saving = 'Saving',
   Spending = 'Spending',
+}
+
+export enum TransactionType {
+  Credit = 'Credit',
+  Debit = 'Debit',
 }
 
 export default Transaction;

@@ -1,4 +1,4 @@
-import useTransactions from 'hooks/useTransactions';
+import useCategorizedTransactions from 'hooks/useCategorizedTransactions';
 import type Transaction from 'types/transaction';
 
 const useTransactionsByTag = ({
@@ -7,11 +7,14 @@ const useTransactionsByTag = ({
 }: {
   endDate: string;
   startDate: string;
-}): { expenses: TagGroup[]; isLoading: boolean } => {
-  const { expenses, isLoading } = useTransactions({ endDate, startDate });
-  const expensesByTag = groupByTag({ transactions: expenses });
+}): { spending: TagGroup[]; isLoading: boolean } => {
+  const { isLoading, spending } = useCategorizedTransactions({
+    endDate,
+    startDate,
+  });
+  const spendingByTag = groupByTag({ transactions: spending });
   return {
-    expenses: expensesByTag,
+    spending: spendingByTag,
     isLoading,
   };
 };
@@ -47,7 +50,7 @@ const groupByTag = ({
   );
 };
 
-interface TagGroup {
+export interface TagGroup {
   tag: string;
   totalAmount: number;
   transactions: Transaction[];

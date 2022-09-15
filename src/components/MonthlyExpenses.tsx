@@ -2,42 +2,43 @@ import React, { FC, Fragment } from 'react';
 
 import LoadingIndicator from 'components/LoadingIndicator';
 import SectionContainer from 'components/SectionContainer';
+import useCategorizedTransactions from 'hooks/useCategorizedTransactions';
 import useCurrencyFormatter from 'hooks/useCurrencyFormatter';
-import useDailyExpenses from 'hooks/useDailyExpenses';
 import useMonth from 'hooks/useMonth';
+import getTransactionsByDate from 'utils/getTransactionsByDate';
 
 const MonthlyExpenses: FC = () => {
-  const { iso: month } = useMonth();
+  const { endDate, startDate } = useMonth();
   const { format } = useCurrencyFormatter();
-  const { dailyExpenses, isLoading } = useDailyExpenses({
-    month,
+  const { isLoading, spending } = useCategorizedTransactions({
+    endDate,
+    startDate,
   });
+  const spendingByDate = getTransactionsByDate({ transactions: spending });
 
   if (isLoading)
     return (
-      <SectionContainer id="monthly-expenses" title="Expenses">
+      <SectionContainer id="monthly-expenses" title="Spending">
         <LoadingIndicator name="monthly-expenses" />
       </SectionContainer>
     );
 
   return (
-    <SectionContainer id="monthly-expenses" title="Expenses">
-      {Object.entries(dailyExpenses || {}).map(([day, expenses]) => (
-        <Fragment key={day}>
-          <p>{day}</p>
+    <SectionContainer id="monthly-expenses" title="Spending">
+      {spendingByDate.map(({ date, transactions }) => (
+        <Fragment key={date}>
+          <p>{date}</p>
           <ul>
-            {expenses?.map(({ amount, category, id, merchant, name, tag }) => {
+            {transactions?.map(({ amount, id, merchant, name, tag }) => {
               const formattedAmount = format({ value: amount });
               return (
                 <li key={id}>
                   {formattedAmount}
                   &mdash;
                   {merchant || 'no merchant'}
-                  &nbsp; &#40;
+                  &nbsp;&#40;
                   {name}
-                  &#41; &nbsp;
-                  {category}
-                  &nbsp;
+                  &#41;&nbsp;
                   {tag}
                 </li>
               );
