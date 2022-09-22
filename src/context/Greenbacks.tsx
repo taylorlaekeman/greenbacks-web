@@ -3,14 +3,14 @@ import React, { FC } from 'react';
 import { TestAccountConnectionProvider } from 'context/AccountConnection';
 import { TestAuthProvider } from 'context/Auth';
 import { TestCurrencyLocalesProvider } from 'context/CurrencyLocales';
-import { FiltersProvider } from 'context/Filters';
+import { AllFilters, FiltersProvider } from 'context/Filters';
 import {
   MockedApiResponse,
   TestGreenbacksApiProvider,
 } from 'context/GreenbacksApi';
 import { TestNowProvider } from 'context/Now';
 import { TestRouteProvider } from 'context/Route';
-import Filter from 'types/filter';
+import { OneTransactionFilter as Filter } from 'types/filter';
 
 export const TestGreenbacksProvider: FC<Props> = ({
   children,
@@ -44,7 +44,7 @@ export const TestGreenbacksProvider: FC<Props> = ({
 );
 
 interface Props {
-  filters?: Filter[];
+  filters?: AllFilters | Filter[];
   idFilters?: Filter[];
   isApiReady?: boolean;
   isAuthenticated?: boolean;

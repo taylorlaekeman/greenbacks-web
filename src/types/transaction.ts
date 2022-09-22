@@ -15,9 +15,10 @@ interface Transaction extends CoreTransaction {
 
 export interface ConnectedTransaction {
   category: Category;
+  firstTransaction?: CoreTransaction;
   id: string;
+  secondTransaction?: CoreTransaction;
   tag?: string;
-  transactions: CoreTransaction[];
 }
 
 export enum Category {
@@ -29,6 +30,7 @@ export enum Category {
 export enum TransactionType {
   Credit = 'Credit',
   Debit = 'Debit',
+  Transfer = 'Transfer',
 }
 
 export default Transaction;

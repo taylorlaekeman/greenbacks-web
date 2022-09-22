@@ -1,16 +1,16 @@
 import React from 'react';
-import { act, render, screen } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 
 import Greenbacks from 'components/Greenbacks';
 import { TestGreenbacksProvider } from 'context/Greenbacks';
 import buildApiTransactionsMock from '__test__/utils/buildApiTransactionsMock';
 import buildTransaction from '__test__/utils/buildTransaction';
-import wait from 'utils/wait';
+import { Category, CoreTransaction } from 'types/transaction';
 
 test('displays loading indicator while transactions are loading', () => {
-  const mocks = [buildApiTransactionsMock()];
+  const apiMocks = [buildApiTransactionsMock()];
   render(
-    <TestGreenbacksProvider mocks={mocks} now="2020-07-01">
+    <TestGreenbacksProvider mocks={apiMocks} now="2020-07-01">
       <Greenbacks />
     </TestGreenbacksProvider>
   );
@@ -21,19 +21,18 @@ test('displays loading indicator while transactions are loading', () => {
 });
 
 test('shows zero without any earnings', async () => {
-  const mocks = [buildApiTransactionsMock()];
+  const apiMocks = [buildApiTransactionsMock()];
   render(
-    <TestGreenbacksProvider mocks={mocks} now="2020-07-01">
+    <TestGreenbacksProvider mocks={apiMocks} now="2020-07-01">
       <Greenbacks />
     </TestGreenbacksProvider>
   );
-  await act(() => wait({ cycles: 2 }));
-  const text = screen.getByTestId('average-monthly-earnings');
+  const text = await screen.findByTestId('average-monthly-earnings');
   expect(text).toHaveTextContent('$0.00');
 });
 
 test('correctly averages transactions', async () => {
-  const mocks = [
+  const apiMocks = [
     buildApiTransactionsMock({
       transactions: [
         buildTransaction({ amount: -100, datetime: '2020-01-01' }),
@@ -46,17 +45,16 @@ test('correctly averages transactions', async () => {
     }),
   ];
   render(
-    <TestGreenbacksProvider mocks={mocks} now="2020-07-01">
+    <TestGreenbacksProvider mocks={apiMocks} now="2020-07-01">
       <Greenbacks />
     </TestGreenbacksProvider>
   );
-  await act(() => wait({ cycles: 2 }));
-  const text = screen.getByTestId('average-monthly-earnings');
+  const text = await screen.findByTestId('average-monthly-earnings');
   expect(text).toHaveTextContent('$1.50');
 });
 
 test('handles months without earnings', async () => {
-  const mocks = [
+  const apiMocks = [
     buildApiTransactionsMock({
       transactions: [
         buildTransaction({ amount: -600, datetime: '2020-01-01' }),
@@ -64,17 +62,16 @@ test('handles months without earnings', async () => {
     }),
   ];
   render(
-    <TestGreenbacksProvider mocks={mocks} now="2020-07-01">
+    <TestGreenbacksProvider mocks={apiMocks} now="2020-07-01">
       <Greenbacks />
     </TestGreenbacksProvider>
   );
-  await act(() => wait({ cycles: 2 }));
-  const text = screen.getByTestId('average-monthly-earnings');
+  const text = await screen.findByTestId('average-monthly-earnings');
   expect(text).toHaveTextContent('$1.00');
 });
 
 test('excludes expenses', async () => {
-  const mocks = [
+  const apiMocks = [
     buildApiTransactionsMock({
       transactions: [
         buildTransaction({
@@ -91,17 +88,16 @@ test('excludes expenses', async () => {
     }),
   ];
   render(
-    <TestGreenbacksProvider mocks={mocks} now="2020-07-01">
+    <TestGreenbacksProvider mocks={apiMocks} now="2020-07-01">
       <Greenbacks />
     </TestGreenbacksProvider>
   );
-  await act(() => wait({ cycles: 2 }));
-  const text = screen.getByTestId('average-monthly-earnings');
+  const text = await screen.findByTestId('average-monthly-earnings');
   expect(text).toHaveTextContent('$1.00');
 });
 
 test('shows label text', async () => {
-  const mocks = [
+  const apiMocks = [
     buildApiTransactionsMock({
       transactions: [
         buildTransaction({ amount: -600, datetime: '2020-01-01' }),
@@ -109,11 +105,70 @@ test('shows label text', async () => {
     }),
   ];
   render(
-    <TestGreenbacksProvider mocks={mocks} now="2020-07-01">
+    <TestGreenbacksProvider mocks={apiMocks} now="2020-07-01">
       <Greenbacks />
     </TestGreenbacksProvider>
   );
-  await act(() => wait({ cycles: 2 }));
-  const label = screen.getByTestId('average-monthly-earnings-label');
+  const label = await screen.findByTestId('average-monthly-earnings-label');
   expect(label).toHaveTextContent(/^Average monthly earning$/);
+});
+
+test('excludes transfers', async () => {
+  const apiMocks = [
+    buildApiTransactionsMock({
+      endDate: '2020-06-30',
+      startDate: '2020-01-01',
+      transactions: [
+        buildTransaction({
+          amount: -600,
+          datetime: '2020-01-01',
+          name: 'transfer received',
+        }),
+        buildTransaction({
+          amount: 600,
+          datetime: '2020-01-01',
+          name: 'transfer sent',
+        }),
+        buildTransaction({
+          amount: -600,
+          datetime: '2020-02-01',
+          name: 'transfer received',
+        }),
+        buildTransaction({
+          amount: 600,
+          datetime: '2020-02-01',
+          name: 'transfer sent',
+        }),
+      ],
+    }),
+  ];
+  const filters = {
+    twoTransactionFilters: [
+      {
+        categoryToAssign: Category.Spending,
+        firstMatchers: [
+          {
+            expectedValue: 'transfer received',
+            property: 'name' as keyof CoreTransaction,
+          },
+        ],
+        id: 'test',
+        secondMatchers: [
+          {
+            expectedValue: 'transfer sent',
+            property: 'name' as keyof CoreTransaction,
+          },
+        ],
+        tagToAssign: 'test-tag',
+      },
+    ],
+  };
+  render(
+    <TestGreenbacksProvider filters={filters} mocks={apiMocks} now="2020-07-01">
+      <Greenbacks />
+    </TestGreenbacksProvider>
+  );
+  expect(
+    await screen.findByTestId('average-monthly-earnings')
+  ).toHaveTextContent('$0.00');
 });

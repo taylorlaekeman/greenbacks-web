@@ -2,15 +2,26 @@ import { useContext } from 'react';
 
 import FiltersContext from 'context/Filters';
 import type { ApolloError } from 'hooks/useQuery';
-import Filter from 'types/filter';
+import { OneTransactionFilter, TwoTransactionFilter } from 'types/filter';
 
 const useFilters = (): {
   error?: ApolloError;
-  filters: Filter[];
+  idFilters?: OneTransactionFilter[];
   isLoading: boolean;
+  oneTransactionFilters?: OneTransactionFilter[];
+  twoTransactionFilters?: TwoTransactionFilter[];
 } => {
-  const { filters, idFilters } = useContext(FiltersContext);
-  return { filters: [...idFilters, ...filters], isLoading: false };
+  const {
+    idFilters,
+    oneTransactionFilters,
+    twoTransactionFilters,
+  } = useContext(FiltersContext);
+  return {
+    idFilters,
+    isLoading: false,
+    oneTransactionFilters,
+    twoTransactionFilters,
+  };
 };
 
 export default useFilters;

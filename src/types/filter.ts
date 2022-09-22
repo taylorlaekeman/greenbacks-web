@@ -1,11 +1,21 @@
 import { Category, CoreTransaction } from 'types/transaction';
 
-interface Filter {
+export interface CoreFilter {
   categoryToAssign: Category;
   id: string;
-  matchers: Matcher[];
   tagToAssign?: string;
 }
+
+export interface OneTransactionFilter extends CoreFilter {
+  matchers: MatcherGroup;
+}
+
+export interface TwoTransactionFilter extends CoreFilter {
+  firstMatchers: MatcherGroup;
+  secondMatchers: MatcherGroup;
+}
+
+export type MatcherGroup = Matcher[];
 
 export interface Matcher {
   comparator?: Comparator;
@@ -18,5 +28,3 @@ export enum Comparator {
   GreaterThan = 'greater-than',
   LessThan = 'less-than',
 }
-
-export default Filter;

@@ -152,3 +152,73 @@ test('shows label text', async () => {
   const label = screen.getByTestId('average-monthly-expenses-label');
   expect(label).toHaveTextContent(/^Average monthly spending/);
 });
+
+test('excludes transfers', async () => {
+  const apiMocks = [
+    buildApiTransactionsMock({
+      endDate: '2020-06-30',
+      startDate: '2020-01-01',
+      transactions: [
+        buildTransaction({
+          amount: -600,
+          datetime: '2020-01-01',
+          name: 'transfer received',
+        }),
+        buildTransaction({
+          amount: 600,
+          datetime: '2020-01-01',
+          name: 'transfer sent',
+        }),
+        buildTransaction({
+          amount: -600,
+          datetime: '2020-02-01',
+          name: 'transfer received',
+        }),
+        buildTransaction({
+          amount: 600,
+          datetime: '2020-02-01',
+          name: 'transfer sent',
+        }),
+        buildTransaction({
+          amount: 600,
+          datetime: '2020-03-01',
+          name: 'transfer sent',
+        }),
+        buildTransaction({
+          amount: 600,
+          datetime: '2020-03-01',
+          name: 'other!',
+        }),
+      ],
+    }),
+  ];
+  const filters = {
+    twoTransactionFilters: [
+      {
+        categoryToAssign: Category.Spending,
+        firstMatchers: [
+          {
+            expectedValue: 'transfer received',
+            property: 'name' as keyof CoreTransaction,
+          },
+        ],
+        id: 'test',
+        secondMatchers: [
+          {
+            expectedValue: 'transfer sent',
+            property: 'name' as keyof CoreTransaction,
+          },
+        ],
+        tagToAssign: 'test-tag',
+      },
+    ],
+  };
+  render(
+    <TestGreenbacksProvider filters={filters} mocks={apiMocks} now="2020-07-01">
+      <Greenbacks />
+    </TestGreenbacksProvider>
+  );
+  expect(
+    await screen.findByTestId('average-monthly-expenses')
+  ).toHaveTextContent('$1.00');
+});
