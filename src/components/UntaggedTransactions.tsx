@@ -19,10 +19,12 @@ const UntaggedTransactions: FC = () => {
     <SectionContainer id="untagged-transactions" title="Untagged Transactions">
       <ul>
         {untaggedTransactions.map(
-          ({ amount, datetime, id, merchant, name }) => (
+          ({ amount, datetime, id, merchant, name, type }) => (
             <li key={id}>
               {format({ value: amount })}
-              &mdash;
+              &nbsp;&#40;
+              {type}
+              &#41;&mdash;
               {merchant}
               &nbsp;&#40;
               {name}

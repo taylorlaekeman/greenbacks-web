@@ -22,11 +22,18 @@ test('shows untagged transactions', async () => {
           name: 'first name',
         }),
         buildTransaction({
-          amount: 200,
+          amount: 300,
           datetime: '2020-01-02',
           id: 'second-id',
           merchant: 'second merchant',
           name: 'second name',
+        }),
+        buildTransaction({
+          amount: -200,
+          datetime: '2020-01-03',
+          id: 'third-id',
+          merchant: 'third merchant',
+          name: 'third name',
         }),
       ],
     }),
@@ -41,10 +48,13 @@ test('shows untagged transactions', async () => {
   );
   const items = getAllByRole('listitem');
   expect(items[0]).toHaveTextContent(
-    '$2.00—second merchant (second name)—2020-01-02 second-id'
+    '$3.00 (Debit)—second merchant (second name)—2020-01-02 second-id'
   );
   expect(items[1]).toHaveTextContent(
-    '$1.00—first merchant (first name)—2020-01-01 first-id'
+    '$2.00 (Credit)—third merchant (third name)—2020-01-03 third-id'
+  );
+  expect(items[2]).toHaveTextContent(
+    '$1.00 (Debit)—first merchant (first name)—2020-01-01 first-id'
   );
 });
 

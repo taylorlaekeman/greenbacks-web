@@ -8,8 +8,8 @@ import GreenbacksApiProvider from 'context/GreenbacksApi';
 import RouteProvider from 'context/Route';
 import env from 'env';
 import GlobalStyle from 'styles/GlobalStyle';
-import Category from 'types/category';
-import Transaction from 'types/unfilteredTransaction';
+import { Comparator } from 'types/filter';
+import { Category, CoreTransaction as Transaction } from 'types/transaction';
 import styled from 'utils/styled';
 
 const App: FunctionComponent = () => (
