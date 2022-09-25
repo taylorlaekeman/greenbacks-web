@@ -94,7 +94,7 @@ test('section is not present when no untagged transactions exist', async () => {
     }),
   ];
   render(
-    <TestGreenbacksProvider filters={filters} mocks={apiMocks}>
+    <TestGreenbacksProvider mocks={apiMocks} oneTransactionFilters={filters}>
       <Greenbacks />
     </TestGreenbacksProvider>
   );

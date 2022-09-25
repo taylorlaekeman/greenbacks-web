@@ -4,6 +4,7 @@ import { act, render, screen } from '@testing-library/react';
 import Greenbacks from 'components/Greenbacks';
 import { TestGreenbacksProvider } from 'context/Greenbacks';
 import buildApiTransactionsMock from '__test__/utils/buildApiTransactionsMock';
+import buildFilter from '__test__/utils/buildFilter';
 import buildTransaction from '__test__/utils/buildTransaction';
 import { Category, CoreTransaction } from 'types/transaction';
 import wait from 'utils/wait';
@@ -77,7 +78,7 @@ test('correctly calculates savings rate', async () => {
     }),
   ];
   const filters = [
-    {
+    buildFilter({
       categoryToAssign: Category.Saving,
       id: 'test-filter-id',
       matchers: [
@@ -87,10 +88,14 @@ test('correctly calculates savings rate', async () => {
         },
       ],
       tagToAssign: 'retirement',
-    },
+    }),
   ];
   render(
-    <TestGreenbacksProvider filters={filters} mocks={mocks} now="2020-07-01">
+    <TestGreenbacksProvider
+      mocks={mocks}
+      now="2020-07-01"
+      oneTransactionFilters={filters}
+    >
       <Greenbacks />
     </TestGreenbacksProvider>
   );

@@ -1,4 +1,9 @@
-import { Comparator, Matcher, OneTransactionFilter } from 'types/filter';
+import {
+  Comparator,
+  FilterType,
+  Matcher,
+  OneTransactionFilter,
+} from 'types/filter';
 import { Category, CoreTransaction } from 'types/transaction';
 
 const buildFilter = ({
@@ -16,6 +21,7 @@ const buildFilter = ({
   id,
   matchers,
   tagToAssign,
+  type: FilterType.OneTransaction,
 });
 
 export const buildMatcher = ({

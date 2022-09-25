@@ -4,6 +4,7 @@ import { render, screen } from '@testing-library/react';
 import Greenbacks from 'components/Greenbacks';
 import { TestGreenbacksProvider } from 'context/Greenbacks';
 import buildApiTransactionsMock from '__test__/utils/buildApiTransactionsMock';
+import buildFilter from '__test__/utils/buildTwoTransactionFilter';
 import buildTransaction from '__test__/utils/buildTransaction';
 import { Category, CoreTransaction } from 'types/transaction';
 
@@ -142,29 +143,31 @@ test('excludes transfers', async () => {
       ],
     }),
   ];
-  const filters = {
-    twoTransactionFilters: [
-      {
-        categoryToAssign: Category.Spending,
-        firstMatchers: [
-          {
-            expectedValue: 'transfer received',
-            property: 'name' as keyof CoreTransaction,
-          },
-        ],
-        id: 'test',
-        secondMatchers: [
-          {
-            expectedValue: 'transfer sent',
-            property: 'name' as keyof CoreTransaction,
-          },
-        ],
-        tagToAssign: 'test-tag',
-      },
-    ],
-  };
+  const filters = [
+    buildFilter({
+      categoryToAssign: Category.Spending,
+      firstMatchers: [
+        {
+          expectedValue: 'transfer received',
+          property: 'name' as keyof CoreTransaction,
+        },
+      ],
+      id: 'test',
+      secondMatchers: [
+        {
+          expectedValue: 'transfer sent',
+          property: 'name' as keyof CoreTransaction,
+        },
+      ],
+      tagToAssign: 'test-tag',
+    }),
+  ];
   render(
-    <TestGreenbacksProvider filters={filters} mocks={apiMocks} now="2020-07-01">
+    <TestGreenbacksProvider
+      mocks={apiMocks}
+      now="2020-07-01"
+      twoTransactionFilters={filters}
+    >
       <Greenbacks />
     </TestGreenbacksProvider>
   );

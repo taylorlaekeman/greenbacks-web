@@ -4,6 +4,7 @@ import { render, screen, within } from '@testing-library/react';
 import Greenbacks from 'components/Greenbacks';
 import { TestGreenbacksProvider } from 'context/Greenbacks';
 import buildApiTransactionsMock from '__test__/utils/buildApiTransactionsMock';
+import buildFilter from '__test__/utils/buildFilter';
 import buildTransaction from '__test__/utils/buildTransaction';
 import { Category, CoreTransaction } from 'types/transaction';
 
@@ -54,7 +55,7 @@ test('groups transactions by tag', async () => {
     }),
   ];
   const filters = [
-    {
+    buildFilter({
       categoryToAssign: Category.Spending,
       id: 'test-filter-id-1',
       matchers: [
@@ -64,8 +65,8 @@ test('groups transactions by tag', async () => {
         },
       ],
       tagToAssign: 'first tag',
-    },
-    {
+    }),
+    buildFilter({
       categoryToAssign: Category.Spending,
       id: 'test-filter-id-1',
       matchers: [
@@ -75,8 +76,8 @@ test('groups transactions by tag', async () => {
         },
       ],
       tagToAssign: 'second tag',
-    },
-    {
+    }),
+    buildFilter({
       categoryToAssign: Category.Spending,
       id: 'test-filter-id-1',
       matchers: [
@@ -86,10 +87,14 @@ test('groups transactions by tag', async () => {
         },
       ],
       tagToAssign: 'third tag',
-    },
+    }),
   ];
   render(
-    <TestGreenbacksProvider filters={filters} mocks={apiMocks} now="2020-01-01">
+    <TestGreenbacksProvider
+      mocks={apiMocks}
+      now="2020-01-01"
+      oneTransactionFilters={filters}
+    >
       <Greenbacks />
     </TestGreenbacksProvider>
   );
@@ -120,7 +125,7 @@ test('groups untagged transactions', async () => {
     }),
   ];
   const filters = [
-    {
+    buildFilter({
       categoryToAssign: Category.Spending,
       id: 'test-filter-id-1',
       matchers: [
@@ -129,8 +134,8 @@ test('groups untagged transactions', async () => {
           property: 'name' as keyof CoreTransaction,
         },
       ],
-    },
-    {
+    }),
+    buildFilter({
       categoryToAssign: Category.Spending,
       id: 'test-filter-id-1',
       matchers: [
@@ -139,10 +144,14 @@ test('groups untagged transactions', async () => {
           property: 'name' as keyof CoreTransaction,
         },
       ],
-    },
+    }),
   ];
   render(
-    <TestGreenbacksProvider filters={filters} mocks={apiMocks} now="2020-01-01">
+    <TestGreenbacksProvider
+      mocks={apiMocks}
+      now="2020-01-01"
+      oneTransactionFilters={filters}
+    >
       <Greenbacks />
     </TestGreenbacksProvider>
   );
@@ -166,7 +175,7 @@ test('shows current month when no month is present in route', async () => {
     }),
   ];
   const filters = [
-    {
+    buildFilter({
       categoryToAssign: Category.Spending,
       id: 'test-filter-id',
       matchers: [
@@ -176,10 +185,14 @@ test('shows current month when no month is present in route', async () => {
         },
       ],
       tagToAssign: 'test tag',
-    },
+    }),
   ];
   render(
-    <TestGreenbacksProvider filters={filters} mocks={apiMocks} now="2020-01-01">
+    <TestGreenbacksProvider
+      mocks={apiMocks}
+      now="2020-01-01"
+      oneTransactionFilters={filters}
+    >
       <Greenbacks />
     </TestGreenbacksProvider>
   );

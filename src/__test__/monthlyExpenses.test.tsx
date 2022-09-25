@@ -4,6 +4,7 @@ import { render, screen, within } from '@testing-library/react';
 import Greenbacks from 'components/Greenbacks';
 import { TestGreenbacksProvider } from 'context/Greenbacks';
 import buildApiTransactionsMock from '__test__/utils/buildApiTransactionsMock';
+import buildFilter from '__test__/utils/buildFilter';
 import buildTransaction from '__test__/utils/buildTransaction';
 import { Comparator } from 'types/filter';
 import { Category, CoreTransaction } from 'types/transaction';
@@ -73,7 +74,7 @@ test('excludes savings', async () => {
     }),
   ];
   const filters = [
-    {
+    buildFilter({
       categoryToAssign: Category.Saving,
       id: 'test-filter-id',
       matchers: [
@@ -83,10 +84,14 @@ test('excludes savings', async () => {
         },
       ],
       tagToAssign: 'retirement',
-    },
+    }),
   ];
   render(
-    <TestGreenbacksProvider filters={filters} mocks={mocks} now="2020-01-01">
+    <TestGreenbacksProvider
+      mocks={mocks}
+      now="2020-01-01"
+      oneTransactionFilters={filters}
+    >
       <Greenbacks />
     </TestGreenbacksProvider>
   );
@@ -141,7 +146,7 @@ test('shows tag if present', async () => {
     }),
   ];
   const filters = [
-    {
+    buildFilter({
       categoryToAssign: Category.Spending,
       id: 'test-filter-id',
       matchers: [
@@ -151,10 +156,14 @@ test('shows tag if present', async () => {
         },
       ],
       tagToAssign: 'Food',
-    },
+    }),
   ];
   render(
-    <TestGreenbacksProvider filters={filters} mocks={mocks} now="2020-01-01">
+    <TestGreenbacksProvider
+      mocks={mocks}
+      now="2020-01-01"
+      oneTransactionFilters={filters}
+    >
       <Greenbacks />
     </TestGreenbacksProvider>
   );
@@ -170,7 +179,7 @@ test('shows tag from id filter', async () => {
     }),
   ];
   const idFilters = [
-    {
+    buildFilter({
       categoryToAssign: Category.Spending,
       id: 'test-filter-id',
       matchers: [
@@ -180,7 +189,7 @@ test('shows tag from id filter', async () => {
         },
       ],
       tagToAssign: 'test tag',
-    },
+    }),
   ];
   render(
     <TestGreenbacksProvider
@@ -206,7 +215,7 @@ test('shows tag from filter with greater than comparator', async () => {
     }),
   ];
   const filters = [
-    {
+    buildFilter({
       categoryToAssign: Category.Spending,
       id: 'test-filter-id',
       matchers: [
@@ -217,10 +226,14 @@ test('shows tag from filter with greater than comparator', async () => {
         },
       ],
       tagToAssign: 'test tag',
-    },
+    }),
   ];
   render(
-    <TestGreenbacksProvider filters={filters} mocks={apiMocks} now="2020-01-01">
+    <TestGreenbacksProvider
+      mocks={apiMocks}
+      now="2020-01-01"
+      oneTransactionFilters={filters}
+    >
       <Greenbacks />
     </TestGreenbacksProvider>
   );
@@ -239,7 +252,7 @@ test('shows tag from filter with less than comparator', async () => {
     }),
   ];
   const filters = [
-    {
+    buildFilter({
       categoryToAssign: Category.Spending,
       id: 'test-filter-id',
       matchers: [
@@ -250,10 +263,14 @@ test('shows tag from filter with less than comparator', async () => {
         },
       ],
       tagToAssign: 'test tag',
-    },
+    }),
   ];
   render(
-    <TestGreenbacksProvider filters={filters} mocks={apiMocks} now="2020-01-01">
+    <TestGreenbacksProvider
+      mocks={apiMocks}
+      now="2020-01-01"
+      oneTransactionFilters={filters}
+    >
       <Greenbacks />
     </TestGreenbacksProvider>
   );
@@ -275,7 +292,7 @@ test('shows tag from filter multiple matchers', async () => {
     }),
   ];
   const filters = [
-    {
+    buildFilter({
       categoryToAssign: Category.Spending,
       id: 'test-filter-id',
       matchers: [
@@ -291,10 +308,14 @@ test('shows tag from filter multiple matchers', async () => {
         },
       ],
       tagToAssign: 'test tag',
-    },
+    }),
   ];
   render(
-    <TestGreenbacksProvider filters={filters} mocks={apiMocks} now="2020-01-01">
+    <TestGreenbacksProvider
+      mocks={apiMocks}
+      now="2020-01-01"
+      oneTransactionFilters={filters}
+    >
       <Greenbacks />
     </TestGreenbacksProvider>
   );

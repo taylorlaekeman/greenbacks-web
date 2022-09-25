@@ -3,26 +3,27 @@ import React, { FC } from 'react';
 import { TestAccountConnectionProvider } from 'context/AccountConnection';
 import { TestAuthProvider } from 'context/Auth';
 import { TestCurrencyLocalesProvider } from 'context/CurrencyLocales';
-import { AllFilters, FiltersProvider } from 'context/Filters';
+import { TestFiltersProvider } from 'context/Filters';
 import {
   MockedApiResponse,
   TestGreenbacksApiProvider,
 } from 'context/GreenbacksApi';
 import { TestNowProvider } from 'context/Now';
 import { TestRouteProvider } from 'context/Route';
-import { OneTransactionFilter as Filter } from 'types/filter';
+import { OneTransactionFilter, TwoTransactionFilter } from 'types/filter';
 
 export const TestGreenbacksProvider: FC<Props> = ({
   children,
-  filters,
   idFilters,
   isApiReady,
   isAuthenticated,
   locales,
   mocks,
   now,
+  oneTransactionFilters,
   onUpdateAccountConnection,
   route,
+  twoTransactionFilters,
 }) => (
   <TestAuthProvider isAuthenticated={isAuthenticated}>
     <TestGreenbacksApiProvider isReady={isApiReady} mocks={mocks}>
@@ -32,9 +33,13 @@ export const TestGreenbacksProvider: FC<Props> = ({
         <TestNowProvider now={now}>
           <TestCurrencyLocalesProvider locales={locales}>
             <TestRouteProvider route={route}>
-              <FiltersProvider filters={filters} idFilters={idFilters}>
+              <TestFiltersProvider
+                idFilters={idFilters}
+                oneTransactionFilters={oneTransactionFilters}
+                twoTransactionFilters={twoTransactionFilters}
+              >
                 {children}
-              </FiltersProvider>
+              </TestFiltersProvider>
             </TestRouteProvider>
           </TestCurrencyLocalesProvider>
         </TestNowProvider>
@@ -44,15 +49,16 @@ export const TestGreenbacksProvider: FC<Props> = ({
 );
 
 interface Props {
-  filters?: AllFilters | Filter[];
-  idFilters?: Filter[];
+  idFilters?: OneTransactionFilter[];
   isApiReady?: boolean;
   isAuthenticated?: boolean;
   locales?: string | string[];
   mocks?: MockedApiResponse[];
   now?: string;
+  oneTransactionFilters?: OneTransactionFilter[];
   onUpdateAccountConnection?: (input: { token: string }) => void;
   route?: string;
+  twoTransactionFilters?: TwoTransactionFilter[];
 }
 
 export default undefined;

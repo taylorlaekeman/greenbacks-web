@@ -39,6 +39,7 @@ module.exports = {
     'jest/no-identical-title': 'error',
     'jest/prefer-to-have-length': 'warn',
     'jest/valid-expect': 'error',
+    'jsx-a11y/label-has-associated-control': 'off',
     'max-classes-per-file': 'off',
     'no-shadow': 'off',
     'no-use-before-define': 'off',

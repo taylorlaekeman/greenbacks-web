@@ -1,6 +1,18 @@
-import React, { createContext, FC } from 'react';
+import React, {
+  createContext,
+  FC,
+  Reducer,
+  useCallback,
+  useEffect,
+  useReducer,
+} from 'react';
 
-import { OneTransactionFilter, TwoTransactionFilter } from 'types/filter';
+import {
+  FilterType,
+  OneTransactionFilter,
+  TwoTransactionFilter,
+} from 'types/filter';
+import noop from 'utils/noop';
 
 export interface AllFilters {
   idFilters?: OneTransactionFilter[];
@@ -8,34 +20,176 @@ export interface AllFilters {
   twoTransactionFilters?: TwoTransactionFilter[];
 }
 
-const getAllFilters = ({
-  filters = [],
-  idFilters = [],
-}: {
-  filters?: OneTransactionFilter[] | AllFilters;
+const FiltersContext = createContext<{
+  addFilter: (input: {
+    filter: OneTransactionFilter | TwoTransactionFilter;
+  }) => void;
   idFilters?: OneTransactionFilter[];
-} = {}): AllFilters => {
-  if (Array.isArray(filters))
-    return {
-      idFilters,
-      oneTransactionFilters: filters,
-      twoTransactionFilters: [],
-    };
-  return filters;
-};
+  oneTransactionFilters?: OneTransactionFilter[];
+  twoTransactionFilters?: TwoTransactionFilter[];
+}>({ addFilter: noop });
 
-const FiltersContext = createContext<AllFilters>(getAllFilters());
-
-export const FiltersProvider: FC<{
-  filters?: OneTransactionFilter[] | AllFilters;
-  idFilters?: OneTransactionFilter[];
-}> = ({ children, filters, idFilters }) => {
-  const allFilters = getAllFilters({ filters, idFilters });
+export const FiltersProvider: FC = ({ children }) => {
+  const {
+    idFilters: initialIdFilters = [],
+    oneTransactionFilters: initialOneTransactionFilters = [],
+    twoTransactionFilters: initialTwoTransactionFilters = [],
+  } = JSON.parse(localStorage.getItem('filters') || '');
+  const {
+    addFilter,
+    idFilters,
+    oneTransactionFilters,
+    twoTransactionFilters,
+  } = useFilters({
+    initialIdFilters,
+    initialOneTransactionFilters,
+    initialTwoTransactionFilters,
+  });
+  useEffect(() => {
+    localStorage.setItem(
+      'filters',
+      JSON.stringify({
+        idFilters,
+        oneTransactionFilters,
+        twoTransactionFilters,
+      })
+    );
+  }, [idFilters, oneTransactionFilters, twoTransactionFilters]);
   return (
-    <FiltersContext.Provider value={allFilters}>
+    <FiltersContext.Provider
+      value={{
+        addFilter,
+        idFilters,
+        oneTransactionFilters,
+        twoTransactionFilters,
+      }}
+    >
       {children}
     </FiltersContext.Provider>
   );
+};
+
+export const TestFiltersProvider: FC<{
+  idFilters?: OneTransactionFilter[];
+  oneTransactionFilters?: OneTransactionFilter[];
+  twoTransactionFilters?: TwoTransactionFilter[];
+}> = ({
+  children,
+  idFilters: initialIdFilters = [],
+  oneTransactionFilters: initialOneTransactionFilters = [],
+  twoTransactionFilters: initialTwoTransactionFilters = [],
+}) => {
+  const {
+    addFilter,
+    idFilters,
+    oneTransactionFilters,
+    twoTransactionFilters,
+  } = useFilters({
+    initialIdFilters,
+    initialOneTransactionFilters,
+    initialTwoTransactionFilters,
+  });
+  return (
+    <FiltersContext.Provider
+      value={{
+        addFilter,
+        idFilters,
+        oneTransactionFilters,
+        twoTransactionFilters,
+      }}
+    >
+      {children}
+    </FiltersContext.Provider>
+  );
+};
+
+const useFilters = ({
+  initialIdFilters,
+  initialOneTransactionFilters,
+  initialTwoTransactionFilters,
+}: {
+  initialIdFilters: OneTransactionFilter[];
+  initialOneTransactionFilters: OneTransactionFilter[];
+  initialTwoTransactionFilters: TwoTransactionFilter[];
+}): {
+  addFilter: (input: {
+    filter: OneTransactionFilter | TwoTransactionFilter;
+  }) => void;
+  idFilters: OneTransactionFilter[];
+  oneTransactionFilters: OneTransactionFilter[];
+  twoTransactionFilters: TwoTransactionFilter[];
+} => {
+  const [
+    { idFilters, oneTransactionFilters, twoTransactionFilters },
+    dispatch,
+  ] = useReducer<Reducer<State, Action>>(reducer, {
+    idFilters: initialIdFilters,
+    oneTransactionFilters: initialOneTransactionFilters,
+    twoTransactionFilters: initialTwoTransactionFilters,
+  });
+  const addFilter = useCallback(
+    ({ filter }) => {
+      dispatch({
+        payload: { filter },
+        type: ActionType.AddFilter,
+      });
+    },
+    [dispatch]
+  );
+  return {
+    addFilter,
+    idFilters,
+    oneTransactionFilters,
+    twoTransactionFilters,
+  };
+};
+
+interface State {
+  idFilters: OneTransactionFilter[];
+  oneTransactionFilters: OneTransactionFilter[];
+  twoTransactionFilters: TwoTransactionFilter[];
+}
+
+type Action = AddFilterAction;
+
+interface AddFilterAction {
+  payload: AddFilterPayload;
+  type: ActionType.AddFilter;
+}
+
+interface AddFilterPayload {
+  filter: OneTransactionFilter | TwoTransactionFilter;
+}
+
+const reducer: Reducer<State, Action> = (state, { payload, type }) => {
+  switch (type) {
+    case ActionType.AddFilter:
+      return handleAddFilterAction({ payload, state });
+    default:
+      return state;
+  }
+};
+
+enum ActionType {
+  AddFilter = 'addFilter',
+}
+
+const handleAddFilterAction = ({
+  payload: { filter },
+  state,
+}: {
+  payload: AddFilterPayload;
+  state: State;
+}): State => {
+  const { oneTransactionFilters } = state;
+  const newOneTransactionFilters =
+    filter.type === FilterType.OneTransaction
+      ? [...oneTransactionFilters, filter]
+      : oneTransactionFilters;
+  return {
+    ...state,
+    oneTransactionFilters: newOneTransactionFilters,
+  };
 };
 
 export default FiltersContext;

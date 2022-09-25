@@ -4,7 +4,9 @@ import { act, render, screen } from '@testing-library/react';
 import Greenbacks from 'components/Greenbacks';
 import { TestGreenbacksProvider } from 'context/Greenbacks';
 import buildApiTransactionsMock from '__test__/utils/buildApiTransactionsMock';
+import buildOneTransactionFilter from '__test__/utils/buildFilter';
 import buildTransaction from '__test__/utils/buildTransaction';
+import buildTwoTransactionFilter from '__test__/utils/buildTwoTransactionFilter';
 import { Category, CoreTransaction } from 'types/transaction';
 import wait from 'utils/wait';
 
@@ -115,7 +117,7 @@ test('excludes savings', async () => {
     }),
   ];
   const filters = [
-    {
+    buildOneTransactionFilter({
       categoryToAssign: Category.Saving,
       id: 'test-filter-id',
       matchers: [
@@ -125,10 +127,14 @@ test('excludes savings', async () => {
         },
       ],
       tagToAssign: 'retirement',
-    },
+    }),
   ];
   render(
-    <TestGreenbacksProvider filters={filters} mocks={mocks} now="2020-07-01">
+    <TestGreenbacksProvider
+      mocks={mocks}
+      now="2020-07-01"
+      oneTransactionFilters={filters}
+    >
       <Greenbacks />
     </TestGreenbacksProvider>
   );
@@ -192,29 +198,31 @@ test('excludes transfers', async () => {
       ],
     }),
   ];
-  const filters = {
-    twoTransactionFilters: [
-      {
-        categoryToAssign: Category.Spending,
-        firstMatchers: [
-          {
-            expectedValue: 'transfer received',
-            property: 'name' as keyof CoreTransaction,
-          },
-        ],
-        id: 'test',
-        secondMatchers: [
-          {
-            expectedValue: 'transfer sent',
-            property: 'name' as keyof CoreTransaction,
-          },
-        ],
-        tagToAssign: 'test-tag',
-      },
-    ],
-  };
+  const filters = [
+    buildTwoTransactionFilter({
+      categoryToAssign: Category.Spending,
+      firstMatchers: [
+        {
+          expectedValue: 'transfer received',
+          property: 'name' as keyof CoreTransaction,
+        },
+      ],
+      id: 'test',
+      secondMatchers: [
+        {
+          expectedValue: 'transfer sent',
+          property: 'name' as keyof CoreTransaction,
+        },
+      ],
+      tagToAssign: 'test-tag',
+    }),
+  ];
   render(
-    <TestGreenbacksProvider filters={filters} mocks={apiMocks} now="2020-07-01">
+    <TestGreenbacksProvider
+      mocks={apiMocks}
+      now="2020-07-01"
+      twoTransactionFilters={filters}
+    >
       <Greenbacks />
     </TestGreenbacksProvider>
   );

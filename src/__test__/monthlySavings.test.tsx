@@ -9,6 +9,7 @@ import {
 import Greenbacks from 'components/Greenbacks';
 import { TestGreenbacksProvider } from 'context/Greenbacks';
 import buildApiTransactionsMock from '__test__/utils/buildApiTransactionsMock';
+import buildFilter from '__test__/utils/buildFilter';
 import buildTransaction from '__test__/utils/buildTransaction';
 import { Category, CoreTransaction } from 'types/transaction';
 
@@ -34,7 +35,7 @@ test('shows savings', async () => {
     }),
   ];
   const filters = [
-    {
+    buildFilter({
       categoryToAssign: Category.Saving,
       id: 'test-filter-id-1',
       matchers: [
@@ -44,8 +45,8 @@ test('shows savings', async () => {
         },
       ],
       tagToAssign: 'first tag',
-    },
-    {
+    }),
+    buildFilter({
       categoryToAssign: Category.Saving,
       id: 'test-filter-id-1',
       matchers: [
@@ -55,12 +56,12 @@ test('shows savings', async () => {
         },
       ],
       tagToAssign: 'second tag',
-    },
+    }),
   ];
   render(
     <TestGreenbacksProvider
-      filters={filters}
       mocks={apiMocks}
+      oneTransactionFilters={filters}
       route="/months/2020-01/"
     >
       <Greenbacks />

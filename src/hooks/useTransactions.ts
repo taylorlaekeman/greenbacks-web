@@ -258,13 +258,15 @@ const isMatcherMatch = ({
   matcher: Matcher;
   transaction: CoreTransaction;
 }): boolean => {
+  if (!(property in transaction)) return false;
+  const actualValue = transaction[property as keyof CoreTransaction];
   switch (comparator) {
     case Comparator.Equals:
-      return transaction[property] === expectedValue;
+      return actualValue === expectedValue;
     case Comparator.GreaterThan:
-      return transaction[property] > expectedValue;
+      return actualValue > expectedValue;
     case Comparator.LessThan:
-      return transaction[property] < expectedValue;
+      return actualValue < expectedValue;
     default:
       return false;
   }

@@ -4,6 +4,7 @@ import { act, render, screen } from '@testing-library/react';
 import Greenbacks from 'components/Greenbacks';
 import { TestGreenbacksProvider } from 'context/Greenbacks';
 import buildApiTransactionsMock from '__test__/utils/buildApiTransactionsMock';
+import buildFilter from '__test__/utils/buildFilter';
 import buildTransaction from '__test__/utils/buildTransaction';
 import { Category, CoreTransaction } from 'types/transaction';
 import wait from 'utils/wait';
@@ -71,7 +72,7 @@ test('correctly averages savings', async () => {
     }),
   ];
   const filters = [
-    {
+    buildFilter({
       categoryToAssign: Category.Saving,
       id: 'test-filter-id',
       matchers: [
@@ -81,10 +82,14 @@ test('correctly averages savings', async () => {
         },
       ],
       tagToAssign: 'retirement',
-    },
+    }),
   ];
   render(
-    <TestGreenbacksProvider filters={filters} mocks={mocks} now="2020-07-01">
+    <TestGreenbacksProvider
+      mocks={mocks}
+      now="2020-07-01"
+      oneTransactionFilters={filters}
+    >
       <Greenbacks />
     </TestGreenbacksProvider>
   );
@@ -106,7 +111,7 @@ test('handles months without savings', async () => {
     }),
   ];
   const filters = [
-    {
+    buildFilter({
       categoryToAssign: Category.Saving,
       id: 'test-filter-id-1',
       matchers: [
@@ -116,10 +121,14 @@ test('handles months without savings', async () => {
         },
       ],
       tagToAssign: 'retirement',
-    },
+    }),
   ];
   render(
-    <TestGreenbacksProvider filters={filters} mocks={mocks} now="2020-07-01">
+    <TestGreenbacksProvider
+      mocks={mocks}
+      now="2020-07-01"
+      oneTransactionFilters={filters}
+    >
       <Greenbacks />
     </TestGreenbacksProvider>
   );
@@ -142,7 +151,7 @@ test('excludes earnings', async () => {
     }),
   ];
   const filters = [
-    {
+    buildFilter({
       categoryToAssign: Category.Saving,
       id: 'test-filter-id-1',
       matchers: [
@@ -152,10 +161,14 @@ test('excludes earnings', async () => {
         },
       ],
       tagToAssign: 'retirement',
-    },
+    }),
   ];
   render(
-    <TestGreenbacksProvider filters={filters} mocks={mocks} now="2020-07-01">
+    <TestGreenbacksProvider
+      mocks={mocks}
+      now="2020-07-01"
+      oneTransactionFilters={filters}
+    >
       <Greenbacks />
     </TestGreenbacksProvider>
   );
@@ -178,7 +191,7 @@ test('excludes expenses', async () => {
     }),
   ];
   const filters = [
-    {
+    buildFilter({
       categoryToAssign: Category.Saving,
       id: 'test-filter-id-1',
       matchers: [
@@ -188,10 +201,14 @@ test('excludes expenses', async () => {
         },
       ],
       tagToAssign: 'retirement',
-    },
+    }),
   ];
   render(
-    <TestGreenbacksProvider filters={filters} mocks={mocks} now="2020-07-01">
+    <TestGreenbacksProvider
+      mocks={mocks}
+      now="2020-07-01"
+      oneTransactionFilters={filters}
+    >
       <Greenbacks />
     </TestGreenbacksProvider>
   );
