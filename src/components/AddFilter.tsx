@@ -8,6 +8,7 @@ import Select from 'components/Select';
 import useAddFilter from 'hooks/useAddFilter';
 import { FilterType } from 'types/filter';
 import { Category } from 'types/transaction';
+import getUuid from 'utils/uuid';
 
 const AddFilter: FC = () => {
   const { addFilter } = useAddFilter();
@@ -54,7 +55,7 @@ const AddFilter: FC = () => {
             addFilter({
               filter: {
                 categoryToAssign: category as Category,
-                id: 'blahblahblah',
+                id: getUuid(),
                 matchers: [
                   {
                     property,
