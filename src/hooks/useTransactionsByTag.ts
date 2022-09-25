@@ -1,4 +1,4 @@
-import useCategorizedTransactions from 'hooks/useCategorizedTransactions';
+import useTransactionsByCategory from 'hooks/useTransactionsByCategory';
 import type Transaction from 'types/transaction';
 
 const useTransactionsByTag = ({
@@ -8,7 +8,7 @@ const useTransactionsByTag = ({
   endDate: string;
   startDate: string;
 }): { spending: TagGroup[]; isLoading: boolean } => {
-  const { earning, isLoading, spending } = useCategorizedTransactions({
+  const { earning, isLoading, spending } = useTransactionsByCategory({
     endDate,
     startDate,
   });

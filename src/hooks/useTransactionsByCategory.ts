@@ -2,7 +2,7 @@ import type { ApolloError } from 'hooks/useQuery';
 import useTransactions from 'hooks/useTransactions';
 import Transaction, { Category } from 'types/transaction';
 
-const useCategorizedTransactions = ({
+const useTransactionsByCategory = ({
   endDate,
   startDate,
 }: {
@@ -35,4 +35,4 @@ const useCategorizedTransactions = ({
   };
 };
 
-export default useCategorizedTransactions;
+export default useTransactionsByCategory;

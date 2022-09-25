@@ -4,12 +4,12 @@ import LoadingIndicator from 'components/LoadingIndicator';
 import SectionContainer from 'components/SectionContainer';
 import useCurrencyFormatter from 'hooks/useCurrencyFormatter';
 import useMonth from 'hooks/useMonth';
-import useCategorizedTransactions from 'hooks/useCategorizedTransactions';
+import useTransactionsByCategory from 'hooks/useTransactionsByCategory';
 import getTransactionsByDate from 'utils/getTransactionsByDate';
 
 const MonthlyEarnings: FC = () => {
   const { endDate, startDate } = useMonth();
-  const { earning, isLoading } = useCategorizedTransactions({
+  const { earning, isLoading } = useTransactionsByCategory({
     endDate,
     startDate,
   });

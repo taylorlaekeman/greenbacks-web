@@ -1,4 +1,4 @@
-import useCategorizedTransactions from 'hooks/useCategorizedTransactions';
+import useTransactionsByCategory from 'hooks/useTransactionsByCategory';
 
 const useTotalEarning = ({
   endDate,
@@ -7,7 +7,7 @@ const useTotalEarning = ({
   endDate: string;
   startDate: string;
 }): { isLoading: boolean; totalEarning?: number } => {
-  const { earning, isLoading } = useCategorizedTransactions({
+  const { earning, isLoading } = useTransactionsByCategory({
     endDate,
     startDate,
   });

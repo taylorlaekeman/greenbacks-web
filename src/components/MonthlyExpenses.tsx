@@ -2,15 +2,15 @@ import React, { FC, Fragment } from 'react';
 
 import LoadingIndicator from 'components/LoadingIndicator';
 import SectionContainer from 'components/SectionContainer';
-import useCategorizedTransactions from 'hooks/useCategorizedTransactions';
 import useCurrencyFormatter from 'hooks/useCurrencyFormatter';
 import useMonth from 'hooks/useMonth';
+import useTransactionsByCategory from 'hooks/useTransactionsByCategory';
 import getTransactionsByDate from 'utils/getTransactionsByDate';
 
 const MonthlyExpenses: FC = () => {
   const { endDate, startDate } = useMonth();
   const { format } = useCurrencyFormatter();
-  const { isLoading, spending } = useCategorizedTransactions({
+  const { isLoading, spending } = useTransactionsByCategory({
     endDate,
     startDate,
   });

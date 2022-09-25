@@ -1,5 +1,5 @@
-import useCategorizedTransactions from 'hooks/useCategorizedTransactions';
 import usePreviousSixMonths from 'hooks/usePreviousSixMonths';
+import useTransactionsByCategory from 'hooks/useTransactionsByCategory';
 import type { ApolloError } from 'hooks/useQuery';
 
 const useAverageMonthlySpending = (): {
@@ -8,7 +8,7 @@ const useAverageMonthlySpending = (): {
   isLoading: boolean;
 } => {
   const { endIso: endDate, startIso: startDate } = usePreviousSixMonths();
-  const { error, isLoading, spending } = useCategorizedTransactions({
+  const { error, isLoading, spending } = useTransactionsByCategory({
     endDate,
     startDate,
   });
