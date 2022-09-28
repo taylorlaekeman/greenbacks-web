@@ -52,6 +52,8 @@ const AddFilter: FC = () => {
         <Button
           onClick={() => {
             if (!property || !expectedValue) return;
+            const type =
+              property === 'id' ? FilterType.Id : FilterType.OneTransaction;
             addFilter({
               filter: {
                 categoryToAssign: category as Category,
@@ -63,7 +65,7 @@ const AddFilter: FC = () => {
                   },
                 ],
                 tagToAssign: tag,
-                type: FilterType.OneTransaction,
+                type,
               },
             });
           }}
@@ -75,6 +77,9 @@ const AddFilter: FC = () => {
   );
 };
 
-const PROPERTY_OPTIONS = [{ label: 'Name', value: 'name' }];
+const PROPERTY_OPTIONS = [
+  { label: 'Name', value: 'name' },
+  { label: 'Id', value: 'id' },
+];
 
 export default AddFilter;

@@ -181,13 +181,16 @@ const handleAddFilterAction = ({
   payload: AddFilterPayload;
   state: State;
 }): State => {
-  const { oneTransactionFilters } = state;
+  const { idFilters, oneTransactionFilters } = state;
+  const newIdFilters =
+    filter.type === FilterType.Id ? [...idFilters, filter] : idFilters;
   const newOneTransactionFilters =
     filter.type === FilterType.OneTransaction
       ? [...oneTransactionFilters, filter]
       : oneTransactionFilters;
   return {
     ...state,
+    idFilters: newIdFilters,
     oneTransactionFilters: newOneTransactionFilters,
   };
 };
