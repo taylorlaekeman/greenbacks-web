@@ -23,6 +23,7 @@ export interface ConnectedTransaction {
 
 export enum Category {
   Earning = 'Earning',
+  Hidden = 'Hidden',
   Saving = 'Saving',
   Spending = 'Spending',
 }

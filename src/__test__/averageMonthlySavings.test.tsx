@@ -4,7 +4,7 @@ import { act, render, screen } from '@testing-library/react';
 import Greenbacks from 'components/Greenbacks';
 import { TestGreenbacksProvider } from 'context/Greenbacks';
 import buildApiTransactionsMock from '__test__/utils/buildApiTransactionsMock';
-import buildFilter from '__test__/utils/buildFilter';
+import buildFilter, { buildMatcher } from '__test__/utils/buildFilter';
 import buildTransaction from '__test__/utils/buildTransaction';
 import { Category, CoreTransaction } from 'types/transaction';
 import wait from 'utils/wait';
@@ -68,6 +68,11 @@ test('correctly averages savings', async () => {
           datetime: '2020-06-01',
           name: 'SAVINGS!',
         }),
+        buildTransaction({
+          amount: -200,
+          datetime: '2020-06-01',
+          name: 'hidden',
+        }),
       ],
     }),
   ];
@@ -82,6 +87,10 @@ test('correctly averages savings', async () => {
         },
       ],
       tagToAssign: 'retirement',
+    }),
+    buildFilter({
+      categoryToAssign: Category.Hidden,
+      matchers: [buildMatcher({ expectedValue: 'hidden', property: 'name' })],
     }),
   ];
   render(

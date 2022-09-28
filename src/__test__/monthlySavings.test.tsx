@@ -9,7 +9,7 @@ import {
 import Greenbacks from 'components/Greenbacks';
 import { TestGreenbacksProvider } from 'context/Greenbacks';
 import buildApiTransactionsMock from '__test__/utils/buildApiTransactionsMock';
-import buildFilter from '__test__/utils/buildFilter';
+import buildFilter, { buildMatcher } from '__test__/utils/buildFilter';
 import buildTransaction from '__test__/utils/buildTransaction';
 import { Category, CoreTransaction } from 'types/transaction';
 
@@ -30,6 +30,12 @@ test('shows savings', async () => {
           datetime: '2020-01-15',
           merchant: 'second merchant',
           name: 'second name',
+        }),
+        buildTransaction({
+          amount: 200,
+          datetime: '2020-01-15',
+          merchant: 'third merchant',
+          name: 'hidden',
         }),
       ],
     }),
@@ -57,6 +63,10 @@ test('shows savings', async () => {
       ],
       tagToAssign: 'second tag',
     }),
+    buildFilter({
+      categoryToAssign: Category.Hidden,
+      matchers: [buildMatcher({ expectedValue: 'hidden', property: 'name' })],
+    }),
   ];
   render(
     <TestGreenbacksProvider
@@ -67,7 +77,7 @@ test('shows savings', async () => {
       <Greenbacks />
     </TestGreenbacksProvider>
   );
-  const { getByText, queryByTestId } = within(
+  const { getByText, queryByTestId, queryByText } = within(
     await screen.findByTestId('section-monthly-savings')
   );
   await waitForElementToBeRemoved(() =>
@@ -81,6 +91,7 @@ test('shows savings', async () => {
   expect(
     getByText(/\$2.00—second merchant \(second name\) second tag/)
   ).toBeVisible();
+  expect(queryByText(/third merchant/)).not.toBeInTheDocument();
 });
 
 test('shows loading indicator while transactions are loading', () => {

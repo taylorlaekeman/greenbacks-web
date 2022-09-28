@@ -4,7 +4,7 @@ import { render, screen, within } from '@testing-library/react';
 import Greenbacks from 'components/Greenbacks';
 import { TestGreenbacksProvider } from 'context/Greenbacks';
 import buildApiTransactionsMock from '__test__/utils/buildApiTransactionsMock';
-import buildFilter from '__test__/utils/buildFilter';
+import buildFilter, { buildMatcher } from '__test__/utils/buildFilter';
 import buildTransaction from '__test__/utils/buildTransaction';
 import { Category, CoreTransaction } from 'types/transaction';
 
@@ -20,11 +20,25 @@ test('shows total earning', async () => {
         buildTransaction({
           amount: -100,
         }),
+        buildTransaction({
+          amount: -100,
+          name: 'hidden',
+        }),
       ],
     }),
   ];
+  const filters = [
+    buildFilter({
+      categoryToAssign: Category.Hidden,
+      matchers: [buildMatcher({ expectedValue: 'hidden', property: 'name' })],
+    }),
+  ];
   render(
-    <TestGreenbacksProvider mocks={apiMocks} route="/months/2020-01/">
+    <TestGreenbacksProvider
+      oneTransactionFilters={filters}
+      mocks={apiMocks}
+      route="/months/2020-01/"
+    >
       <Greenbacks />
     </TestGreenbacksProvider>
   );
@@ -46,11 +60,25 @@ test('shows total spending', async () => {
         buildTransaction({
           amount: 100,
         }),
+        buildTransaction({
+          amount: 100,
+          name: 'hidden',
+        }),
       ],
     }),
   ];
+  const filters = [
+    buildFilter({
+      categoryToAssign: Category.Hidden,
+      matchers: [buildMatcher({ expectedValue: 'hidden', property: 'name' })],
+    }),
+  ];
   render(
-    <TestGreenbacksProvider mocks={apiMocks} route="/months/2020-01/">
+    <TestGreenbacksProvider
+      mocks={apiMocks}
+      oneTransactionFilters={filters}
+      route="/months/2020-01/"
+    >
       <Greenbacks />
     </TestGreenbacksProvider>
   );
@@ -70,6 +98,10 @@ test('shows total saving', async () => {
           amount: 100,
           name: 'test name',
         }),
+        buildTransaction({
+          amount: 100,
+          name: 'hidden',
+        }),
       ],
     }),
   ];
@@ -83,6 +115,10 @@ test('shows total saving', async () => {
           property: 'name' as keyof CoreTransaction,
         },
       ],
+    }),
+    buildFilter({
+      categoryToAssign: Category.Hidden,
+      matchers: [buildMatcher({ expectedValue: 'hidden', property: 'name' })],
     }),
   ];
   render(
@@ -113,6 +149,10 @@ test('shows savings rate', async () => {
           amount: 100,
           name: 'test name',
         }),
+        buildTransaction({
+          amount: 100,
+          name: 'hidden',
+        }),
       ],
     }),
   ];
@@ -126,6 +166,10 @@ test('shows savings rate', async () => {
           property: 'name',
         },
       ],
+    }),
+    buildFilter({
+      categoryToAssign: Category.Hidden,
+      matchers: [buildMatcher({ expectedValue: 'hidden', property: 'name' })],
     }),
   ];
   render(

@@ -4,7 +4,9 @@ import { act, render, screen } from '@testing-library/react';
 import Greenbacks from 'components/Greenbacks';
 import { TestGreenbacksProvider } from 'context/Greenbacks';
 import buildApiTransactionsMock from '__test__/utils/buildApiTransactionsMock';
-import buildOneTransactionFilter from '__test__/utils/buildFilter';
+import buildOneTransactionFilter, {
+  buildMatcher,
+} from '__test__/utils/buildFilter';
 import buildTransaction from '__test__/utils/buildTransaction';
 import buildTwoTransactionFilter from '__test__/utils/buildTwoTransactionFilter';
 import { Category, CoreTransaction } from 'types/transaction';
@@ -45,11 +47,26 @@ test('correctly averages transactions', async () => {
         buildTransaction({ amount: 200, datetime: '2020-04-01' }),
         buildTransaction({ amount: 200, datetime: '2020-05-01' }),
         buildTransaction({ amount: 200, datetime: '2020-06-01' }),
+        buildTransaction({
+          amount: 200,
+          datetime: '2020-06-01',
+          name: 'hidden',
+        }),
       ],
     }),
   ];
+  const filters = [
+    buildOneTransactionFilter({
+      categoryToAssign: Category.Hidden,
+      matchers: [buildMatcher({ expectedValue: 'hidden', property: 'name' })],
+    }),
+  ];
   render(
-    <TestGreenbacksProvider mocks={mocks} now="2020-07-01">
+    <TestGreenbacksProvider
+      oneTransactionFilters={filters}
+      mocks={mocks}
+      now="2020-07-01"
+    >
       <Greenbacks />
     </TestGreenbacksProvider>
   );

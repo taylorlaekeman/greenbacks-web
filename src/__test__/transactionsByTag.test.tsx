@@ -4,7 +4,7 @@ import { render, screen, within } from '@testing-library/react';
 import Greenbacks from 'components/Greenbacks';
 import { TestGreenbacksProvider } from 'context/Greenbacks';
 import buildApiTransactionsMock from '__test__/utils/buildApiTransactionsMock';
-import buildFilter from '__test__/utils/buildFilter';
+import buildFilter, { buildMatcher } from '__test__/utils/buildFilter';
 import buildTransaction from '__test__/utils/buildTransaction';
 import { Category, CoreTransaction } from 'types/transaction';
 
@@ -51,6 +51,10 @@ test('groups transactions by tag', async () => {
           amount: 100,
           name: 'third name',
         }),
+        buildTransaction({
+          amount: 100,
+          name: 'hidden',
+        }),
       ],
     }),
   ];
@@ -88,6 +92,10 @@ test('groups transactions by tag', async () => {
       ],
       tagToAssign: 'third tag',
     }),
+    buildFilter({
+      categoryToAssign: Category.Hidden,
+      matchers: [buildMatcher({ expectedValue: 'hidden', property: 'name' })],
+    }),
   ];
   render(
     <TestGreenbacksProvider
@@ -105,6 +113,7 @@ test('groups transactions by tag', async () => {
   expect(items[0]).toHaveTextContent(/second tag: \$3.00/);
   expect(items[1]).toHaveTextContent(/first tag: \$2.00/);
   expect(items[2]).toHaveTextContent(/third tag: \$1.00/);
+  expect(items).toHaveLength(3);
 });
 
 test('groups untagged transactions', async () => {

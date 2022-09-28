@@ -9,7 +9,9 @@ import {
 import Greenbacks from 'components/Greenbacks';
 import { TestGreenbacksProvider } from 'context/Greenbacks';
 import buildApiTransactionsMock from '__test__/utils/buildApiTransactionsMock';
+import buildFilter, { buildMatcher } from '__test__/utils/buildFilter';
 import buildTransaction from '__test__/utils/buildTransaction';
+import { Category } from 'types/transaction';
 
 test('shows earnings', async () => {
   const apiMocks = [
@@ -29,15 +31,31 @@ test('shows earnings', async () => {
           merchant: 'second merchant',
           name: 'second name',
         }),
+        buildTransaction({
+          amount: 200,
+          datetime: '2020-06-01',
+          merchant: 'third merchant',
+          name: 'hidden',
+        }),
       ],
     }),
   ];
+  const filters = [
+    buildFilter({
+      categoryToAssign: Category.Hidden,
+      matchers: [buildMatcher({ expectedValue: 'hidden', property: 'name' })],
+    }),
+  ];
   render(
-    <TestGreenbacksProvider mocks={apiMocks} route="/months/2020-01/">
+    <TestGreenbacksProvider
+      oneTransactionFilters={filters}
+      mocks={apiMocks}
+      route="/months/2020-01/"
+    >
       <Greenbacks />
     </TestGreenbacksProvider>
   );
-  const { getByText, queryByTestId } = within(
+  const { getByText, queryByTestId, queryByText } = within(
     await screen.findByTestId('section-monthly-earnings')
   );
   await waitForElementToBeRemoved(() =>
@@ -47,6 +65,9 @@ test('shows earnings', async () => {
   expect(getByText(/\$1.00—first merchant \(first name\)/)).toBeVisible();
   expect(getByText('2020-01-15')).toBeVisible();
   expect(getByText(/\$2.00—second merchant \(second name\)/)).toBeVisible();
+  expect(
+    queryByText(/\$2.00—third merchant \(hidden\)/)
+  ).not.toBeInTheDocument();
 });
 
 test('shows loading indicator while transactions are loading', () => {

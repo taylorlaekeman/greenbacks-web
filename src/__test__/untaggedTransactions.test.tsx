@@ -35,11 +35,28 @@ test('shows untagged transactions', async () => {
           merchant: 'third merchant',
           name: 'third name',
         }),
+        buildTransaction({
+          amount: -200,
+          datetime: '2020-01-03',
+          id: 'fourth-id',
+          merchant: 'fourth merchant',
+          name: 'hidden',
+        }),
       ],
     }),
   ];
+  const filters = [
+    buildFilter({
+      categoryToAssign: Category.Hidden,
+      matchers: [buildMatcher({ expectedValue: 'hidden', property: 'name' })],
+    }),
+  ];
   render(
-    <TestGreenbacksProvider mocks={apiMocks} route="/months/2020-01/">
+    <TestGreenbacksProvider
+      mocks={apiMocks}
+      oneTransactionFilters={filters}
+      route="/months/2020-01/"
+    >
       <Greenbacks />
     </TestGreenbacksProvider>
   );
@@ -56,6 +73,7 @@ test('shows untagged transactions', async () => {
   expect(items[2]).toHaveTextContent(
     '$1.00 (Debit)—first merchant (first name)—2020-01-01 first-id'
   );
+  expect(items).toHaveLength(3);
 });
 
 test('section is not present while transactions are loading', async () => {

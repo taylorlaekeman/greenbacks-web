@@ -4,7 +4,7 @@ import { render, screen, within } from '@testing-library/react';
 import Greenbacks from 'components/Greenbacks';
 import { TestGreenbacksProvider } from 'context/Greenbacks';
 import buildApiTransactionsMock from '__test__/utils/buildApiTransactionsMock';
-import buildFilter from '__test__/utils/buildFilter';
+import buildFilter, { buildMatcher } from '__test__/utils/buildFilter';
 import buildTransaction from '__test__/utils/buildTransaction';
 import { Comparator } from 'types/filter';
 import { Category, CoreTransaction } from 'types/transaction';
@@ -40,15 +40,31 @@ test('shows expenses', async () => {
           merchant: 'second merchant',
           name: 'second name',
         }),
+        buildTransaction({
+          amount: 200,
+          datetime: '2020-01-15',
+          merchant: 'third merchant',
+          name: 'hidden',
+        }),
       ],
     }),
   ];
+  const filters = [
+    buildFilter({
+      categoryToAssign: Category.Hidden,
+      matchers: [buildMatcher({ expectedValue: 'hidden', property: 'name' })],
+    }),
+  ];
   render(
-    <TestGreenbacksProvider mocks={mocks} now="2020-01-01">
+    <TestGreenbacksProvider
+      oneTransactionFilters={filters}
+      mocks={mocks}
+      now="2020-01-01"
+    >
       <Greenbacks />
     </TestGreenbacksProvider>
   );
-  const { getByText } = within(
+  const { getByText, queryByText } = within(
     await screen.findByTestId('section-monthly-expenses')
   );
   expect(getByText(/first merchant/)).toBeInTheDocument();
@@ -59,6 +75,7 @@ test('shows expenses', async () => {
   expect(getByText(/second name/)).toBeInTheDocument();
   expect(getByText(/\$2.00/)).toBeInTheDocument();
   expect(getByText(/2020-01-15/)).toBeInTheDocument();
+  expect(queryByText(/third merchant/)).not.toBeInTheDocument();
 });
 
 test('excludes savings', async () => {
