@@ -9,12 +9,12 @@ const useTransactionsByTag = ({
   endDate: string;
   startDate: string;
 }): { spending: TagGroup[]; isLoading: boolean } => {
-  const { earning, isLoading, spending } = useTransactionsByCategory({
+  const { isLoading, spending } = useTransactionsByCategory({
     endDate,
     startDate,
   });
   const spendingByTag = groupByTag({
-    transactions: [...(spending || []), ...(earning || [])],
+    transactions: spending,
   });
   return {
     spending: spendingByTag,

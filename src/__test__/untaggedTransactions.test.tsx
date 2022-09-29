@@ -68,12 +68,9 @@ test('shows untagged transactions', async () => {
     '$3.00 (Debit)—second merchant (second name)—2020-01-02 second-id'
   );
   expect(items[1]).toHaveTextContent(
-    '$2.00 (Credit)—third merchant (third name)—2020-01-03 third-id'
-  );
-  expect(items[2]).toHaveTextContent(
     '$1.00 (Debit)—first merchant (first name)—2020-01-01 first-id'
   );
-  expect(items).toHaveLength(3);
+  expect(items).toHaveLength(2);
 });
 
 test('section is not present while transactions are loading', async () => {

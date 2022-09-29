@@ -19,15 +19,16 @@ const useTransactionsByCategory = ({
     endDate,
     startDate,
   });
-  const earning = credits?.filter(
-    ({ category }) => category === Category.Earning
-  );
+  const earning = [
+    ...(credits?.filter(({ category }) => category === Category.Earning) || []),
+    ...(debits?.filter(({ category }) => category === Category.Earning) || []),
+  ];
   const saving = debits?.filter(({ category }) => category === Category.Saving);
   const spending = debits?.filter(
     ({ category }) => category === Category.Spending
   );
   return {
-    earning,
+    earning: earning.length > 0 ? earning : undefined,
     error,
     isLoading,
     saving,
