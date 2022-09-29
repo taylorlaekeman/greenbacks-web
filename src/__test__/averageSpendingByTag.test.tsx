@@ -15,63 +15,13 @@ test('correctly averages spending', async () => {
       startDate: '2020-01-01',
       transactions: [
         buildTransaction({
-          amount: 200,
+          amount: 600,
           datetime: '2020-01-01',
           name: 'first name',
         }),
         buildTransaction({
-          amount: 300,
+          amount: 1200,
           datetime: '2020-01-01',
-          name: 'second name',
-        }),
-        buildTransaction({
-          amount: 200,
-          datetime: '2020-02-01',
-          name: 'first name',
-        }),
-        buildTransaction({
-          amount: 300,
-          datetime: '2020-02-01',
-          name: 'second name',
-        }),
-        buildTransaction({
-          amount: 200,
-          datetime: '2020-03-01',
-          name: 'first name',
-        }),
-        buildTransaction({
-          amount: 300,
-          datetime: '2020-03-01',
-          name: 'second name',
-        }),
-        buildTransaction({
-          amount: 200,
-          datetime: '2020-04-01',
-          name: 'first name',
-        }),
-        buildTransaction({
-          amount: 300,
-          datetime: '2020-04-01',
-          name: 'second name',
-        }),
-        buildTransaction({
-          amount: 200,
-          datetime: '2020-05-01',
-          name: 'first name',
-        }),
-        buildTransaction({
-          amount: 300,
-          datetime: '2020-05-01',
-          name: 'second name',
-        }),
-        buildTransaction({
-          amount: 200,
-          datetime: '2020-06-01',
-          name: 'first name',
-        }),
-        buildTransaction({
-          amount: 300,
-          datetime: '2020-06-01',
           name: 'second name',
         }),
       ],
@@ -106,8 +56,8 @@ test('correctly averages spending', async () => {
     await screen.findByTestId('section-average-spending-by-tag')
   );
   const items = await findAllByRole('listitem');
-  expect(items[0]).toHaveTextContent(/second tag: \$3.00/);
-  expect(items[1]).toHaveTextContent(/first tag: \$2.00/);
+  expect(items[0]).toHaveTextContent(/second tag: \$2.00/);
+  expect(items[1]).toHaveTextContent(/first tag: \$1.00/);
   expect(items).toHaveLength(2);
 });
 
@@ -118,63 +68,13 @@ test('excludes savings', async () => {
       startDate: '2020-01-01',
       transactions: [
         buildTransaction({
-          amount: 200,
+          amount: 600,
           datetime: '2020-01-01',
           name: 'first name',
         }),
         buildTransaction({
-          amount: 300,
+          amount: 600,
           datetime: '2020-01-01',
-          name: 'second name',
-        }),
-        buildTransaction({
-          amount: 200,
-          datetime: '2020-02-01',
-          name: 'first name',
-        }),
-        buildTransaction({
-          amount: 300,
-          datetime: '2020-02-01',
-          name: 'second name',
-        }),
-        buildTransaction({
-          amount: 200,
-          datetime: '2020-03-01',
-          name: 'first name',
-        }),
-        buildTransaction({
-          amount: 300,
-          datetime: '2020-03-01',
-          name: 'second name',
-        }),
-        buildTransaction({
-          amount: 200,
-          datetime: '2020-04-01',
-          name: 'first name',
-        }),
-        buildTransaction({
-          amount: 300,
-          datetime: '2020-04-01',
-          name: 'second name',
-        }),
-        buildTransaction({
-          amount: 200,
-          datetime: '2020-05-01',
-          name: 'first name',
-        }),
-        buildTransaction({
-          amount: 300,
-          datetime: '2020-05-01',
-          name: 'second name',
-        }),
-        buildTransaction({
-          amount: 200,
-          datetime: '2020-06-01',
-          name: 'first name',
-        }),
-        buildTransaction({
-          amount: 300,
-          datetime: '2020-06-01',
           name: 'second name',
         }),
       ],
@@ -208,7 +108,7 @@ test('excludes savings', async () => {
     await screen.findByTestId('section-average-spending-by-tag')
   );
   const items = await findAllByRole('listitem');
-  expect(items[0]).toHaveTextContent(/second tag: \$3.00/);
+  expect(items[0]).toHaveTextContent(/second tag: \$1.00/);
   expect(items).toHaveLength(1);
 });
 
@@ -219,63 +119,13 @@ test('excludes earnings', async () => {
       startDate: '2020-01-01',
       transactions: [
         buildTransaction({
-          amount: 200,
+          amount: 600,
           datetime: '2020-01-01',
           name: 'first name',
         }),
         buildTransaction({
-          amount: 300,
+          amount: 600,
           datetime: '2020-01-01',
-          name: 'second name',
-        }),
-        buildTransaction({
-          amount: 200,
-          datetime: '2020-02-01',
-          name: 'first name',
-        }),
-        buildTransaction({
-          amount: 300,
-          datetime: '2020-02-01',
-          name: 'second name',
-        }),
-        buildTransaction({
-          amount: 200,
-          datetime: '2020-03-01',
-          name: 'first name',
-        }),
-        buildTransaction({
-          amount: 300,
-          datetime: '2020-03-01',
-          name: 'second name',
-        }),
-        buildTransaction({
-          amount: 200,
-          datetime: '2020-04-01',
-          name: 'first name',
-        }),
-        buildTransaction({
-          amount: 300,
-          datetime: '2020-04-01',
-          name: 'second name',
-        }),
-        buildTransaction({
-          amount: 200,
-          datetime: '2020-05-01',
-          name: 'first name',
-        }),
-        buildTransaction({
-          amount: 300,
-          datetime: '2020-05-01',
-          name: 'second name',
-        }),
-        buildTransaction({
-          amount: 200,
-          datetime: '2020-06-01',
-          name: 'first name',
-        }),
-        buildTransaction({
-          amount: 300,
-          datetime: '2020-06-01',
           name: 'second name',
         }),
       ],
@@ -309,7 +159,7 @@ test('excludes earnings', async () => {
     await screen.findByTestId('section-average-spending-by-tag')
   );
   const items = await findAllByRole('listitem');
-  expect(items[0]).toHaveTextContent(/second tag: \$3.00/);
+  expect(items[0]).toHaveTextContent(/second tag: \$1.00/);
   expect(items).toHaveLength(1);
 });
 
@@ -320,63 +170,13 @@ test('excludes hidden transactions', async () => {
       startDate: '2020-01-01',
       transactions: [
         buildTransaction({
-          amount: 200,
+          amount: 600,
           datetime: '2020-01-01',
           name: 'first name',
         }),
         buildTransaction({
-          amount: 300,
+          amount: 600,
           datetime: '2020-01-01',
-          name: 'second name',
-        }),
-        buildTransaction({
-          amount: 200,
-          datetime: '2020-02-01',
-          name: 'first name',
-        }),
-        buildTransaction({
-          amount: 300,
-          datetime: '2020-02-01',
-          name: 'second name',
-        }),
-        buildTransaction({
-          amount: 200,
-          datetime: '2020-03-01',
-          name: 'first name',
-        }),
-        buildTransaction({
-          amount: 300,
-          datetime: '2020-03-01',
-          name: 'second name',
-        }),
-        buildTransaction({
-          amount: 200,
-          datetime: '2020-04-01',
-          name: 'first name',
-        }),
-        buildTransaction({
-          amount: 300,
-          datetime: '2020-04-01',
-          name: 'second name',
-        }),
-        buildTransaction({
-          amount: 200,
-          datetime: '2020-05-01',
-          name: 'first name',
-        }),
-        buildTransaction({
-          amount: 300,
-          datetime: '2020-05-01',
-          name: 'second name',
-        }),
-        buildTransaction({
-          amount: 200,
-          datetime: '2020-06-01',
-          name: 'first name',
-        }),
-        buildTransaction({
-          amount: 300,
-          datetime: '2020-06-01',
           name: 'second name',
         }),
       ],
@@ -410,7 +210,7 @@ test('excludes hidden transactions', async () => {
     await screen.findByTestId('section-average-spending-by-tag')
   );
   const items = await findAllByRole('listitem');
-  expect(items[0]).toHaveTextContent(/second tag: \$3.00/);
+  expect(items[0]).toHaveTextContent(/second tag: \$1.00/);
   expect(items).toHaveLength(1);
 });
 
@@ -421,83 +221,20 @@ test('groups untagged transactions', async () => {
       startDate: '2020-01-01',
       transactions: [
         buildTransaction({
-          amount: 200,
+          amount: 600,
           datetime: '2020-01-01',
           name: 'first name',
         }),
         buildTransaction({
-          amount: 300,
+          amount: 600,
           datetime: '2020-01-01',
           name: 'second name',
         }),
-        buildTransaction({
-          amount: 200,
-          datetime: '2020-02-01',
-          name: 'first name',
-        }),
-        buildTransaction({
-          amount: 300,
-          datetime: '2020-02-01',
-          name: 'second name',
-        }),
-        buildTransaction({
-          amount: 200,
-          datetime: '2020-03-01',
-          name: 'first name',
-        }),
-        buildTransaction({
-          amount: 300,
-          datetime: '2020-03-01',
-          name: 'second name',
-        }),
-        buildTransaction({
-          amount: 200,
-          datetime: '2020-04-01',
-          name: 'first name',
-        }),
-        buildTransaction({
-          amount: 300,
-          datetime: '2020-04-01',
-          name: 'second name',
-        }),
-        buildTransaction({
-          amount: 200,
-          datetime: '2020-05-01',
-          name: 'first name',
-        }),
-        buildTransaction({
-          amount: 300,
-          datetime: '2020-05-01',
-          name: 'second name',
-        }),
-        buildTransaction({
-          amount: 200,
-          datetime: '2020-06-01',
-          name: 'first name',
-        }),
-        buildTransaction({
-          amount: 300,
-          datetime: '2020-06-01',
-          name: 'second name',
-        }),
       ],
-    }),
-  ];
-  const filters = [
-    buildFilter({
-      categoryToAssign: Category.Spending,
-      matchers: [
-        buildMatcher({ expectedValue: 'second name', property: 'name' }),
-      ],
-      tagToAssign: 'second tag',
     }),
   ];
   render(
-    <TestGreenbacksProvider
-      mocks={apiMocks}
-      now="2020-07-01"
-      oneTransactionFilters={filters}
-    >
+    <TestGreenbacksProvider mocks={apiMocks} now="2020-07-01">
       <Greenbacks />
     </TestGreenbacksProvider>
   );
@@ -505,9 +242,8 @@ test('groups untagged transactions', async () => {
     await screen.findByTestId('section-average-spending-by-tag')
   );
   const items = await findAllByRole('listitem');
-  expect(items[0]).toHaveTextContent(/second tag: \$3.00/);
-  expect(items[1]).toHaveTextContent(/Untagged: \$2.00/);
-  expect(items).toHaveLength(2);
+  expect(items[0]).toHaveTextContent(/Untagged: \$2.00/);
+  expect(items).toHaveLength(1);
 });
 
 test('shows loading indicator', async () => {
