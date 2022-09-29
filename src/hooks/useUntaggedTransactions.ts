@@ -9,7 +9,7 @@ const useUntaggedTransactions = ({
 }: {
   endDate: string;
   startDate: string;
-}): { isLoading: boolean; untaggedTransactions?: Transaction[] } => {
+}): { isLoading: boolean; spending?: Transaction[] } => {
   const { isLoading, spending } = useTransactionsByTag({ endDate, startDate });
   const { transactions } =
     spending.find(({ tag }: TagGroup) => tag === UNTAGGED) || {};
@@ -17,7 +17,7 @@ const useUntaggedTransactions = ({
     ({ amount: firstAmount }, { amount: secondAmount }) =>
       firstAmount > secondAmount ? -1 : 1
   );
-  return { isLoading, untaggedTransactions: sortedTransactions };
+  return { isLoading, spending: sortedTransactions };
 };
 
 export default useUntaggedTransactions;

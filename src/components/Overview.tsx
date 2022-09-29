@@ -1,9 +1,11 @@
 import React, { FC } from 'react';
 
+import AddFilter from 'components/AddFilter';
 import AmountBadge from 'components/AmountBadge';
 import ArticleContainer from 'components/ArticleContainer';
 import PercentBadge from 'components/PercentBadge';
 import TransactionsByTag from 'components/TransactionsByTag';
+import UntaggedTransactions from 'components/UntaggedTransactions';
 import useAverageMonthlyEarning from 'hooks/useAverageMonthlyEarning';
 import useAverageMonthlySaving from 'hooks/useAverageMonthlySaving';
 import useAverageMonthlySpending from 'hooks/useAverageMonthlySpending';
@@ -67,6 +69,8 @@ const Overview: FC = () => {
         name="Average Spending by Tag"
         transactions={spendingByTag}
       />
+      <AddFilter />
+      <UntaggedTransactions />
     </ArticleContainer>
   );
 };

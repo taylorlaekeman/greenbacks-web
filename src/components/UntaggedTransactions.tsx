@@ -1,41 +1,22 @@
 import React, { FC } from 'react';
 
 import SectionContainer from 'components/SectionContainer';
-import useCurrencyFormatter from 'hooks/useCurrencyFormatter';
-import useMonth from 'hooks/useMonth';
+import Transactions from 'components/Transactions';
+import usePreviousSixMonths from 'hooks/usePreviousSixMonths';
 import useUntaggedTransactions from 'hooks/useUntaggedTransactions';
 
 const UntaggedTransactions: FC = () => {
-  const { endDate, startDate } = useMonth();
-  const { isLoading, untaggedTransactions } = useUntaggedTransactions({
+  const { endIso: endDate, startIso: startDate } = usePreviousSixMonths();
+  const { isLoading, spending } = useUntaggedTransactions({
     endDate,
     startDate,
   });
-  const { format } = useCurrencyFormatter();
 
-  if (isLoading || !untaggedTransactions) return null;
+  if (isLoading || !spending) return null;
 
   return (
-    <SectionContainer id="untagged-transactions" title="Untagged Transactions">
-      <ul>
-        {untaggedTransactions.map(
-          ({ amount, datetime, id, merchant, name, type }) => (
-            <li key={id}>
-              {format({ value: amount })}
-              &nbsp;&#40;
-              {type}
-              &#41;&mdash;
-              {merchant}
-              &nbsp;&#40;
-              {name}
-              &#41;&mdash;
-              {datetime}
-              &nbsp;
-              {id}
-            </li>
-          )
-        )}
-      </ul>
+    <SectionContainer id="untagged-spending" title="Untagged Spending">
+      <Transactions transactions={spending} />
     </SectionContainer>
   );
 };
