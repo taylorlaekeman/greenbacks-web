@@ -1,9 +1,7 @@
 import Transaction from 'types/transaction';
 
-import useTransactionsByTag, {
-  TagGroup,
-  UNTAGGED,
-} from 'hooks/useTransactionsByTag';
+import useTransactionsByTag, { UNTAGGED } from 'hooks/useTransactionsByTag';
+import type { TagGroup } from 'types/tagGroup';
 
 const useUntaggedTransactions = ({
   endDate,

@@ -3,13 +3,17 @@ import React, { FC } from 'react';
 import AmountBadge from 'components/AmountBadge';
 import ArticleContainer from 'components/ArticleContainer';
 import PercentBadge from 'components/PercentBadge';
+import TransactionsByTag from 'components/TransactionsByTag';
 import useAverageMonthlyEarning from 'hooks/useAverageMonthlyEarning';
 import useAverageMonthlySaving from 'hooks/useAverageMonthlySaving';
 import useAverageMonthlySpending from 'hooks/useAverageMonthlySpending';
+import usePreviousSixMonths from 'hooks/usePreviousSixMonths';
 import useSavingsRate from 'hooks/useSavingsRate';
+import useTransactionsByTag from 'hooks/useTransactionsByTag';
 import styled from 'utils/styled';
 
 const Overview: FC = () => {
+  const { endIso: endDate, startIso: startDate } = usePreviousSixMonths();
   const {
     averageMonthlyEarning,
     isLoading: isLoadingAverageEarning,
@@ -23,6 +27,10 @@ const Overview: FC = () => {
     isLoading: isLoadingAverageSaving,
   } = useAverageMonthlySaving();
   const { savingsRate, isLoading: isLoadingSavingsRate } = useSavingsRate();
+  const {
+    isLoading: isLoadingTransactionsByTag,
+    spending: spendingByTag,
+  } = useTransactionsByTag({ endDate, startDate });
 
   return (
     <ArticleContainer id="overview" title="Overview">
@@ -52,6 +60,13 @@ const Overview: FC = () => {
           percent={savingsRate}
         />
       </BadgeGrid>
+      <TransactionsByTag
+        id="average-spending-by-tag"
+        isLoading={isLoadingTransactionsByTag}
+        months={6}
+        name="Average Spending by Tag"
+        transactions={spendingByTag}
+      />
     </ArticleContainer>
   );
 };

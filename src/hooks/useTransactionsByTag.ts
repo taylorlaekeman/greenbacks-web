@@ -1,4 +1,5 @@
 import useTransactionsByCategory from 'hooks/useTransactionsByCategory';
+import type TagGroup from 'types/tagGroup';
 import type Transaction from 'types/transaction';
 
 const useTransactionsByTag = ({
@@ -51,12 +52,6 @@ const groupByTag = ({
     firstAmount > secondAmount ? -1 : 1
   );
 };
-
-export interface TagGroup {
-  tag: string;
-  totalAmount: number;
-  transactions: Transaction[];
-}
 
 export const UNTAGGED = 'Untagged';
 

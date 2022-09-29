@@ -3,27 +3,37 @@ import React, { FC } from 'react';
 import LoadingIndicator from 'components/LoadingIndicator';
 import SectionContainer from 'components/SectionContainer';
 import useCurrencyFormatter from 'hooks/useCurrencyFormatter';
-import useMonth from 'hooks/useMonth';
-import useTransactionsByTag from 'hooks/useTransactionsByTag';
+import type { TagGroup } from 'types/tagGroup';
 
-const TransactionsByTag: FC = () => {
-  const { endDate, startDate } = useMonth();
-  const { isLoading, spending } = useTransactionsByTag({ endDate, startDate });
+const TransactionsByTag: FC<{
+  id?: string;
+  isLoading: boolean;
+  months?: number;
+  name?: string;
+  transactions: TagGroup[];
+}> = ({
+  id = 'transactions-by-tag',
+  isLoading,
+  months = 1,
+  name = 'Transactions by Tag',
+  transactions,
+}) => {
   const { format } = useCurrencyFormatter();
 
   if (isLoading)
     return (
-      <SectionContainer id="transactions-by-tag" title="Transactions by Tag">
-        <LoadingIndicator name="transactions-by-tag" />
+      <SectionContainer id={id} title={name}>
+        <LoadingIndicator name={id} />
       </SectionContainer>
     );
 
   return (
-    <SectionContainer id="transactions-by-tag" title="Transactions by Tag">
+    <SectionContainer id={id} title={name}>
       <ul>
-        {spending.map(({ tag, totalAmount }) => (
-          <li key={tag}>{`${tag}: ${format({ value: totalAmount })}`}</li>
-        ))}
+        {transactions.map(({ tag, totalAmount }) => {
+          const formattedAmount = format({ value: totalAmount / months });
+          return <li key={tag}>{`${tag}: ${formattedAmount}`}</li>;
+        })}
       </ul>
     </SectionContainer>
   );
