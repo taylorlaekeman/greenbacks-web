@@ -34,7 +34,7 @@ export const FiltersProvider: FC = ({ children }) => {
     idFilters: initialIdFilters = [],
     oneTransactionFilters: initialOneTransactionFilters = [],
     twoTransactionFilters: initialTwoTransactionFilters = [],
-  } = JSON.parse(localStorage.getItem('filters') || '');
+  } = getFiltersFromStorage();
   const {
     addFilter,
     idFilters,
@@ -67,6 +67,30 @@ export const FiltersProvider: FC = ({ children }) => {
       {children}
     </FiltersContext.Provider>
   );
+};
+
+const getFiltersFromStorage = (): {
+  idFilters: OneTransactionFilter[];
+  oneTransactionFilters: OneTransactionFilter[];
+  twoTransactionFilters: TwoTransactionFilter[];
+} => {
+  const serializedFilters = localStorage.getItem('filters');
+  if (!serializedFilters)
+    return {
+      idFilters: [],
+      oneTransactionFilters: [],
+      twoTransactionFilters: [],
+    };
+  const {
+    idFilters = [],
+    oneTransactionFilters = [],
+    twoTransactionFilters = [],
+  } = JSON.parse(serializedFilters);
+  return {
+    idFilters,
+    oneTransactionFilters,
+    twoTransactionFilters,
+  };
 };
 
 export const TestFiltersProvider: FC<{

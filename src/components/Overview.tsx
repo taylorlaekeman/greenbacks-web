@@ -1,6 +1,5 @@
 import React, { FC } from 'react';
 
-import AddFilter from 'components/AddFilter';
 import AmountBadge from 'components/AmountBadge';
 import ArticleContainer from 'components/ArticleContainer';
 import PercentBadge from 'components/PercentBadge';
@@ -69,7 +68,6 @@ const Overview: FC = () => {
         name="Average Spending by Tag"
         transactions={spendingByTag}
       />
-      <AddFilter />
       <UntaggedTransactions />
     </ArticleContainer>
   );

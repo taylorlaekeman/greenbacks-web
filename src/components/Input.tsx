@@ -5,8 +5,8 @@ import noop from 'utils/noop';
 const Input: FC<{
   id: string;
   onChange?: (input: string) => void;
-  value: string;
-}> = ({ id, onChange = noop, value }) => (
+  value?: string;
+}> = ({ id, onChange = noop, value = '' }) => (
   <input
     id={id}
     onChange={(event) => {

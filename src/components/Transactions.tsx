@@ -1,31 +1,18 @@
 import React, { FC } from 'react';
 
-import useCurrencyFormatter from 'hooks/useCurrencyFormatter';
-import Transaction from 'types/transaction';
+import Transaction from 'components/Transaction';
+import TransactionType from 'types/transaction';
 
-const Transactions: FC<{ transactions: Transaction[] }> = ({
+const Transactions: FC<{ transactions: TransactionType[] }> = ({
   transactions,
-}) => {
-  const { format } = useCurrencyFormatter();
-  return (
-    <ul>
-      {transactions.map(({ amount, datetime, id, merchant, name, type }) => (
-        <li key={id}>
-          {format({ value: amount })}
-          &nbsp;&#40;
-          {type}
-          &#41;&mdash;
-          {merchant}
-          &nbsp;&#40;
-          {name}
-          &#41;&mdash;
-          {datetime}
-          &nbsp;
-          {id}
-        </li>
-      ))}
-    </ul>
-  );
-};
+}) => (
+  <ul>
+    {transactions.map((transaction) => (
+      <li key={transaction.id}>
+        <Transaction isFilteringEnabled transaction={transaction} />
+      </li>
+    ))}
+  </ul>
+);
 
 export default Transactions;

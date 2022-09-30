@@ -3,77 +3,67 @@ import React, { FC, useState } from 'react';
 import Button from 'components/Button';
 import Input from 'components/Input';
 import Label from 'components/Label';
-import SectionContainer from 'components/SectionContainer';
-import Select from 'components/Select';
+import RadioButtons from 'components/RadioButtons';
 import useAddFilter from 'hooks/useAddFilter';
 import { FilterType } from 'types/filter';
-import { Category } from 'types/transaction';
+import Transaction, { Category } from 'types/transaction';
 import getUuid from 'utils/uuid';
 
-const AddFilter: FC = () => {
+const AddFilter: FC<{ transaction: Transaction }> = ({ transaction }) => {
+  const { id, name } = transaction;
   const { addFilter } = useAddFilter();
-  const [property, setProperty] = useState<string>('');
-  const [expectedValue, setExpectedValue] = useState<string>('');
+  const [property, setProperty] = useState<string>();
   const [category, setCategory] = useState<string>('');
-  const [tag, setTag] = useState<string>('');
+  const [tag, setTag] = useState<string>();
   return (
-    <SectionContainer id="add-filter" title="Add Filter">
-      <form>
-        <Label forId="property">Property</Label>
-        <Select
-          id="property"
-          onChange={(newProperty) => setProperty(newProperty)}
-          options={PROPERTY_OPTIONS}
-          value={property}
-        />
-        <Label forId="expectedValue">Expected Value</Label>
-        <Input
-          id="expectedValue"
-          onChange={(newExpectedValue) => {
-            setExpectedValue(newExpectedValue);
-          }}
-          value={expectedValue}
-        />
-        <Label forId="category">Category</Label>
-        <Select
-          id="category"
-          onChange={(newCategory) => setCategory(newCategory)}
-          options={Object.values(Category)}
-          value={category}
-        />
-        <Label forId="tag">Tag</Label>
-        <Input
-          id="tag"
-          onChange={(newTag) => {
-            setTag(newTag);
-          }}
-          value={tag}
-        />
-        <Button
-          onClick={() => {
-            if (!property || !expectedValue) return;
-            const type =
-              property === 'id' ? FilterType.Id : FilterType.OneTransaction;
-            addFilter({
-              filter: {
-                categoryToAssign: category as Category,
-                id: getUuid(),
-                matchers: [
-                  {
-                    property,
-                    expectedValue,
-                  },
-                ],
-                tagToAssign: tag,
-                type,
-              },
-            });
-          }}
-        >
-          Save filter
-        </Button>
-      </form>
-    </SectionContainer>
+    <form>
+      <RadioButtons
+        name="property"
+        options={[
+          { label: `Transactions with name '${name}'`, value: 'name' },
+          { label: 'Only this transaction', value: 'id' },
+        ]}
+        onChange={(newProperty) => setProperty(newProperty)}
+        value={property}
+      />
+      <RadioButtons
+        name="category"
+        options={Object.values(Category)}
+        onChange={(newCategory) => setCategory(newCategory)}
+        value={category}
+      />
+      <Label forId="tag">Tag</Label>
+      <Input
+        id="tag"
+        onChange={(newTag) => {
+          setTag(newTag);
+        }}
+        value={tag}
+      />
+      <Button
+        onClick={() => {
+          if (!property) return;
+          const type =
+            property === 'id' ? FilterType.Id : FilterType.OneTransaction;
+          addFilter({
+            filter: {
+              categoryToAssign: category as Category,
+              id: getUuid(),
+              matchers: [
+                {
+                  property,
+                  expectedValue: property === 'id' ? id : name,
+                },
+              ],
+              tagToAssign: tag,
+              type,
+            },
+          });
+        }}
+      >
+        Add filter
+      </Button>
+    </form>
   );
 };
 

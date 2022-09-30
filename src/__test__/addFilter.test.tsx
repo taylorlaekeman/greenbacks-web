@@ -10,178 +10,108 @@ import buildTransaction from '__test__/utils/buildTransaction';
 test('adds spending filter', async () => {
   const apiMocks = [
     buildApiTransactionsMock({
-      endDate: '2020-01-31',
+      endDate: '2020-06-30',
       startDate: '2020-01-01',
       transactions: [
         buildTransaction({
-          amount: 100,
+          amount: 600,
           name: 'test name',
         }),
       ],
     }),
   ];
   render(
-    <TestGreenbacksProvider mocks={apiMocks} route="/months/2020-01/">
+    <TestGreenbacksProvider mocks={apiMocks} now="2020-07-01">
       <Greenbacks />
     </TestGreenbacksProvider>
   );
-  userEvent.selectOptions(
-    screen.getByRole('combobox', { name: 'Property' }),
-    'name'
+  const { getByRole } = within(
+    await screen.findByTestId('section-untagged-spending')
   );
-  userEvent.type(
-    await screen.findByRole('textbox', { name: 'Expected Value' }),
-    'test name'
+  userEvent.click(getByRole('button'));
+  userEvent.click(
+    getByRole('radio', { name: "Transactions with name 'test name'" })
   );
-  userEvent.selectOptions(
-    screen.getByRole('combobox', { name: 'Category' }),
-    'Spending'
-  );
+  userEvent.click(getByRole('radio', { name: 'Spending' }));
   userEvent.type(
     await screen.findByRole('textbox', { name: 'Tag' }),
     'test tag'
   );
-  userEvent.click(screen.getByRole('button', { name: 'Save filter' }));
-  expect(
-    screen.queryByTestId('section-untagged-transactions')
-  ).not.toBeInTheDocument();
-});
-
-test('adds saving filter', async () => {
-  const apiMocks = [
-    buildApiTransactionsMock({
-      endDate: '2020-01-31',
-      startDate: '2020-01-01',
-      transactions: [
-        buildTransaction({
-          amount: 100,
-          name: 'test name',
-        }),
-      ],
-    }),
-  ];
-  render(
-    <TestGreenbacksProvider mocks={apiMocks} route="/months/2020-01/">
-      <Greenbacks />
-    </TestGreenbacksProvider>
+  userEvent.click(screen.getByRole('button', { name: 'Add filter' }));
+  const { getByText } = within(
+    screen.getByTestId('section-average-spending-by-tag')
   );
-  userEvent.selectOptions(
-    screen.getByRole('combobox', { name: 'Property' }),
-    'name'
-  );
-  userEvent.type(
-    await screen.findByRole('textbox', { name: 'Expected Value' }),
-    'test name'
-  );
-  userEvent.selectOptions(
-    screen.getByRole('combobox', { name: 'Category' }),
-    'Saving'
-  );
-  userEvent.type(
-    await screen.findByRole('textbox', { name: 'Tag' }),
-    'test tag'
-  );
-  userEvent.click(screen.getByRole('button', { name: 'Save filter' }));
-  const { findByText } = within(
-    await screen.findByTestId('section-monthly-overview')
-  );
-  expect(await findByText(/Total Saving: \$1.00/)).toBeVisible();
+  expect(getByText(/test tag: \$1.00/)).toBeVisible();
 });
 
 test('adds earning filter', async () => {
   const apiMocks = [
     buildApiTransactionsMock({
-      endDate: '2020-01-31',
+      endDate: '2020-06-30',
       startDate: '2020-01-01',
       transactions: [
         buildTransaction({
-          amount: -100,
+          amount: 600,
           name: 'test name',
         }),
       ],
     }),
   ];
   render(
-    <TestGreenbacksProvider mocks={apiMocks} route="/months/2020-01/">
+    <TestGreenbacksProvider mocks={apiMocks} now="2020-07-01">
       <Greenbacks />
     </TestGreenbacksProvider>
   );
-  userEvent.selectOptions(
-    screen.getByRole('combobox', { name: 'Property' }),
-    'name'
+  const { getByRole } = within(
+    await screen.findByTestId('section-untagged-spending')
   );
-  userEvent.type(
-    await screen.findByRole('textbox', { name: 'Expected Value' }),
-    'test name'
+  userEvent.click(getByRole('button'));
+  userEvent.click(
+    getByRole('radio', { name: "Transactions with name 'test name'" })
   );
-  userEvent.selectOptions(
-    screen.getByRole('combobox', { name: 'Category' }),
-    'Earning'
-  );
+  userEvent.click(getByRole('radio', { name: 'Earning' }));
   userEvent.type(
     await screen.findByRole('textbox', { name: 'Tag' }),
     'test tag'
   );
-  userEvent.click(screen.getByRole('button', { name: 'Save filter' }));
-  const { findByText } = within(
-    await screen.findByTestId('section-monthly-overview')
+  userEvent.click(screen.getByRole('button', { name: 'Add filter' }));
+  expect(screen.getByTestId('average-monthly-earnings')).toHaveTextContent(
+    /\$1.00/
   );
-  expect(await findByText(/Total Earning: \$1.00/)).toBeVisible();
 });
 
-test('adds id filter', async () => {
+test('adds saving filter', async () => {
   const apiMocks = [
     buildApiTransactionsMock({
-      endDate: '2020-01-31',
+      endDate: '2020-06-30',
       startDate: '2020-01-01',
       transactions: [
         buildTransaction({
-          amount: 100,
-          id: 'test id',
+          amount: 600,
           name: 'test name',
         }),
       ],
     }),
   ];
   render(
-    <TestGreenbacksProvider mocks={apiMocks} route="/months/2020-01/">
+    <TestGreenbacksProvider mocks={apiMocks} now="2020-07-01">
       <Greenbacks />
     </TestGreenbacksProvider>
   );
-  userEvent.selectOptions(
-    screen.getByRole('combobox', { name: 'Property' }),
-    'name'
+  const { getByRole } = within(
+    await screen.findByTestId('section-untagged-spending')
   );
-  userEvent.type(
-    await screen.findByRole('textbox', { name: 'Expected Value' }),
-    'test name'
+  userEvent.click(getByRole('button'));
+  userEvent.click(
+    getByRole('radio', { name: "Transactions with name 'test name'" })
   );
-  userEvent.selectOptions(
-    screen.getByRole('combobox', { name: 'Category' }),
-    'Saving'
-  );
+  userEvent.click(getByRole('radio', { name: 'Saving' }));
   userEvent.type(
     await screen.findByRole('textbox', { name: 'Tag' }),
-    'name tag'
+    'test tag'
   );
-  userEvent.click(screen.getByRole('button', { name: 'Save filter' }));
-  userEvent.selectOptions(
-    screen.getByRole('combobox', { name: 'Property' }),
-    'id'
+  userEvent.click(screen.getByRole('button', { name: 'Add filter' }));
+  expect(screen.getByTestId('average-monthly-savings')).toHaveTextContent(
+    /\$1.00/
   );
-  userEvent.type(
-    await screen.findByRole('textbox', { name: 'Expected Value' }),
-    'test id'
-  );
-  userEvent.selectOptions(
-    screen.getByRole('combobox', { name: 'Category' }),
-    'Spending'
-  );
-  userEvent.type(await screen.findByRole('textbox', { name: 'Tag' }), 'id tag');
-  userEvent.click(screen.getByRole('button', { name: 'Save filter' }));
-  const { findByText } = within(
-    await screen.findByTestId('section-monthly-overview')
-  );
-  expect(await findByText(/Total Saving: \$0.00/)).toBeVisible();
-  expect(await findByText(/Total Spending: \$1.00/)).toBeVisible();
 });
