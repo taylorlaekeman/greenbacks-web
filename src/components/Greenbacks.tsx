@@ -4,6 +4,7 @@ import { Route, Routes } from 'react-router-dom';
 import Accounts from 'components/Accounts';
 import Button from 'components/Button';
 import Home from 'components/Home';
+import Link from 'components/Link';
 import LoadingIndicator from 'components/LoadingIndicator';
 import useIsApiReady from 'hooks/useIsApiReady';
 import useIsAuthenticated from 'hooks/useIsAuthenticated';
@@ -23,6 +24,7 @@ const Greenbacks: FC = () => {
   return (
     <>
       <Button onClick={logout}>Logout</Button>
+      <Link href="/accounts">Accounts</Link>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/months/:month/" element={<Home />} />
