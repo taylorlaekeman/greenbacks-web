@@ -8,21 +8,21 @@ import buildFilter, { buildMatcher } from '__test__/utils/buildFilter';
 import buildTransaction from '__test__/utils/buildTransaction';
 import { Category } from 'types/transaction';
 
-test('shows untagged spending', async () => {
+test('shows untagged earning', async () => {
   const apiMocks = [
     buildApiTransactionsMock({
       endDate: '2020-06-30',
       startDate: '2020-01-01',
       transactions: [
         buildTransaction({
-          amount: 100,
+          amount: -100,
           datetime: '2020-01-01',
           id: 'first-id',
           merchant: 'first merchant',
           name: 'first name',
         }),
         buildTransaction({
-          amount: 200,
+          amount: -200,
           datetime: '2020-01-02',
           id: 'second-id',
           merchant: 'second merchant',
@@ -37,140 +37,33 @@ test('shows untagged spending', async () => {
     </TestGreenbacksProvider>
   );
   const { getAllByRole } = within(
-    await screen.findByTestId('section-untagged-spending')
+    await screen.findByTestId('section-untagged-earning')
   );
   const items = getAllByRole('listitem');
   expect(items[0]).toHaveTextContent(
-    '$2.00 (Debit)—second merchant (second name)—2020-01-02'
+    '$2.00 (Credit)—second merchant (second name)—2020-01-02'
   );
   expect(items[1]).toHaveTextContent(
-    '$1.00 (Debit)—first merchant (first name)—2020-01-01'
+    '$1.00 (Credit)—first merchant (first name)—2020-01-01'
   );
   expect(items).toHaveLength(2);
 });
 
-test('excludes tagged spending', async () => {
+test('excludes tagged earning', async () => {
   const apiMocks = [
     buildApiTransactionsMock({
       endDate: '2020-06-30',
       startDate: '2020-01-01',
       transactions: [
         buildTransaction({
-          amount: 100,
+          amount: -100,
           datetime: '2020-01-01',
           id: 'first-id',
           merchant: 'first merchant',
           name: 'first name',
         }),
         buildTransaction({
-          amount: 200,
-          datetime: '2020-01-02',
-          id: 'second-id',
-          merchant: 'second merchant',
-          name: 'second name',
-        }),
-      ],
-    }),
-  ];
-  const filters = [
-    buildFilter({
-      categoryToAssign: Category.Spending,
-      matchers: [
-        buildMatcher({
-          expectedValue: 'first name',
-          property: 'name',
-        }),
-      ],
-      tagToAssign: 'test tag',
-    }),
-  ];
-  render(
-    <TestGreenbacksProvider
-      mocks={apiMocks}
-      now="2020-07-01"
-      oneTransactionFilters={filters}
-    >
-      <Greenbacks />
-    </TestGreenbacksProvider>
-  );
-  const { getAllByRole } = within(
-    await screen.findByTestId('section-untagged-spending')
-  );
-  const items = getAllByRole('listitem');
-  expect(items[0]).toHaveTextContent(
-    '$2.00 (Debit)—second merchant (second name)—2020-01-02'
-  );
-  expect(items).toHaveLength(1);
-});
-
-test('excludes saving', async () => {
-  const apiMocks = [
-    buildApiTransactionsMock({
-      endDate: '2020-06-30',
-      startDate: '2020-01-01',
-      transactions: [
-        buildTransaction({
-          amount: 100,
-          datetime: '2020-01-01',
-          id: 'first-id',
-          merchant: 'first merchant',
-          name: 'first name',
-        }),
-        buildTransaction({
-          amount: 200,
-          datetime: '2020-01-02',
-          id: 'second-id',
-          merchant: 'second merchant',
-          name: 'second name',
-        }),
-      ],
-    }),
-  ];
-  const filters = [
-    buildFilter({
-      categoryToAssign: Category.Saving,
-      matchers: [
-        buildMatcher({
-          expectedValue: 'first name',
-          property: 'name',
-        }),
-      ],
-    }),
-  ];
-  render(
-    <TestGreenbacksProvider
-      mocks={apiMocks}
-      now="2020-07-01"
-      oneTransactionFilters={filters}
-    >
-      <Greenbacks />
-    </TestGreenbacksProvider>
-  );
-  const { getAllByRole } = within(
-    await screen.findByTestId('section-untagged-spending')
-  );
-  const items = getAllByRole('listitem');
-  expect(items[0]).toHaveTextContent(
-    '$2.00 (Debit)—second merchant (second name)—2020-01-02'
-  );
-  expect(items).toHaveLength(1);
-});
-
-test('excludes earning', async () => {
-  const apiMocks = [
-    buildApiTransactionsMock({
-      endDate: '2020-06-30',
-      startDate: '2020-01-01',
-      transactions: [
-        buildTransaction({
-          amount: 100,
-          datetime: '2020-01-01',
-          id: 'first-id',
-          merchant: 'first merchant',
-          name: 'first name',
-        }),
-        buildTransaction({
-          amount: 200,
+          amount: -200,
           datetime: '2020-01-02',
           id: 'second-id',
           merchant: 'second merchant',
@@ -201,11 +94,117 @@ test('excludes earning', async () => {
     </TestGreenbacksProvider>
   );
   const { getAllByRole } = within(
-    await screen.findByTestId('section-untagged-spending')
+    await screen.findByTestId('section-untagged-earning')
   );
   const items = getAllByRole('listitem');
   expect(items[0]).toHaveTextContent(
-    '$2.00 (Debit)—second merchant (second name)—2020-01-02'
+    '$2.00 (Credit)—second merchant (second name)—2020-01-02'
+  );
+  expect(items).toHaveLength(1);
+});
+
+test('excludes spending', async () => {
+  const apiMocks = [
+    buildApiTransactionsMock({
+      endDate: '2020-06-30',
+      startDate: '2020-01-01',
+      transactions: [
+        buildTransaction({
+          amount: -100,
+          datetime: '2020-01-01',
+          id: 'first-id',
+          merchant: 'first merchant',
+          name: 'first name',
+        }),
+        buildTransaction({
+          amount: -200,
+          datetime: '2020-01-02',
+          id: 'second-id',
+          merchant: 'second merchant',
+          name: 'second name',
+        }),
+      ],
+    }),
+  ];
+  const filters = [
+    buildFilter({
+      categoryToAssign: Category.Spending,
+      matchers: [
+        buildMatcher({
+          expectedValue: 'first name',
+          property: 'name',
+        }),
+      ],
+    }),
+  ];
+  render(
+    <TestGreenbacksProvider
+      mocks={apiMocks}
+      now="2020-07-01"
+      oneTransactionFilters={filters}
+    >
+      <Greenbacks />
+    </TestGreenbacksProvider>
+  );
+  const { getAllByRole } = within(
+    await screen.findByTestId('section-untagged-earning')
+  );
+  const items = getAllByRole('listitem');
+  expect(items[0]).toHaveTextContent(
+    '$2.00 (Credit)—second merchant (second name)—2020-01-02'
+  );
+  expect(items).toHaveLength(1);
+});
+
+test('excludes saving', async () => {
+  const apiMocks = [
+    buildApiTransactionsMock({
+      endDate: '2020-06-30',
+      startDate: '2020-01-01',
+      transactions: [
+        buildTransaction({
+          amount: -100,
+          datetime: '2020-01-01',
+          id: 'first-id',
+          merchant: 'first merchant',
+          name: 'first name',
+        }),
+        buildTransaction({
+          amount: -200,
+          datetime: '2020-01-02',
+          id: 'second-id',
+          merchant: 'second merchant',
+          name: 'second name',
+        }),
+      ],
+    }),
+  ];
+  const filters = [
+    buildFilter({
+      categoryToAssign: Category.Saving,
+      matchers: [
+        buildMatcher({
+          expectedValue: 'first name',
+          property: 'name',
+        }),
+      ],
+    }),
+  ];
+  render(
+    <TestGreenbacksProvider
+      mocks={apiMocks}
+      now="2020-07-01"
+      oneTransactionFilters={filters}
+    >
+      <Greenbacks />
+    </TestGreenbacksProvider>
+  );
+  const { getAllByRole } = within(
+    await screen.findByTestId('section-untagged-earning')
+  );
+  const items = getAllByRole('listitem');
+  expect(items[0]).toHaveTextContent(
+    '$2.00 (Credit)—second merchant (second name)—2020-01-02'
   );
   expect(items).toHaveLength(1);
 });
@@ -217,14 +216,14 @@ test('excludes hidden transactions', async () => {
       startDate: '2020-01-01',
       transactions: [
         buildTransaction({
-          amount: 100,
+          amount: -100,
           datetime: '2020-01-01',
           id: 'first-id',
           merchant: 'first merchant',
           name: 'first name',
         }),
         buildTransaction({
-          amount: 200,
+          amount: -200,
           datetime: '2020-01-02',
           id: 'second-id',
           merchant: 'second merchant',
@@ -242,7 +241,6 @@ test('excludes hidden transactions', async () => {
           property: 'name',
         }),
       ],
-      tagToAssign: 'test tag',
     }),
   ];
   render(
@@ -255,11 +253,11 @@ test('excludes hidden transactions', async () => {
     </TestGreenbacksProvider>
   );
   const { getAllByRole } = within(
-    await screen.findByTestId('section-untagged-spending')
+    await screen.findByTestId('section-untagged-earning')
   );
   const items = getAllByRole('listitem');
   expect(items[0]).toHaveTextContent(
-    '$2.00 (Debit)—second merchant (second name)—2020-01-02'
+    '$2.00 (Credit)—second merchant (second name)—2020-01-02'
   );
   expect(items).toHaveLength(1);
 });
@@ -271,7 +269,7 @@ test('section is not present while transactions are loading', async () => {
     </TestGreenbacksProvider>
   );
   expect(
-    screen.queryByTestId('section-untagged-spending')
+    screen.queryByTestId('section-untagged-earning')
   ).not.toBeInTheDocument();
 });
 
@@ -282,6 +280,7 @@ test('section is not present when no untagged transactions exist', async () => {
       startDate: '2020-01-01',
       transactions: [
         buildTransaction({
+          amount: -100,
           name: 'test name',
         }),
       ],
@@ -289,7 +288,7 @@ test('section is not present when no untagged transactions exist', async () => {
   ];
   const filters = [
     buildFilter({
-      categoryToAssign: Category.Spending,
+      categoryToAssign: Category.Earning,
       matchers: [
         buildMatcher({
           expectedValue: 'test name',
@@ -306,6 +305,6 @@ test('section is not present when no untagged transactions exist', async () => {
   );
   await screen.findByText(/test name/); // ensure transactions have loaded
   expect(
-    screen.queryByTestId('section-untagged-spending')
+    screen.queryByTestId('section-untagged-earning')
   ).not.toBeInTheDocument();
 });

@@ -3,14 +3,16 @@ import React, { FC } from 'react';
 import AmountBadge from 'components/AmountBadge';
 import ArticleContainer from 'components/ArticleContainer';
 import PercentBadge from 'components/PercentBadge';
+import SectionContainer from 'components/SectionContainer';
+import Transactions from 'components/Transactions';
 import TransactionsByTag from 'components/TransactionsByTag';
-import UntaggedTransactions from 'components/UntaggedTransactions';
 import useAverageMonthlyEarning from 'hooks/useAverageMonthlyEarning';
 import useAverageMonthlySaving from 'hooks/useAverageMonthlySaving';
 import useAverageMonthlySpending from 'hooks/useAverageMonthlySpending';
 import usePreviousSixMonths from 'hooks/usePreviousSixMonths';
 import useSavingsRate from 'hooks/useSavingsRate';
 import useTransactionsByTag from 'hooks/useTransactionsByTag';
+import useUntaggedTransactions from 'hooks/useUntaggedTransactions';
 import styled from 'utils/styled';
 
 const Overview: FC = () => {
@@ -32,6 +34,13 @@ const Overview: FC = () => {
     isLoading: isLoadingTransactionsByTag,
     spending: spendingByTag,
   } = useTransactionsByTag({ endDate, startDate });
+  const {
+    earning: untaggedEarning,
+    spending: untaggedSpending,
+  } = useUntaggedTransactions({
+    endDate,
+    startDate,
+  });
 
   return (
     <ArticleContainer id="overview" title="Overview">
@@ -68,7 +77,16 @@ const Overview: FC = () => {
         name="Average Spending by Tag"
         transactions={spendingByTag}
       />
-      <UntaggedTransactions />
+      {untaggedEarning && (
+        <SectionContainer id="untagged-earning" title="Untagged Earning">
+          <Transactions transactions={untaggedEarning} />
+        </SectionContainer>
+      )}
+      {untaggedSpending && (
+        <SectionContainer id="untagged-spending" title="Untagged Spending">
+          <Transactions transactions={untaggedSpending} />
+        </SectionContainer>
+      )}
     </ArticleContainer>
   );
 };

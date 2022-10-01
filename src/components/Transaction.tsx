@@ -11,9 +11,9 @@ const Transaction: FC<{
 }> = ({ isFilteringEnabled = false, transaction }) => {
   const { format } = useCurrencyFormatter();
   const [isFilterFormVisible, setIsFilterFormVisible] = useState<boolean>();
-  const { amount, datetime, id, merchant, name, type } = transaction;
+  const { amount, datetime, merchant, name, type } = transaction;
   return (
-    <div>
+    <>
       <p>
         {format({ value: amount })}
         &nbsp;&#40;
@@ -24,14 +24,12 @@ const Transaction: FC<{
         {name}
         &#41;&mdash;
         {datetime}
-        &nbsp;
-        {id}
       </p>
       {isFilteringEnabled && !isFilterFormVisible && (
         <Button onClick={() => setIsFilterFormVisible(true)}>filter</Button>
       )}
       {isFilterFormVisible && <AddFilter transaction={transaction} />}
-    </div>
+    </>
   );
 };
 

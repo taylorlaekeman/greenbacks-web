@@ -20,7 +20,7 @@ test('shows reauthentication required error when transactions endpoint returns r
   const text = await screen.findByText(
     /At least one of your accounts needs reauthentication/
   );
-  const link = screen.getByRole('link');
+  const link = screen.getAllByRole('link')[0];
   expect(text).toBeInTheDocument();
   expect(link).toBeInTheDocument();
 });
@@ -36,8 +36,8 @@ test('reauthentication required error link redirects to acounts page', async () 
       <Greenbacks />
     </TestGreenbacksProvider>
   );
-  const link = await screen.findByRole('link');
-  userEvent.click(link);
+  const links = await screen.findAllByRole('link');
+  userEvent.click(links[0]);
   const pageWrapper = screen.getByTestId('accounts-page');
   expect(pageWrapper).toBeInTheDocument();
 });

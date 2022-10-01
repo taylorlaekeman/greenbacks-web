@@ -9,15 +9,33 @@ const useUntaggedTransactions = ({
 }: {
   endDate: string;
   startDate: string;
-}): { isLoading: boolean; spending?: Transaction[] } => {
-  const { isLoading, spending } = useTransactionsByTag({ endDate, startDate });
+}): {
+  earning?: Transaction[];
+  isLoading: boolean;
+  spending?: Transaction[];
+} => {
+  const { earning, isLoading, spending } = useTransactionsByTag({
+    endDate,
+    startDate,
+  });
+  const untaggedSpending = groupUntaggedTransactions({ tagGroups: spending });
+  const untaggedEarning = groupUntaggedTransactions({ tagGroups: earning });
+  return { earning: untaggedEarning, isLoading, spending: untaggedSpending };
+};
+
+const groupUntaggedTransactions = ({
+  tagGroups,
+}: {
+  tagGroups?: TagGroup[];
+}): Transaction[] | undefined => {
+  if (!tagGroups) return undefined;
   const { transactions } =
-    spending.find(({ tag }: TagGroup) => tag === UNTAGGED) || {};
+    tagGroups.find(({ tag }: TagGroup) => tag === UNTAGGED) || {};
   const sortedTransactions = transactions?.sort(
     ({ amount: firstAmount }, { amount: secondAmount }) =>
       firstAmount > secondAmount ? -1 : 1
   );
-  return { isLoading, spending: sortedTransactions };
+  return sortedTransactions;
 };
 
 export default useUntaggedTransactions;

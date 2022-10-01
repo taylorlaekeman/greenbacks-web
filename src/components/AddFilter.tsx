@@ -27,6 +27,7 @@ const AddFilter: FC<{ transaction: Transaction }> = ({ transaction }) => {
         value={property}
       />
       <RadioButtons
+        label="Category"
         name="category"
         options={Object.values(Category)}
         onChange={(newCategory) => setCategory(newCategory)}
