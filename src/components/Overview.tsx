@@ -9,14 +9,14 @@ import TransactionsByTag from 'components/TransactionsByTag';
 import useAverageMonthlyEarning from 'hooks/useAverageMonthlyEarning';
 import useAverageMonthlySaving from 'hooks/useAverageMonthlySaving';
 import useAverageMonthlySpending from 'hooks/useAverageMonthlySpending';
-import usePreviousSixMonths from 'hooks/usePreviousSixMonths';
+import useAveragingPeriod from 'hooks/useAveragingPeriod';
 import useSavingsRate from 'hooks/useSavingsRate';
 import useTransactionsByTag from 'hooks/useTransactionsByTag';
 import useUntaggedTransactions from 'hooks/useUntaggedTransactions';
 import styled from 'utils/styled';
 
 const Overview: FC = () => {
-  const { endIso: endDate, startIso: startDate } = usePreviousSixMonths();
+  const { count, endIso: endDate, startIso: startDate } = useAveragingPeriod();
   const {
     averageMonthlyEarning,
     isLoading: isLoadingAverageEarning,
@@ -73,7 +73,7 @@ const Overview: FC = () => {
       <TransactionsByTag
         id="average-spending-by-tag"
         isLoading={isLoadingTransactionsByTag}
-        months={6}
+        months={count}
         name="Average Spending by Tag"
         transactions={spendingByTag}
       />
