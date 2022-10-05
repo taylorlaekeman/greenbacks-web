@@ -5,6 +5,7 @@ import Input from 'components/Input';
 import Label from 'components/Label';
 import RadioButtons from 'components/RadioButtons';
 import useAddFilter from 'hooks/useAddFilter';
+import useTags from 'hooks/useTags';
 import { FilterType } from 'types/filter';
 import Transaction, { Category } from 'types/transaction';
 import getUuid from 'utils/uuid';
@@ -12,6 +13,7 @@ import getUuid from 'utils/uuid';
 const AddFilter: FC<{ transaction: Transaction }> = ({ transaction }) => {
   const { id, name } = transaction;
   const { addFilter } = useAddFilter();
+  const { isLoading: isLoadingTags, tags } = useTags();
   const [property, setProperty] = useState<string>();
   const [category, setCategory] = useState<string>('');
   const [tag, setTag] = useState<string>();
@@ -33,6 +35,15 @@ const AddFilter: FC<{ transaction: Transaction }> = ({ transaction }) => {
         onChange={(newCategory) => setCategory(newCategory)}
         value={category}
       />
+      {!isLoadingTags && (
+        <RadioButtons
+          label="Tag"
+          name="tag"
+          options={tags}
+          onChange={(newTag) => setTag(newTag)}
+          value={tag}
+        />
+      )}
       <Label forId="tag">Tag</Label>
       <Input
         id="tag"

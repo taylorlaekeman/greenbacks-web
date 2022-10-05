@@ -246,10 +246,12 @@ const isMatchersMatch = ({
 }: {
   matchers: Matcher[];
   transaction: CoreTransaction;
-}): boolean =>
-  matchers.every((matcher: Matcher) =>
+}): boolean => {
+  if (matchers.length === 0) return false;
+  return matchers.every((matcher: Matcher) =>
     isMatcherMatch({ matcher, transaction })
   );
+};
 
 const isMatcherMatch = ({
   matcher: { comparator = Comparator.Equals, expectedValue, property },
