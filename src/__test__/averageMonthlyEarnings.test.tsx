@@ -14,7 +14,7 @@ import { Category, CoreTransaction } from 'types/transaction';
 test('displays loading indicator while transactions are loading', () => {
   const apiMocks = [buildApiTransactionsMock()];
   render(
-    <TestGreenbacksProvider mocks={apiMocks} now="2020-07-01">
+    <TestGreenbacksProvider mocks={apiMocks} now="2021-01-01">
       <Greenbacks />
     </TestGreenbacksProvider>
   );
@@ -27,7 +27,7 @@ test('displays loading indicator while transactions are loading', () => {
 test('shows zero without any earnings', async () => {
   const apiMocks = [buildApiTransactionsMock()];
   render(
-    <TestGreenbacksProvider mocks={apiMocks} now="2020-07-01">
+    <TestGreenbacksProvider mocks={apiMocks} now="2021-01-01">
       <Greenbacks />
     </TestGreenbacksProvider>
   );
@@ -38,15 +38,17 @@ test('shows zero without any earnings', async () => {
 test('correctly averages transactions', async () => {
   const apiMocks = [
     buildApiTransactionsMock({
+      endDate: '2020-12-31',
+      startDate: '2020-01-01',
       transactions: [
-        buildTransaction({ amount: -100, datetime: '2020-01-01' }),
-        buildTransaction({ amount: -100, datetime: '2020-02-01' }),
-        buildTransaction({ amount: -100, datetime: '2020-03-01' }),
-        buildTransaction({ amount: -200, datetime: '2020-04-01' }),
-        buildTransaction({ amount: -200, datetime: '2020-05-01' }),
-        buildTransaction({ amount: -200, datetime: '2020-06-01' }),
+        buildTransaction({ amount: -200, datetime: '2020-01-01' }),
+        buildTransaction({ amount: -200, datetime: '2020-02-01' }),
+        buildTransaction({ amount: -200, datetime: '2020-03-01' }),
+        buildTransaction({ amount: -400, datetime: '2020-04-01' }),
+        buildTransaction({ amount: -400, datetime: '2020-05-01' }),
+        buildTransaction({ amount: -400, datetime: '2020-06-01' }),
         buildTransaction({
-          amount: -200,
+          amount: -400,
           datetime: '2020-06-01',
           name: 'hidden',
         }),
@@ -63,7 +65,7 @@ test('correctly averages transactions', async () => {
     <TestGreenbacksProvider
       oneTransactionFilters={filters}
       mocks={apiMocks}
-      now="2020-07-01"
+      now="2021-01-01"
     >
       <Greenbacks />
     </TestGreenbacksProvider>
@@ -75,13 +77,15 @@ test('correctly averages transactions', async () => {
 test('handles months without earnings', async () => {
   const apiMocks = [
     buildApiTransactionsMock({
+      endDate: '2020-12-31',
+      startDate: '2020-01-01',
       transactions: [
-        buildTransaction({ amount: -600, datetime: '2020-01-01' }),
+        buildTransaction({ amount: -1200, datetime: '2020-01-01' }),
       ],
     }),
   ];
   render(
-    <TestGreenbacksProvider mocks={apiMocks} now="2020-07-01">
+    <TestGreenbacksProvider mocks={apiMocks} now="2021-01-01">
       <Greenbacks />
     </TestGreenbacksProvider>
   );
@@ -92,22 +96,24 @@ test('handles months without earnings', async () => {
 test('excludes expenses', async () => {
   const apiMocks = [
     buildApiTransactionsMock({
+      endDate: '2020-12-31',
+      startDate: '2020-01-01',
       transactions: [
         buildTransaction({
           accountId: '1',
-          amount: -600,
+          amount: -1200,
           datetime: '2020-01-01',
         }),
         buildTransaction({
           accountId: '1',
-          amount: 600,
+          amount: 1200,
           datetime: '2020-01-01',
         }),
       ],
     }),
   ];
   render(
-    <TestGreenbacksProvider mocks={apiMocks} now="2020-07-01">
+    <TestGreenbacksProvider mocks={apiMocks} now="2021-01-01">
       <Greenbacks />
     </TestGreenbacksProvider>
   );
@@ -118,13 +124,15 @@ test('excludes expenses', async () => {
 test('shows label text', async () => {
   const apiMocks = [
     buildApiTransactionsMock({
+      endDate: '2020-12-31',
+      startDate: '2020-01-01',
       transactions: [
-        buildTransaction({ amount: -600, datetime: '2020-01-01' }),
+        buildTransaction({ amount: -1200, datetime: '2020-01-01' }),
       ],
     }),
   ];
   render(
-    <TestGreenbacksProvider mocks={apiMocks} now="2020-07-01">
+    <TestGreenbacksProvider mocks={apiMocks} now="2021-01-01">
       <Greenbacks />
     </TestGreenbacksProvider>
   );
@@ -135,26 +143,26 @@ test('shows label text', async () => {
 test('excludes transfers', async () => {
   const apiMocks = [
     buildApiTransactionsMock({
-      endDate: '2020-06-30',
+      endDate: '2020-12-31',
       startDate: '2020-01-01',
       transactions: [
         buildTransaction({
-          amount: -600,
+          amount: -1200,
           datetime: '2020-01-01',
           name: 'transfer received',
         }),
         buildTransaction({
-          amount: 600,
+          amount: 1200,
           datetime: '2020-01-01',
           name: 'transfer sent',
         }),
         buildTransaction({
-          amount: -600,
+          amount: -1200,
           datetime: '2020-02-01',
           name: 'transfer received',
         }),
         buildTransaction({
-          amount: 600,
+          amount: 1200,
           datetime: '2020-02-01',
           name: 'transfer sent',
         }),
@@ -183,7 +191,7 @@ test('excludes transfers', async () => {
   render(
     <TestGreenbacksProvider
       mocks={apiMocks}
-      now="2020-07-01"
+      now="2021-01-01"
       twoTransactionFilters={filters}
     >
       <Greenbacks />

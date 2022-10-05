@@ -9,11 +9,13 @@ import buildApiTransactionsMock from '__test__/utils/buildApiTransactionsMock';
 test('shows reauthentication required error when transactions endpoint returns reauthentication required error', async () => {
   const mocks = [
     buildApiTransactionsMock({
+      endDate: '2020-12-31',
+      startDate: '2020-01-01',
       errors: ['Reauthentication required for a connected account'],
     }),
   ];
   render(
-    <TestGreenbacksProvider mocks={mocks} now="2020-07-01">
+    <TestGreenbacksProvider mocks={mocks} now="2021-01-01">
       <Greenbacks />
     </TestGreenbacksProvider>
   );
@@ -28,11 +30,13 @@ test('shows reauthentication required error when transactions endpoint returns r
 test('reauthentication required error link redirects to acounts page', async () => {
   const mocks = [
     buildApiTransactionsMock({
+      endDate: '2020-12-31',
+      startDate: '2020-01-01',
       errors: ['Reauthentication required for a connected account'],
     }),
   ];
   render(
-    <TestGreenbacksProvider mocks={mocks} now="2020-07-01">
+    <TestGreenbacksProvider mocks={mocks} now="2021-01-01">
       <Greenbacks />
     </TestGreenbacksProvider>
   );

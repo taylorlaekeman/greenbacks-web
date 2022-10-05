@@ -12,7 +12,7 @@ import wait from 'utils/wait';
 test('shows loading indicator while transactions are loading', () => {
   const mocks = [buildApiTransactionsMock()];
   render(
-    <TestGreenbacksProvider mocks={mocks} now="2020-07-01">
+    <TestGreenbacksProvider mocks={mocks} now="2021-01-01">
       <Greenbacks />
     </TestGreenbacksProvider>
   );
@@ -25,7 +25,7 @@ test('shows loading indicator while transactions are loading', () => {
 test('shows dash without any transactions', async () => {
   const mocks = [buildApiTransactionsMock()];
   render(
-    <TestGreenbacksProvider mocks={mocks} now="2020-07-01">
+    <TestGreenbacksProvider mocks={mocks} now="2021-01-01">
       <Greenbacks />
     </TestGreenbacksProvider>
   );
@@ -37,6 +37,8 @@ test('shows dash without any transactions', async () => {
 test('correctly calculates savings rate', async () => {
   const mocks = [
     buildApiTransactionsMock({
+      endDate: '2020-12-31',
+      startDate: '2020-01-01',
       transactions: [
         buildTransaction({ amount: -100, datetime: '2020-01-01' }),
         buildTransaction({
@@ -102,7 +104,7 @@ test('correctly calculates savings rate', async () => {
   render(
     <TestGreenbacksProvider
       mocks={mocks}
-      now="2020-07-01"
+      now="2021-01-01"
       oneTransactionFilters={filters}
     >
       <Greenbacks />
@@ -116,11 +118,13 @@ test('correctly calculates savings rate', async () => {
 test('shows label text', async () => {
   const mocks = [
     buildApiTransactionsMock({
+      endDate: '2020-12-31',
+      startDate: '2020-01-01',
       transactions: [buildTransaction({ amount: 600, datetime: '2020-01-01' })],
     }),
   ];
   render(
-    <TestGreenbacksProvider mocks={mocks} now="2020-07-01">
+    <TestGreenbacksProvider mocks={mocks} now="2021-01-01">
       <Greenbacks />
     </TestGreenbacksProvider>
   );

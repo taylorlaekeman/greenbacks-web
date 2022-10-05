@@ -11,7 +11,7 @@ import { Category } from 'types/transaction';
 test('shows untagged earning', async () => {
   const apiMocks = [
     buildApiTransactionsMock({
-      endDate: '2020-06-30',
+      endDate: '2020-12-31',
       startDate: '2020-01-01',
       transactions: [
         buildTransaction({
@@ -32,7 +32,7 @@ test('shows untagged earning', async () => {
     }),
   ];
   render(
-    <TestGreenbacksProvider mocks={apiMocks} now="2020-07-01">
+    <TestGreenbacksProvider mocks={apiMocks} now="2021-01-01">
       <Greenbacks />
     </TestGreenbacksProvider>
   );
@@ -52,7 +52,7 @@ test('shows untagged earning', async () => {
 test('excludes tagged earning', async () => {
   const apiMocks = [
     buildApiTransactionsMock({
-      endDate: '2020-06-30',
+      endDate: '2020-12-31',
       startDate: '2020-01-01',
       transactions: [
         buildTransaction({
@@ -87,7 +87,7 @@ test('excludes tagged earning', async () => {
   render(
     <TestGreenbacksProvider
       mocks={apiMocks}
-      now="2020-07-01"
+      now="2021-01-01"
       oneTransactionFilters={filters}
     >
       <Greenbacks />
@@ -106,7 +106,7 @@ test('excludes tagged earning', async () => {
 test('excludes spending', async () => {
   const apiMocks = [
     buildApiTransactionsMock({
-      endDate: '2020-06-30',
+      endDate: '2020-12-31',
       startDate: '2020-01-01',
       transactions: [
         buildTransaction({
@@ -140,7 +140,7 @@ test('excludes spending', async () => {
   render(
     <TestGreenbacksProvider
       mocks={apiMocks}
-      now="2020-07-01"
+      now="2021-01-01"
       oneTransactionFilters={filters}
     >
       <Greenbacks />
@@ -159,7 +159,7 @@ test('excludes spending', async () => {
 test('excludes saving', async () => {
   const apiMocks = [
     buildApiTransactionsMock({
-      endDate: '2020-06-30',
+      endDate: '2020-12-31',
       startDate: '2020-01-01',
       transactions: [
         buildTransaction({
@@ -193,7 +193,7 @@ test('excludes saving', async () => {
   render(
     <TestGreenbacksProvider
       mocks={apiMocks}
-      now="2020-07-01"
+      now="2021-01-01"
       oneTransactionFilters={filters}
     >
       <Greenbacks />
@@ -212,7 +212,7 @@ test('excludes saving', async () => {
 test('excludes hidden transactions', async () => {
   const apiMocks = [
     buildApiTransactionsMock({
-      endDate: '2020-06-30',
+      endDate: '2020-12-31',
       startDate: '2020-01-01',
       transactions: [
         buildTransaction({
@@ -246,7 +246,7 @@ test('excludes hidden transactions', async () => {
   render(
     <TestGreenbacksProvider
       mocks={apiMocks}
-      now="2020-07-01"
+      now="2021-01-01"
       oneTransactionFilters={filters}
     >
       <Greenbacks />

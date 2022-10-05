@@ -10,18 +10,18 @@ import buildTransaction from '__test__/utils/buildTransaction';
 test('adds spending filter', async () => {
   const apiMocks = [
     buildApiTransactionsMock({
-      endDate: '2020-06-30',
+      endDate: '2020-12-31',
       startDate: '2020-01-01',
       transactions: [
         buildTransaction({
-          amount: 600,
+          amount: 1200,
           name: 'test name',
         }),
       ],
     }),
   ];
   render(
-    <TestGreenbacksProvider mocks={apiMocks} now="2020-07-01">
+    <TestGreenbacksProvider mocks={apiMocks} now="2021-01-01">
       <Greenbacks />
     </TestGreenbacksProvider>
   );
@@ -47,18 +47,18 @@ test('adds spending filter', async () => {
 test('adds earning filter', async () => {
   const apiMocks = [
     buildApiTransactionsMock({
-      endDate: '2020-06-30',
+      endDate: '2020-12-31',
       startDate: '2020-01-01',
       transactions: [
         buildTransaction({
-          amount: 600,
+          amount: 1200,
           name: 'test name',
         }),
       ],
     }),
   ];
   render(
-    <TestGreenbacksProvider mocks={apiMocks} now="2020-07-01">
+    <TestGreenbacksProvider mocks={apiMocks} now="2021-01-01">
       <Greenbacks />
     </TestGreenbacksProvider>
   );
@@ -83,18 +83,18 @@ test('adds earning filter', async () => {
 test('adds saving filter', async () => {
   const apiMocks = [
     buildApiTransactionsMock({
-      endDate: '2020-06-30',
+      endDate: '2020-12-31',
       startDate: '2020-01-01',
       transactions: [
         buildTransaction({
-          amount: 600,
+          amount: 1200,
           name: 'test name',
         }),
       ],
     }),
   ];
   render(
-    <TestGreenbacksProvider mocks={apiMocks} now="2020-07-01">
+    <TestGreenbacksProvider mocks={apiMocks} now="2021-01-01">
       <Greenbacks />
     </TestGreenbacksProvider>
   );
