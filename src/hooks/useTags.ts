@@ -9,7 +9,7 @@ const useTags = (): { isLoading: boolean; tags?: string[] } => {
   oneTransactionFilters?.forEach(({ tagToAssign }) => {
     if (tagToAssign) uniqueTags[tagToAssign] = tagToAssign;
   });
-  const tags = Object.keys(uniqueTags);
+  const tags = Object.keys(uniqueTags).sort();
   if (tags.length === 0) return { isLoading };
   return {
     isLoading,

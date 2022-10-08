@@ -9,6 +9,7 @@ export interface CoreTransaction {
 
 interface Transaction extends CoreTransaction {
   category: Category;
+  filteredBy?: string;
   tag?: string;
   type: TransactionType;
 }

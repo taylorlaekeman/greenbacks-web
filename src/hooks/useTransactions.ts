@@ -210,10 +210,11 @@ const applyOneTransactionFilters = ({
       destinationList.push(transaction);
       return;
     }
-    const { categoryToAssign, tagToAssign } = matchingFilter;
+    const { categoryToAssign, id, tagToAssign } = matchingFilter;
     destinationList.push({
       ...transaction,
       category: categoryToAssign,
+      filteredBy: id,
       tag: tagToAssign,
     });
   });
