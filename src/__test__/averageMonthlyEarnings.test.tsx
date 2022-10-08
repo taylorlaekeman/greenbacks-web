@@ -4,12 +4,9 @@ import { render, screen } from '@testing-library/react';
 import Greenbacks from 'components/Greenbacks';
 import { TestGreenbacksProvider } from 'context/Greenbacks';
 import buildApiTransactionsMock from '__test__/utils/buildApiTransactionsMock';
-import buildOneTransactionFilter, {
-  buildMatcher,
-} from '__test__/utils/buildFilter';
-import buildFilter from '__test__/utils/buildTwoTransactionFilter';
+import buildFilter, { buildMatcher } from '__test__/utils/buildFilter';
 import buildTransaction from '__test__/utils/buildTransaction';
-import { Category, CoreTransaction } from 'types/transaction';
+import { Category } from 'types/transaction';
 
 test('displays loading indicator while transactions are loading', () => {
   const apiMocks = [buildApiTransactionsMock()];
@@ -56,17 +53,13 @@ test('correctly averages transactions', async () => {
     }),
   ];
   const filters = [
-    buildOneTransactionFilter({
+    buildFilter({
       categoryToAssign: Category.Hidden,
       matchers: [buildMatcher({ expectedValue: 'hidden', property: 'name' })],
     }),
   ];
   render(
-    <TestGreenbacksProvider
-      oneTransactionFilters={filters}
-      mocks={apiMocks}
-      now="2021-01-01"
-    >
+    <TestGreenbacksProvider filters={filters} mocks={apiMocks} now="2021-01-01">
       <Greenbacks />
     </TestGreenbacksProvider>
   );
@@ -138,66 +131,4 @@ test('shows label text', async () => {
   );
   const label = await screen.findByTestId('average-monthly-earnings-label');
   expect(label).toHaveTextContent(/^Average monthly earning$/);
-});
-
-test('excludes transfers', async () => {
-  const apiMocks = [
-    buildApiTransactionsMock({
-      endDate: '2020-12-31',
-      startDate: '2020-01-01',
-      transactions: [
-        buildTransaction({
-          amount: -1200,
-          datetime: '2020-01-01',
-          name: 'transfer received',
-        }),
-        buildTransaction({
-          amount: 1200,
-          datetime: '2020-01-01',
-          name: 'transfer sent',
-        }),
-        buildTransaction({
-          amount: -1200,
-          datetime: '2020-02-01',
-          name: 'transfer received',
-        }),
-        buildTransaction({
-          amount: 1200,
-          datetime: '2020-02-01',
-          name: 'transfer sent',
-        }),
-      ],
-    }),
-  ];
-  const filters = [
-    buildFilter({
-      categoryToAssign: Category.Spending,
-      firstMatchers: [
-        {
-          expectedValue: 'transfer received',
-          property: 'name' as keyof CoreTransaction,
-        },
-      ],
-      id: 'test',
-      secondMatchers: [
-        {
-          expectedValue: 'transfer sent',
-          property: 'name' as keyof CoreTransaction,
-        },
-      ],
-      tagToAssign: 'test-tag',
-    }),
-  ];
-  render(
-    <TestGreenbacksProvider
-      mocks={apiMocks}
-      now="2021-01-01"
-      twoTransactionFilters={filters}
-    >
-      <Greenbacks />
-    </TestGreenbacksProvider>
-  );
-  expect(
-    await screen.findByTestId('average-monthly-earnings')
-  ).toHaveTextContent('$0.00');
 });

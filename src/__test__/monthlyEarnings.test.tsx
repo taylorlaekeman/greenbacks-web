@@ -49,7 +49,7 @@ test('shows earnings', async () => {
   render(
     <TestGreenbacksProvider
       mocks={apiMocks}
-      oneTransactionFilters={filters}
+      filters={filters}
       route="/months/2020-01/"
     >
       <Greenbacks />

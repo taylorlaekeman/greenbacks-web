@@ -6,7 +6,6 @@ import Label from 'components/Label';
 import RadioButtons from 'components/RadioButtons';
 import useAddFilter from 'hooks/useAddFilter';
 import useTags from 'hooks/useTags';
-import { FilterType } from 'types/filter';
 import Transaction, { Category } from 'types/transaction';
 import getUuid from 'utils/uuid';
 
@@ -55,8 +54,6 @@ const AddFilter: FC<{ transaction: Transaction }> = ({ transaction }) => {
       <Button
         onClick={() => {
           if (!property) return;
-          const type =
-            property === 'id' ? FilterType.Id : FilterType.OneTransaction;
           addFilter({
             filter: {
               categoryToAssign: category as Category,
@@ -68,7 +65,6 @@ const AddFilter: FC<{ transaction: Transaction }> = ({ transaction }) => {
                 },
               ],
               tagToAssign: tag,
-              type,
             },
           });
         }}

@@ -56,11 +56,7 @@ test('shows expenses', async () => {
     }),
   ];
   render(
-    <TestGreenbacksProvider
-      oneTransactionFilters={filters}
-      mocks={mocks}
-      now="2020-01-01"
-    >
+    <TestGreenbacksProvider filters={filters} mocks={mocks} now="2020-01-01">
       <Greenbacks />
     </TestGreenbacksProvider>
   );
@@ -104,11 +100,7 @@ test('excludes savings', async () => {
     }),
   ];
   render(
-    <TestGreenbacksProvider
-      mocks={mocks}
-      now="2020-01-01"
-      oneTransactionFilters={filters}
-    >
+    <TestGreenbacksProvider mocks={mocks} now="2020-01-01" filters={filters}>
       <Greenbacks />
     </TestGreenbacksProvider>
   );
@@ -176,11 +168,7 @@ test('shows tag if present', async () => {
     }),
   ];
   render(
-    <TestGreenbacksProvider
-      mocks={mocks}
-      now="2020-01-01"
-      oneTransactionFilters={filters}
-    >
+    <TestGreenbacksProvider mocks={mocks} now="2020-01-01" filters={filters}>
       <Greenbacks />
     </TestGreenbacksProvider>
   );
@@ -246,11 +234,7 @@ test('shows tag from filter with greater than comparator', async () => {
     }),
   ];
   render(
-    <TestGreenbacksProvider
-      mocks={apiMocks}
-      now="2020-01-01"
-      oneTransactionFilters={filters}
-    >
+    <TestGreenbacksProvider mocks={apiMocks} now="2020-01-01" filters={filters}>
       <Greenbacks />
     </TestGreenbacksProvider>
   );
@@ -283,11 +267,7 @@ test('shows tag from filter with less than comparator', async () => {
     }),
   ];
   render(
-    <TestGreenbacksProvider
-      mocks={apiMocks}
-      now="2020-01-01"
-      oneTransactionFilters={filters}
-    >
+    <TestGreenbacksProvider mocks={apiMocks} now="2020-01-01" filters={filters}>
       <Greenbacks />
     </TestGreenbacksProvider>
   );
@@ -328,11 +308,7 @@ test('shows tag from filter multiple matchers', async () => {
     }),
   ];
   render(
-    <TestGreenbacksProvider
-      mocks={apiMocks}
-      now="2020-01-01"
-      oneTransactionFilters={filters}
-    >
+    <TestGreenbacksProvider mocks={apiMocks} now="2020-01-01" filters={filters}>
       <Greenbacks />
     </TestGreenbacksProvider>
   );

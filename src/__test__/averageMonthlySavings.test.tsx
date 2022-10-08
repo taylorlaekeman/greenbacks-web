@@ -96,11 +96,7 @@ test('correctly averages savings', async () => {
     }),
   ];
   render(
-    <TestGreenbacksProvider
-      mocks={mocks}
-      now="2021-01-01"
-      oneTransactionFilters={filters}
-    >
+    <TestGreenbacksProvider mocks={mocks} now="2021-01-01" filters={filters}>
       <Greenbacks />
     </TestGreenbacksProvider>
   );
@@ -137,11 +133,7 @@ test('handles months without savings', async () => {
     }),
   ];
   render(
-    <TestGreenbacksProvider
-      mocks={mocks}
-      now="2021-01-01"
-      oneTransactionFilters={filters}
-    >
+    <TestGreenbacksProvider mocks={mocks} now="2021-01-01" filters={filters}>
       <Greenbacks />
     </TestGreenbacksProvider>
   );
@@ -179,11 +171,7 @@ test('excludes earnings', async () => {
     }),
   ];
   render(
-    <TestGreenbacksProvider
-      mocks={mocks}
-      now="2021-01-01"
-      oneTransactionFilters={filters}
-    >
+    <TestGreenbacksProvider mocks={mocks} now="2021-01-01" filters={filters}>
       <Greenbacks />
     </TestGreenbacksProvider>
   );
@@ -221,11 +209,7 @@ test('excludes expenses', async () => {
     }),
   ];
   render(
-    <TestGreenbacksProvider
-      mocks={mocks}
-      now="2021-01-01"
-      oneTransactionFilters={filters}
-    >
+    <TestGreenbacksProvider mocks={mocks} now="2021-01-01" filters={filters}>
       <Greenbacks />
     </TestGreenbacksProvider>
   );

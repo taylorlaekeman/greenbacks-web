@@ -10,20 +10,19 @@ import {
 } from 'context/GreenbacksApi';
 import { TestNowProvider } from 'context/Now';
 import { TestRouteProvider } from 'context/Route';
-import { OneTransactionFilter, TwoTransactionFilter } from 'types/filter';
+import type { Filter } from 'types/filter';
 
 export const TestGreenbacksProvider: FC<Props> = ({
   children,
+  filters,
   idFilters,
   isApiReady,
   isAuthenticated,
   locales,
   mocks,
   now,
-  oneTransactionFilters,
   onUpdateAccountConnection,
   route,
-  twoTransactionFilters,
 }) => (
   <TestAuthProvider isAuthenticated={isAuthenticated}>
     <TestGreenbacksApiProvider isReady={isApiReady} mocks={mocks}>
@@ -33,11 +32,7 @@ export const TestGreenbacksProvider: FC<Props> = ({
         <TestNowProvider now={now}>
           <TestCurrencyLocalesProvider locales={locales}>
             <TestRouteProvider route={route}>
-              <TestFiltersProvider
-                idFilters={idFilters}
-                oneTransactionFilters={oneTransactionFilters}
-                twoTransactionFilters={twoTransactionFilters}
-              >
+              <TestFiltersProvider idFilters={idFilters} filters={filters}>
                 {children}
               </TestFiltersProvider>
             </TestRouteProvider>
@@ -49,16 +44,15 @@ export const TestGreenbacksProvider: FC<Props> = ({
 );
 
 interface Props {
-  idFilters?: OneTransactionFilter[];
+  filters?: Filter[];
+  idFilters?: Filter[];
   isApiReady?: boolean;
   isAuthenticated?: boolean;
   locales?: string | string[];
   mocks?: MockedApiResponse[];
   now?: string;
-  oneTransactionFilters?: OneTransactionFilter[];
   onUpdateAccountConnection?: (input: { token: string }) => void;
   route?: string;
-  twoTransactionFilters?: TwoTransactionFilter[];
 }
 
 export default undefined;

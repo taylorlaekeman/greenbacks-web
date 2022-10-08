@@ -4,64 +4,45 @@ import React, {
   Reducer,
   useCallback,
   useEffect,
+  useMemo,
   useReducer,
 } from 'react';
 
-import {
-  FilterType,
-  OneTransactionFilter,
-  TwoTransactionFilter,
-} from 'types/filter';
+import { Filter } from 'types/filter';
 import noop from 'utils/noop';
 
 export interface AllFilters {
-  idFilters?: OneTransactionFilter[];
-  oneTransactionFilters?: OneTransactionFilter[];
-  twoTransactionFilters?: TwoTransactionFilter[];
+  idFilters?: Filter[];
+  filters?: Filter[];
 }
 
 const FiltersContext = createContext<{
-  addFilter: (input: {
-    filter: OneTransactionFilter | TwoTransactionFilter;
-  }) => void;
-  idFilters?: OneTransactionFilter[];
-  oneTransactionFilters?: OneTransactionFilter[];
-  twoTransactionFilters?: TwoTransactionFilter[];
+  addFilter: (input: { filter: Filter }) => void;
+  filters?: Filter[];
 }>({ addFilter: noop });
 
 export const FiltersProvider: FC = ({ children }) => {
   const {
     idFilters: initialIdFilters = [],
-    oneTransactionFilters: initialOneTransactionFilters = [],
-    twoTransactionFilters: initialTwoTransactionFilters = [],
+    filters: initialFilters = [],
   } = getFiltersFromStorage();
-  const {
-    addFilter,
-    idFilters,
-    oneTransactionFilters,
-    twoTransactionFilters,
-  } = useFilters({
+  const { addFilter, filters } = useFilters({
     initialIdFilters,
-    initialOneTransactionFilters,
-    initialTwoTransactionFilters,
+    initialFilters,
   });
   useEffect(() => {
     localStorage.setItem(
       'filters',
       JSON.stringify({
-        idFilters,
-        oneTransactionFilters,
-        twoTransactionFilters,
+        filters,
       })
     );
-  }, [idFilters, oneTransactionFilters, twoTransactionFilters]);
+  }, [filters]);
   return (
     <FiltersContext.Provider
       value={{
         addFilter,
-        idFilters,
-        oneTransactionFilters,
-        twoTransactionFilters,
+        filters,
       }}
     >
       {children}
@@ -70,56 +51,39 @@ export const FiltersProvider: FC = ({ children }) => {
 };
 
 const getFiltersFromStorage = (): {
-  idFilters: OneTransactionFilter[];
-  oneTransactionFilters: OneTransactionFilter[];
-  twoTransactionFilters: TwoTransactionFilter[];
+  idFilters: Filter[];
+  filters: Filter[];
 } => {
   const serializedFilters = localStorage.getItem('filters');
   if (!serializedFilters)
     return {
       idFilters: [],
-      oneTransactionFilters: [],
-      twoTransactionFilters: [],
+      filters: [],
     };
-  const {
-    idFilters = [],
-    oneTransactionFilters = [],
-    twoTransactionFilters = [],
-  } = JSON.parse(serializedFilters);
+  const { idFilters = [], filters = [] } = JSON.parse(serializedFilters);
   return {
     idFilters,
-    oneTransactionFilters,
-    twoTransactionFilters,
+    filters,
   };
 };
 
 export const TestFiltersProvider: FC<{
-  idFilters?: OneTransactionFilter[];
-  oneTransactionFilters?: OneTransactionFilter[];
-  twoTransactionFilters?: TwoTransactionFilter[];
+  idFilters?: Filter[];
+  filters?: Filter[];
 }> = ({
   children,
   idFilters: initialIdFilters = [],
-  oneTransactionFilters: initialOneTransactionFilters = [],
-  twoTransactionFilters: initialTwoTransactionFilters = [],
+  filters: initialFilters = [],
 }) => {
-  const {
-    addFilter,
-    idFilters,
-    oneTransactionFilters,
-    twoTransactionFilters,
-  } = useFilters({
+  const { addFilter, filters } = useFilters({
     initialIdFilters,
-    initialOneTransactionFilters,
-    initialTwoTransactionFilters,
+    initialFilters,
   });
   return (
     <FiltersContext.Provider
       value={{
         addFilter,
-        idFilters,
-        oneTransactionFilters,
-        twoTransactionFilters,
+        filters,
       }}
     >
       {children}
@@ -129,28 +93,21 @@ export const TestFiltersProvider: FC<{
 
 const useFilters = ({
   initialIdFilters,
-  initialOneTransactionFilters,
-  initialTwoTransactionFilters,
+  initialFilters,
 }: {
-  initialIdFilters: OneTransactionFilter[];
-  initialOneTransactionFilters: OneTransactionFilter[];
-  initialTwoTransactionFilters: TwoTransactionFilter[];
+  initialIdFilters: Filter[];
+  initialFilters: Filter[];
 }): {
-  addFilter: (input: {
-    filter: OneTransactionFilter | TwoTransactionFilter;
-  }) => void;
-  idFilters: OneTransactionFilter[];
-  oneTransactionFilters: OneTransactionFilter[];
-  twoTransactionFilters: TwoTransactionFilter[];
+  addFilter: (input: { filter: Filter }) => void;
+  filters: Filter[];
 } => {
-  const [
-    { idFilters, oneTransactionFilters, twoTransactionFilters },
-    dispatch,
-  ] = useReducer<Reducer<State, Action>>(reducer, {
-    idFilters: initialIdFilters,
-    oneTransactionFilters: initialOneTransactionFilters,
-    twoTransactionFilters: initialTwoTransactionFilters,
-  });
+  const [{ idFilters, filters }, dispatch] = useReducer<Reducer<State, Action>>(
+    reducer,
+    {
+      idFilters: initialIdFilters,
+      filters: initialFilters,
+    }
+  );
   const addFilter = useCallback(
     ({ filter }) => {
       dispatch({
@@ -160,21 +117,26 @@ const useFilters = ({
     },
     [dispatch]
   );
+  const allFilters = useMemo(() => [...idFilters, ...filters], [
+    idFilters,
+    filters,
+  ]);
   return {
     addFilter,
-    idFilters,
-    oneTransactionFilters,
-    twoTransactionFilters,
+    filters: allFilters,
   };
 };
 
 interface State {
-  idFilters: OneTransactionFilter[];
-  oneTransactionFilters: OneTransactionFilter[];
-  twoTransactionFilters: TwoTransactionFilter[];
+  idFilters: Filter[];
+  filters: Filter[];
 }
 
 type Action = AddFilterAction;
+
+enum ActionType {
+  AddFilter = 'addFilter',
+}
 
 interface AddFilterAction {
   payload: AddFilterPayload;
@@ -182,7 +144,7 @@ interface AddFilterAction {
 }
 
 interface AddFilterPayload {
-  filter: OneTransactionFilter | TwoTransactionFilter;
+  filter: Filter;
 }
 
 const reducer: Reducer<State, Action> = (state, { payload, type }) => {
@@ -194,10 +156,6 @@ const reducer: Reducer<State, Action> = (state, { payload, type }) => {
   }
 };
 
-enum ActionType {
-  AddFilter = 'addFilter',
-}
-
 const handleAddFilterAction = ({
   payload: { filter },
   state,
@@ -205,17 +163,14 @@ const handleAddFilterAction = ({
   payload: AddFilterPayload;
   state: State;
 }): State => {
-  const { idFilters, oneTransactionFilters } = state;
-  const newIdFilters =
-    filter.type === FilterType.Id ? [...idFilters, filter] : idFilters;
-  const newOneTransactionFilters =
-    filter.type === FilterType.OneTransaction
-      ? [...oneTransactionFilters, filter]
-      : oneTransactionFilters;
+  const { idFilters, filters } = state;
+  const isIdFilter = filter.matchers.some(({ property }) => property === 'id');
+  const newIdFilters = isIdFilter ? [...idFilters, filter] : idFilters;
+  const newFilters = !isIdFilter ? [...filters, filter] : filters;
   return {
     ...state,
     idFilters: newIdFilters,
-    oneTransactionFilters: newOneTransactionFilters,
+    filters: newFilters,
   };
 };
 

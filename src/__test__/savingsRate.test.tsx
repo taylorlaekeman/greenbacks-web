@@ -102,11 +102,7 @@ test('correctly calculates savings rate', async () => {
     }),
   ];
   render(
-    <TestGreenbacksProvider
-      mocks={mocks}
-      now="2021-01-01"
-      oneTransactionFilters={filters}
-    >
+    <TestGreenbacksProvider mocks={mocks} now="2021-01-01" filters={filters}>
       <Greenbacks />
     </TestGreenbacksProvider>
   );

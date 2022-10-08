@@ -35,7 +35,7 @@ test('shows total earning', async () => {
   ];
   render(
     <TestGreenbacksProvider
-      oneTransactionFilters={filters}
+      filters={filters}
       mocks={apiMocks}
       route="/months/2020-01/"
     >
@@ -76,7 +76,7 @@ test('shows total spending', async () => {
   render(
     <TestGreenbacksProvider
       mocks={apiMocks}
-      oneTransactionFilters={filters}
+      filters={filters}
       route="/months/2020-01/"
     >
       <Greenbacks />
@@ -124,7 +124,7 @@ test('shows total saving', async () => {
   render(
     <TestGreenbacksProvider
       mocks={apiMocks}
-      oneTransactionFilters={filters}
+      filters={filters}
       route="/months/2020-01/"
     >
       <Greenbacks />
@@ -175,7 +175,7 @@ test('shows savings rate', async () => {
   render(
     <TestGreenbacksProvider
       mocks={apiMocks}
-      oneTransactionFilters={filters}
+      filters={filters}
       route="/months/2020-01/"
     >
       <Greenbacks />

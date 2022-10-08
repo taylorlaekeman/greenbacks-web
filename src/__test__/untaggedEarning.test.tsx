@@ -85,11 +85,7 @@ test('excludes tagged earning', async () => {
     }),
   ];
   render(
-    <TestGreenbacksProvider
-      mocks={apiMocks}
-      now="2021-01-01"
-      oneTransactionFilters={filters}
-    >
+    <TestGreenbacksProvider mocks={apiMocks} now="2021-01-01" filters={filters}>
       <Greenbacks />
     </TestGreenbacksProvider>
   );
@@ -138,11 +134,7 @@ test('excludes spending', async () => {
     }),
   ];
   render(
-    <TestGreenbacksProvider
-      mocks={apiMocks}
-      now="2021-01-01"
-      oneTransactionFilters={filters}
-    >
+    <TestGreenbacksProvider mocks={apiMocks} now="2021-01-01" filters={filters}>
       <Greenbacks />
     </TestGreenbacksProvider>
   );
@@ -191,11 +183,7 @@ test('excludes saving', async () => {
     }),
   ];
   render(
-    <TestGreenbacksProvider
-      mocks={apiMocks}
-      now="2021-01-01"
-      oneTransactionFilters={filters}
-    >
+    <TestGreenbacksProvider mocks={apiMocks} now="2021-01-01" filters={filters}>
       <Greenbacks />
     </TestGreenbacksProvider>
   );
@@ -244,11 +232,7 @@ test('excludes hidden transactions', async () => {
     }),
   ];
   render(
-    <TestGreenbacksProvider
-      mocks={apiMocks}
-      now="2021-01-01"
-      oneTransactionFilters={filters}
-    >
+    <TestGreenbacksProvider mocks={apiMocks} now="2021-01-01" filters={filters}>
       <Greenbacks />
     </TestGreenbacksProvider>
   );
@@ -299,7 +283,7 @@ test('section is not present when no untagged transactions exist', async () => {
     }),
   ];
   render(
-    <TestGreenbacksProvider mocks={apiMocks} oneTransactionFilters={filters}>
+    <TestGreenbacksProvider mocks={apiMocks} filters={filters}>
       <Greenbacks />
     </TestGreenbacksProvider>
   );

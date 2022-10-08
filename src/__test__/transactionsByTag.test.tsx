@@ -98,11 +98,7 @@ test('groups transactions by tag', async () => {
     }),
   ];
   render(
-    <TestGreenbacksProvider
-      mocks={apiMocks}
-      now="2020-01-01"
-      oneTransactionFilters={filters}
-    >
+    <TestGreenbacksProvider mocks={apiMocks} now="2020-01-01" filters={filters}>
       <Greenbacks />
     </TestGreenbacksProvider>
   );
@@ -156,11 +152,7 @@ test('groups untagged transactions', async () => {
     }),
   ];
   render(
-    <TestGreenbacksProvider
-      mocks={apiMocks}
-      now="2020-01-01"
-      oneTransactionFilters={filters}
-    >
+    <TestGreenbacksProvider mocks={apiMocks} now="2020-01-01" filters={filters}>
       <Greenbacks />
     </TestGreenbacksProvider>
   );
@@ -197,11 +189,7 @@ test('shows current month when no month is present in route', async () => {
     }),
   ];
   render(
-    <TestGreenbacksProvider
-      mocks={apiMocks}
-      now="2020-01-01"
-      oneTransactionFilters={filters}
-    >
+    <TestGreenbacksProvider mocks={apiMocks} now="2020-01-01" filters={filters}>
       <Greenbacks />
     </TestGreenbacksProvider>
   );

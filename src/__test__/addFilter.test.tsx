@@ -137,11 +137,7 @@ test('allows selecting existing filter', async () => {
     }),
   ];
   render(
-    <TestGreenbacksProvider
-      mocks={apiMocks}
-      now="2021-01-01"
-      oneTransactionFilters={filters}
-    >
+    <TestGreenbacksProvider mocks={apiMocks} now="2021-01-01" filters={filters}>
       <Greenbacks />
     </TestGreenbacksProvider>
   );

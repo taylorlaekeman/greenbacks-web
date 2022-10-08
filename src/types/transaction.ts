@@ -14,14 +14,6 @@ interface Transaction extends CoreTransaction {
   type: TransactionType;
 }
 
-export interface ConnectedTransaction {
-  category: Category;
-  firstTransaction?: CoreTransaction;
-  id: string;
-  secondTransaction?: CoreTransaction;
-  tag?: string;
-}
-
 export enum Category {
   Earning = 'Earning',
   Hidden = 'Hidden',
