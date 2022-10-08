@@ -52,7 +52,7 @@ test('adds earning filter', async () => {
       startDate: '2020-01-01',
       transactions: [
         buildTransaction({
-          amount: 1200,
+          amount: -1200,
           name: 'test name',
         }),
       ],
@@ -64,7 +64,7 @@ test('adds earning filter', async () => {
     </TestGreenbacksProvider>
   );
   const { getByRole } = within(
-    await screen.findByTestId('section-untagged-spending')
+    await screen.findByTestId('section-untagged-earning')
   );
   userEvent.click(getByRole('button'));
   userEvent.click(
@@ -155,4 +155,81 @@ test('allows selecting existing filter', async () => {
     screen.getByTestId('section-average-spending-by-tag')
   );
   expect(getByText(/test tag: \$1.00/)).toBeVisible();
+});
+
+test('defaults to name filter', async () => {
+  const apiMocks = [
+    buildApiTransactionsMock({
+      endDate: '2020-12-31',
+      startDate: '2020-01-01',
+      transactions: [
+        buildTransaction({
+          amount: 1200,
+          name: 'test name',
+        }),
+      ],
+    }),
+  ];
+  render(
+    <TestGreenbacksProvider mocks={apiMocks} now="2021-01-01">
+      <Greenbacks />
+    </TestGreenbacksProvider>
+  );
+  const { getByRole } = within(
+    await screen.findByTestId('section-untagged-spending')
+  );
+  userEvent.click(getByRole('button'));
+  expect(
+    getByRole('radio', { name: "Transactions with name 'test name'" })
+  ).toHaveAttribute('checked');
+});
+
+test('untagged spending defaults to spending category', async () => {
+  const apiMocks = [
+    buildApiTransactionsMock({
+      endDate: '2020-12-31',
+      startDate: '2020-01-01',
+      transactions: [
+        buildTransaction({
+          amount: 1200,
+          name: 'test name',
+        }),
+      ],
+    }),
+  ];
+  render(
+    <TestGreenbacksProvider mocks={apiMocks} now="2021-01-01">
+      <Greenbacks />
+    </TestGreenbacksProvider>
+  );
+  const { getByRole } = within(
+    await screen.findByTestId('section-untagged-spending')
+  );
+  userEvent.click(getByRole('button'));
+  expect(getByRole('radio', { name: 'Spending' })).toHaveAttribute('checked');
+});
+
+test('untagged earning defaults to earning category', async () => {
+  const apiMocks = [
+    buildApiTransactionsMock({
+      endDate: '2020-12-31',
+      startDate: '2020-01-01',
+      transactions: [
+        buildTransaction({
+          amount: -1200,
+          name: 'test name',
+        }),
+      ],
+    }),
+  ];
+  render(
+    <TestGreenbacksProvider mocks={apiMocks} now="2021-01-01">
+      <Greenbacks />
+    </TestGreenbacksProvider>
+  );
+  const { getByRole } = within(
+    await screen.findByTestId('section-untagged-earning')
+  );
+  userEvent.click(getByRole('button'));
+  expect(getByRole('radio', { name: 'Earning' })).toHaveProperty('checked');
 });

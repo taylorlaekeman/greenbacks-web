@@ -10,11 +10,11 @@ import Transaction, { Category } from 'types/transaction';
 import getUuid from 'utils/uuid';
 
 const AddFilter: FC<{ transaction: Transaction }> = ({ transaction }) => {
-  const { id, name } = transaction;
+  const { category: defaultCategory, id, name } = transaction;
   const { addFilter } = useAddFilter();
   const { isLoading: isLoadingTags, tags } = useTags();
-  const [property, setProperty] = useState<string>();
-  const [category, setCategory] = useState<string>('');
+  const [property, setProperty] = useState<string>('name');
+  const [category, setCategory] = useState<string>(defaultCategory);
   const [tag, setTag] = useState<string>();
   return (
     <form>
