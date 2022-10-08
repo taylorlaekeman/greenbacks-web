@@ -41,10 +41,10 @@ test('shows untagged earning', async () => {
   );
   const items = getAllByRole('listitem');
   expect(items[0]).toHaveTextContent(
-    '$2.00 (Credit)—second merchant (second name)—2020-01-02'
+    '$2.00—second name (second merchant)—2020-01-02'
   );
   expect(items[1]).toHaveTextContent(
-    '$1.00 (Credit)—first merchant (first name)—2020-01-01'
+    '$1.00—first name (first merchant)—2020-01-01'
   );
   expect(items).toHaveLength(2);
 });
@@ -94,7 +94,7 @@ test('excludes tagged earning', async () => {
   );
   const items = getAllByRole('listitem');
   expect(items[0]).toHaveTextContent(
-    '$2.00 (Credit)—second merchant (second name)—2020-01-02'
+    '$2.00—second name (second merchant)—2020-01-02'
   );
   expect(items).toHaveLength(1);
 });
@@ -143,7 +143,7 @@ test('excludes spending', async () => {
   );
   const items = getAllByRole('listitem');
   expect(items[0]).toHaveTextContent(
-    '$2.00 (Credit)—second merchant (second name)—2020-01-02'
+    '$2.00—second name (second merchant)—2020-01-02'
   );
   expect(items).toHaveLength(1);
 });
@@ -192,7 +192,7 @@ test('excludes saving', async () => {
   );
   const items = getAllByRole('listitem');
   expect(items[0]).toHaveTextContent(
-    '$2.00 (Credit)—second merchant (second name)—2020-01-02'
+    '$2.00—second name (second merchant)—2020-01-02'
   );
   expect(items).toHaveLength(1);
 });
@@ -241,7 +241,7 @@ test('excludes hidden transactions', async () => {
   );
   const items = getAllByRole('listitem');
   expect(items[0]).toHaveTextContent(
-    '$2.00 (Credit)—second merchant (second name)—2020-01-02'
+    '$2.00—second name (second merchant)—2020-01-02'
   );
   expect(items).toHaveLength(1);
 });
