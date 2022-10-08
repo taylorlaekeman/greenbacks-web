@@ -233,3 +233,40 @@ test('untagged earning defaults to earning category', async () => {
   userEvent.click(getByRole('button'));
   expect(getByRole('radio', { name: 'Earning' })).toHaveProperty('checked');
 });
+
+test('adds merchant filter', async () => {
+  const apiMocks = [
+    buildApiTransactionsMock({
+      endDate: '2020-12-31',
+      startDate: '2020-01-01',
+      transactions: [
+        buildTransaction({
+          amount: 1200,
+          merchant: 'test merchant',
+        }),
+      ],
+    }),
+  ];
+  render(
+    <TestGreenbacksProvider mocks={apiMocks} now="2021-01-01">
+      <Greenbacks />
+    </TestGreenbacksProvider>
+  );
+  const { getByRole } = within(
+    await screen.findByTestId('section-untagged-spending')
+  );
+  userEvent.click(getByRole('button'));
+  userEvent.click(
+    getByRole('radio', { name: "Transactions from merchant 'test merchant'" })
+  );
+  userEvent.click(getByRole('radio', { name: 'Spending' }));
+  userEvent.type(
+    await screen.findByRole('textbox', { name: 'Tag' }),
+    'test tag'
+  );
+  userEvent.click(screen.getByRole('button', { name: 'Add filter' }));
+  const { getByText } = within(
+    screen.getByTestId('section-average-spending-by-tag')
+  );
+  expect(getByText(/test tag: \$1.00/)).toBeVisible();
+});

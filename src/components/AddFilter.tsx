@@ -10,7 +10,7 @@ import Transaction, { Category } from 'types/transaction';
 import getUuid from 'utils/uuid';
 
 const AddFilter: FC<{ transaction: Transaction }> = ({ transaction }) => {
-  const { category: defaultCategory, id, name } = transaction;
+  const { category: defaultCategory, merchant, name } = transaction;
   const { addFilter } = useAddFilter();
   const { isLoading: isLoadingTags, tags } = useTags();
   const [property, setProperty] = useState<string>('name');
@@ -22,6 +22,10 @@ const AddFilter: FC<{ transaction: Transaction }> = ({ transaction }) => {
         name="property"
         options={[
           { label: `Transactions with name '${name}'`, value: 'name' },
+          {
+            label: `Transactions from merchant '${merchant}'`,
+            value: 'merchant',
+          },
           { label: 'Only this transaction', value: 'id' },
         ]}
         onChange={(newProperty) => setProperty(newProperty)}
@@ -61,7 +65,7 @@ const AddFilter: FC<{ transaction: Transaction }> = ({ transaction }) => {
               matchers: [
                 {
                   property,
-                  expectedValue: property === 'id' ? id : name,
+                  expectedValue: getExpectedValue({ property, transaction }),
                 },
               ],
               tagToAssign: tag,
@@ -79,5 +83,25 @@ const PROPERTY_OPTIONS = [
   { label: 'Name', value: 'name' },
   { label: 'Id', value: 'id' },
 ];
+
+const getExpectedValue = ({
+  property,
+  transaction,
+}: {
+  property: string;
+  transaction: Transaction;
+}): string => {
+  const { id, merchant, name } = transaction;
+  switch (property) {
+    case 'id':
+      return id;
+    case 'merchant':
+      return merchant;
+    case 'name':
+      return name;
+    default:
+      return name;
+  }
+};
 
 export default AddFilter;
