@@ -4,6 +4,7 @@ import AmountBadge from 'components/AmountBadge';
 import ArticleContainer from 'components/ArticleContainer';
 import PercentBadge from 'components/PercentBadge';
 import SectionContainer from 'components/SectionContainer';
+import TotalsByMonth from 'components/TotalsByMonth';
 import Transactions from 'components/Transactions';
 import TransactionsByTag from 'components/TransactionsByTag';
 import useAverageMonthlyEarning from 'hooks/useAverageMonthlyEarning';
@@ -87,6 +88,7 @@ const Overview: FC = () => {
           <Transactions transactions={untaggedSpending} />
         </SectionContainer>
       )}
+      <TotalsByMonth />
     </ArticleContainer>
   );
 };
