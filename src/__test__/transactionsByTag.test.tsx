@@ -16,7 +16,7 @@ test('shows loading indicator while transactions are loading', () => {
     </TestGreenbacksProvider>
   );
   const loadingIndicator = screen.getByTestId(
-    'loading-indicator-transactions-by-tag'
+    'loading-indicator-monthly-spending-by-tag'
   );
   expect(loadingIndicator).toBeInTheDocument();
 });
@@ -103,7 +103,7 @@ test('groups transactions by tag', async () => {
     </TestGreenbacksProvider>
   );
   const { getAllByRole } = within(
-    await screen.findByTestId('section-transactions-by-tag')
+    await screen.findByTestId('section-monthly-spending-by-tag')
   );
   const items = getAllByRole('listitem');
   expect(items[0]).toHaveTextContent(/second tag: \$3.00/);
@@ -157,7 +157,7 @@ test('groups untagged transactions', async () => {
     </TestGreenbacksProvider>
   );
   const { getByText } = within(
-    await screen.findByTestId('section-transactions-by-tag')
+    await screen.findByTestId('section-monthly-spending-by-tag')
   );
   expect(getByText(/Untagged: \$2.00/)).toBeVisible();
 });
@@ -193,6 +193,8 @@ test('shows current month when no month is present in route', async () => {
       <Greenbacks />
     </TestGreenbacksProvider>
   );
-  const container = await screen.findByTestId('section-transactions-by-tag');
+  const container = await screen.findByTestId(
+    'section-monthly-spending-by-tag'
+  );
   expect(within(container).getByText(/test tag/)).toBeVisible();
 });
