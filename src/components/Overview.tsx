@@ -86,6 +86,7 @@ const Overview: FC = () => {
       {untaggedSpending && (
         <SectionContainer
           id="untagged-spending"
+          isCollapsible
           title={`Untagged Spending (${untaggedSpending.length})`}
         >
           <Transactions transactions={untaggedSpending} />

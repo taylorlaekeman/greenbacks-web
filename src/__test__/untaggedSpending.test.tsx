@@ -1,5 +1,6 @@
 import React from 'react';
 import { render, screen, within } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 import Greenbacks from 'components/Greenbacks';
 import { TestGreenbacksProvider } from 'context/Greenbacks';
@@ -293,4 +294,37 @@ test('section is not present when no untagged transactions exist', async () => {
   expect(
     screen.queryByTestId('section-untagged-spending')
   ).not.toBeInTheDocument();
+});
+
+test('untagged transactions can be collapsed and expanded', async () => {
+  const apiMocks = [
+    buildApiTransactionsMock({
+      endDate: '2020-12-31',
+      startDate: '2020-01-01',
+      transactions: [
+        buildTransaction({
+          amount: 100,
+          name: 'test name',
+        }),
+      ],
+    }),
+  ];
+  render(
+    <TestGreenbacksProvider mocks={apiMocks} now="2021-01-01">
+      <Greenbacks />
+    </TestGreenbacksProvider>
+  );
+  const { queryByRole } = within(
+    await screen.findByTestId('section-untagged-spending')
+  );
+  userEvent.click(
+    await screen.findByRole('button', { name: 'Untagged Spending (1)' })
+  );
+  const collapsedList = queryByRole('list');
+  userEvent.click(
+    await screen.findByRole('button', { name: 'Untagged Spending (1)' })
+  );
+  const expandedList = queryByRole('list');
+  expect(collapsedList).toBeNull();
+  expect(expandedList).toBeVisible();
 });
