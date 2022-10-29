@@ -36,9 +36,10 @@ test('shows untagged spending', async () => {
       <Greenbacks />
     </TestGreenbacksProvider>
   );
-  const { getAllByRole } = within(
+  const { getAllByRole, getByRole } = within(
     await screen.findByTestId('section-untagged-spending')
   );
+  expect(getByRole('heading')).toHaveTextContent('Untagged Spending (2)');
   const items = getAllByRole('listitem');
   expect(items[0]).toHaveTextContent(
     '$2.00—second name (second merchant)—2020-01-02'
