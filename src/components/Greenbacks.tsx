@@ -23,8 +23,17 @@ const Greenbacks: FC = () => {
 
   return (
     <>
-      <Button onClick={logout}>Logout</Button>
-      <Link href="/accounts">Accounts</Link>
+      <ul>
+        <li>
+          <Link href="/">Greenbacks</Link>
+        </li>
+        <li>
+          <Link href="/accounts">Accounts</Link>
+        </li>
+        <li>
+          <Button onClick={logout}>Logout</Button>
+        </li>
+      </ul>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/months/:month/" element={<Home />} />
