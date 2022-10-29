@@ -29,7 +29,7 @@ test('adds spending filter', async () => {
   const { getByRole } = within(
     await screen.findByTestId('section-untagged-spending')
   );
-  userEvent.click(getByRole('button'));
+  userEvent.click(getByRole('button', { name: 'filter' }));
   userEvent.click(
     getByRole('radio', { name: "Transactions with name 'test name'" })
   );
@@ -66,7 +66,7 @@ test('adds earning filter', async () => {
   const { getByRole } = within(
     await screen.findByTestId('section-untagged-earning')
   );
-  userEvent.click(getByRole('button'));
+  userEvent.click(getByRole('button', { name: 'filter' }));
   userEvent.click(
     getByRole('radio', { name: "Transactions with name 'test name'" })
   );
@@ -102,7 +102,7 @@ test('adds saving filter', async () => {
   const { getByRole } = within(
     await screen.findByTestId('section-untagged-spending')
   );
-  userEvent.click(getByRole('button'));
+  userEvent.click(getByRole('button', { name: 'filter' }));
   userEvent.click(
     getByRole('radio', { name: "Transactions with name 'test name'" })
   );
@@ -144,7 +144,7 @@ test('allows selecting existing filter', async () => {
   const { getByRole } = within(
     await screen.findByTestId('section-untagged-spending')
   );
-  userEvent.click(getByRole('button'));
+  userEvent.click(getByRole('button', { name: 'filter' }));
   userEvent.click(
     getByRole('radio', { name: "Transactions with name 'test name'" })
   );
@@ -178,7 +178,7 @@ test('defaults to name filter', async () => {
   const { getByRole } = within(
     await screen.findByTestId('section-untagged-spending')
   );
-  userEvent.click(getByRole('button'));
+  userEvent.click(getByRole('button', { name: 'filter' }));
   expect(
     getByRole('radio', { name: "Transactions with name 'test name'" })
   ).toHaveAttribute('checked');
@@ -205,7 +205,7 @@ test('untagged spending defaults to spending category', async () => {
   const { getByRole } = within(
     await screen.findByTestId('section-untagged-spending')
   );
-  userEvent.click(getByRole('button'));
+  userEvent.click(getByRole('button', { name: 'filter' }));
   expect(getByRole('radio', { name: 'Spending' })).toHaveAttribute('checked');
 });
 
@@ -230,7 +230,7 @@ test('untagged earning defaults to earning category', async () => {
   const { getByRole } = within(
     await screen.findByTestId('section-untagged-earning')
   );
-  userEvent.click(getByRole('button'));
+  userEvent.click(getByRole('button', { name: 'filter' }));
   expect(getByRole('radio', { name: 'Earning' })).toHaveProperty('checked');
 });
 
@@ -255,7 +255,7 @@ test('adds merchant filter', async () => {
   const { getByRole } = within(
     await screen.findByTestId('section-untagged-spending')
   );
-  userEvent.click(getByRole('button'));
+  userEvent.click(getByRole('button', { name: 'filter' }));
   userEvent.click(
     getByRole('radio', { name: "Transactions from merchant 'test merchant'" })
   );

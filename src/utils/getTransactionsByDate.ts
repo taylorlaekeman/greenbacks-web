@@ -23,7 +23,7 @@ const getTransactionsByDate = ({
       transactions: dailyTransactions,
     }))
     .sort(({ date: firstDate }, { date: secondDate }) =>
-      firstDate > secondDate ? 1 : -1
+      firstDate > secondDate ? -1 : 1
     );
 };
 
