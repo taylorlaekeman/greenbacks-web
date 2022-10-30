@@ -3,6 +3,7 @@ import React, { FunctionComponent } from 'react';
 import Greenbacks from 'components/Greenbacks';
 import AccountConnectionProvider from 'context/AccountConnection';
 import AuthProvider from 'context/Auth';
+import { FiltersProvider } from 'context/Filters';
 import GreenbacksApiProvider from 'context/GreenbacksApi';
 import RouteProvider from 'context/Route';
 import env from 'env';
@@ -13,12 +14,14 @@ const App: FunctionComponent = () => (
   <AuthProvider>
     <GreenbacksApiProvider uri={`${env.apiHost}/graphql`}>
       <AccountConnectionProvider>
-        <RouteProvider>
-          <GlobalStyle />
-          <Wrapper>
-            <Greenbacks />
-          </Wrapper>
-        </RouteProvider>
+        <FiltersProvider>
+          <RouteProvider>
+            <GlobalStyle />
+            <Wrapper>
+              <Greenbacks />
+            </Wrapper>
+          </RouteProvider>
+        </FiltersProvider>
       </AccountConnectionProvider>
     </GreenbacksApiProvider>
   </AuthProvider>

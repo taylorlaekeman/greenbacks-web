@@ -1,5 +1,12 @@
-import gql from 'utils/gql';
+import useFilters from 'hooks/useFilters';
 import useQuery, { ApolloError } from 'hooks/useQuery';
+import { Comparator, Filter, Matcher } from 'types/filter';
+import Transaction, {
+  Category,
+  CoreTransaction,
+  TransactionType,
+} from 'types/transaction';
+import gql from 'utils/gql';
 
 const useTransactions = ({
   endDate,
@@ -12,36 +19,29 @@ const useTransactions = ({
   debits?: Transaction[];
   error?: ApolloError;
   isLoading: boolean;
-  transfers?: Transfer[];
 } => {
+  const {
+    error: filtersError,
+    isLoading: isLoadingFilters,
+    filters = [],
+  } = useFilters();
   const { data, error, loading: isLoading } = useQuery<
-    { transactions: Transaction[] },
+    { transactions: CoreTransaction[] },
     { endDate: string; startDate: string }
   >(GET_TRANSACTIONS_QUERY, {
     variables: { endDate, startDate },
   });
-  const { credits, debits, transfers } = categorizeTransactions({
+  const { credits, debits } = categorizeTransactions({
+    filters,
     transactions: data?.transactions,
   });
-  return { error, isLoading, credits, debits, transfers };
+  return {
+    credits,
+    debits,
+    error: error || filtersError,
+    isLoading: isLoading || isLoadingFilters,
+  };
 };
-
-interface CoreTransaction {
-  amount: number;
-  datetime: string;
-  id: string;
-  merchant: string;
-  name: string;
-}
-
-export interface Transaction extends CoreTransaction {
-  accountId: string;
-}
-
-interface Transfer extends CoreTransaction {
-  destinationAccountId: string;
-  sourceAccountId: string;
-}
 
 export const GET_TRANSACTIONS_QUERY = gql`
   query GetTransactions($startDate: String!, $endDate: String!) {
@@ -57,93 +57,107 @@ export const GET_TRANSACTIONS_QUERY = gql`
 `;
 
 export const categorizeTransactions = ({
+  filters,
   transactions,
 }: {
-  transactions?: Transaction[];
+  filters?: Filter[];
+  transactions?: CoreTransaction[];
 } = {}): {
   credits?: Transaction[];
   debits?: Transaction[];
-  transfers?: Transfer[];
 } => {
   if (!transactions) return {};
-  const transfers: Transfer[] = [];
-  const debitsToReturn: Transaction[] = [];
-  const credits = transactions
-    .filter(({ amount }) => amount < 0)
-    .map(({ amount, ...rest }) => ({ ...rest, amount: -amount }));
-  const debits = transactions.filter(({ amount }) => amount > 0);
-  let creditsByAmount = getTransactionsByAmount({ transactions: credits });
-  debits.forEach((debit) => {
-    const {
-      debit: debitToReturn,
-      creditsByAmount: newCreditsByAmount,
-      transfer,
-    } = categorizeTransaction({
-      creditsByAmount,
-      debit,
-    });
-    creditsByAmount = newCreditsByAmount;
-    if (debitToReturn) debitsToReturn.push(debitToReturn);
-    if (transfer) transfers.push(transfer);
+  const { credits, debits } = applyFilters({
+    filters,
+    transactions,
   });
+  return { credits, debits };
+};
+
+const applyFilters = ({
+  filters,
+  transactions,
+}: {
+  filters?: Filter[];
+  transactions: CoreTransaction[];
+}): { credits?: Transaction[]; debits?: Transaction[] } => {
+  if (!filters) return {};
+  const credits: Transaction[] = [];
+  const debits: Transaction[] = [];
+  transactions.forEach((coreTransaction) => {
+    const transaction = getFullTransaction({ transaction: coreTransaction });
+    const destinationList =
+      transaction.type === TransactionType.Debit ? debits : credits;
+    const matchingFilter = filters.find(({ matchers }) =>
+      isMatchersMatch({ matchers, transaction })
+    );
+    if (!matchingFilter) {
+      destinationList.push(transaction);
+      return;
+    }
+    const { categoryToAssign, id, tagToAssign } = matchingFilter;
+    destinationList.push({
+      ...transaction,
+      category: categoryToAssign,
+      filteredBy: id,
+      tag: tagToAssign,
+    });
+  });
+  return { credits, debits };
+};
+
+const getFullTransaction = ({
+  transaction,
+}: {
+  transaction: CoreTransaction;
+}): Transaction => {
+  const { amount } = transaction;
+  if (amount >= 0)
+    return {
+      ...transaction,
+      category: Category.Spending,
+      type: TransactionType.Debit,
+    };
   return {
-    credits: Object.values(creditsByAmount).flat(),
-    debits: debitsToReturn,
-    transfers,
+    ...transaction,
+    amount: -amount,
+    category: Category.Earning,
+    type: TransactionType.Credit,
   };
 };
 
-const getTransactionsByAmount = ({
-  transactions,
+const isMatchersMatch = ({
+  matchers,
+  transaction,
 }: {
-  transactions: Transaction[];
-}): Record<number, Transaction[]> =>
-  transactions.reduce(
-    (result: Record<number, Transaction[]>, transaction: Transaction) => {
-      const { amount } = transaction;
-      const existingTransactions = result[amount] || [];
-      return {
-        ...result,
-        [amount]: [...existingTransactions, transaction],
-      };
-    },
-    {}
+  matchers: Matcher[];
+  transaction: CoreTransaction;
+}): boolean => {
+  if (matchers.length === 0) return false;
+  return matchers.every((matcher: Matcher) =>
+    isMatcherMatch({ matcher, transaction })
   );
+};
 
-const categorizeTransaction = ({
-  creditsByAmount,
-  debit,
+const isMatcherMatch = ({
+  matcher: { comparator = Comparator.Equals, expectedValue, property },
+  transaction,
 }: {
-  creditsByAmount: Record<number, Transaction[]>;
-  debit: Transaction;
-}): {
-  creditsByAmount: Record<number, Transaction[]>;
-  debit?: Transaction;
-  transfer?: Transfer;
-} => {
-  const { accountId: debitedAccountId, amount, ...rest } = debit;
-  if (!(amount in creditsByAmount)) return { creditsByAmount, debit };
-  const creditsWithAmount = creditsByAmount[amount];
-  const creditIndex = creditsWithAmount.findIndex(
-    ({ accountId: creditedAccountId }) => creditedAccountId !== debitedAccountId
-  );
-  if (creditIndex === -1) return { creditsByAmount, debit };
-  const { accountId: creditedAccountId } = creditsWithAmount[creditIndex];
-  return {
-    creditsByAmount: {
-      ...creditsByAmount,
-      [amount]: [
-        ...creditsWithAmount.slice(0, creditIndex),
-        ...creditsWithAmount.slice(creditIndex + 1),
-      ],
-    },
-    transfer: {
-      ...rest,
-      amount,
-      destinationAccountId: creditedAccountId,
-      sourceAccountId: debitedAccountId,
-    },
-  };
+  matcher: Matcher;
+  transaction: CoreTransaction;
+}): boolean => {
+  if (!(property in transaction)) return false;
+  const actualValue = transaction[property as keyof CoreTransaction];
+  switch (comparator) {
+    case Comparator.Equals:
+      return actualValue === expectedValue;
+    case Comparator.GreaterThan:
+      return actualValue > expectedValue;
+    case Comparator.LessThan:
+      return actualValue < expectedValue;
+    default:
+      return false;
+  }
 };
 
 export default useTransactions;

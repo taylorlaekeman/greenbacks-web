@@ -1,55 +1,52 @@
-import React, { FC, Fragment, useState } from 'react';
+import React, { FC, Fragment } from 'react';
 
-import Button from 'components/Button';
 import LoadingIndicator from 'components/LoadingIndicator';
+import SectionContainer from 'components/SectionContainer';
 import useCurrencyFormatter from 'hooks/useCurrencyFormatter';
-import useCurrentMonth from 'hooks/useCurrentMonth';
-import useDailyExpenses from 'hooks/useDailyExpenses';
-import useNextMonth from 'hooks/useNextMonth';
-import usePreviousMonth from 'hooks/usePreviousMonth';
-import useReadableMonth from 'hooks/useReadableMonth';
+import useMonth from 'hooks/useMonth';
+import useTransactionsByCategory from 'hooks/useTransactionsByCategory';
+import getTransactionsByDate from 'utils/getTransactionsByDate';
 
 const MonthlyExpenses: FC = () => {
-  const { iso: currentMonth } = useCurrentMonth();
-  const [month, setMonth] = useState(currentMonth);
-  const { iso: nextMonth } = useNextMonth({ iso: month });
-  const { iso: previousMonth } = usePreviousMonth({ iso: month });
-  const { month: readableMonth } = useReadableMonth({ iso: month });
+  const { endDate, startDate } = useMonth();
   const { format } = useCurrencyFormatter();
-  const { dailyExpenses, isLoading } = useDailyExpenses({
-    month,
+  const { isLoading, spending } = useTransactionsByCategory({
+    endDate,
+    startDate,
   });
+  const spendingByDate = getTransactionsByDate({ transactions: spending });
 
-  if (isLoading) return <LoadingIndicator name="monthly-expenses" />;
+  if (isLoading)
+    return (
+      <SectionContainer id="monthly-expenses" title="Spending">
+        <LoadingIndicator name="monthly-expenses" />
+      </SectionContainer>
+    );
 
   return (
-    <>
-      <p>{readableMonth}</p>
-      <Button onClick={() => setMonth(previousMonth)}>
-        Go to previous month
-      </Button>
-      <Button onClick={() => setMonth(nextMonth)}>Go to next month</Button>
-      {Object.entries(dailyExpenses || {}).map(([day, expenses]) => (
-        <Fragment key={day}>
-          <p>{day}</p>
+    <SectionContainer id="monthly-expenses" title="Spending">
+      {spendingByDate.map(({ date, transactions }) => (
+        <Fragment key={date}>
+          <p>{date}</p>
           <ul>
-            {expenses?.map(({ amount, id, merchant, name }) => {
+            {transactions?.map(({ amount, id, merchant, name, tag }) => {
               const formattedAmount = format({ value: amount });
               return (
                 <li key={id}>
                   {formattedAmount}
                   &mdash;
                   {merchant || 'no merchant'}
-                  &nbsp; &#40;
+                  &nbsp;&#40;
                   {name}
-                  &#41;
+                  &#41;&nbsp;
+                  {tag}
                 </li>
               );
             })}
           </ul>
         </Fragment>
       ))}
-    </>
+    </SectionContainer>
   );
 };
 

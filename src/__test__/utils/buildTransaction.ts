@@ -1,5 +1,5 @@
-import type { Transaction } from 'hooks/useTransactions';
 import uuid from 'utils/uuid';
+import { CoreTransaction } from 'types/transaction';
 
 const buildTransaction = ({
   accountId = 'accountId',
@@ -15,7 +15,7 @@ const buildTransaction = ({
   id?: string;
   merchant?: string;
   name?: string;
-} = {}): Transaction => ({
+} = {}): CoreTransaction => ({
   accountId,
   amount,
   datetime,

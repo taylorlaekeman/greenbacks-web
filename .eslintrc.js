@@ -39,7 +39,9 @@ module.exports = {
     'jest/no-identical-title': 'error',
     'jest/prefer-to-have-length': 'warn',
     'jest/valid-expect': 'error',
+    'jsx-a11y/label-has-associated-control': 'off',
     'max-classes-per-file': 'off',
+    'no-shadow': 'off',
     'no-use-before-define': 'off',
     'react/jsx-filename-extension': [1, { extensions: ['.ts', '.tsx'] }],
     'react/jsx-props-no-spreading': 'off',
@@ -47,6 +49,7 @@ module.exports = {
     'react-hooks/exhaustive-deps': 'error',
     'react-hooks/rules-of-hooks': 'error',
     '@typescript-eslint/explicit-module-boundary-types': 'error',
+    '@typescript-eslint/no-shadow': 'error',
     '@typescript-eslint/no-unused-vars': ['error', { varsIgnorePattern: '_' }],
   },
   settings: {

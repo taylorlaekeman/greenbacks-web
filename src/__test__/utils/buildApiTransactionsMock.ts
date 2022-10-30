@@ -1,5 +1,6 @@
 import { GraphQLError, MockedApiResponse } from 'context/GreenbacksApi';
-import { GET_TRANSACTIONS_QUERY, Transaction } from 'hooks/useTransactions';
+import { GET_TRANSACTIONS_QUERY } from 'hooks/useTransactions';
+import { CoreTransaction } from 'types/transaction';
 
 const buildApiTransactionsMock = ({
   endDate = '2020-06-30',
@@ -19,7 +20,7 @@ const buildResult = ({
   transactions,
 }: {
   errors?: string[];
-  transactions?: Transaction[];
+  transactions?: CoreTransaction[];
 }) => {
   if (errors) {
     const graphqlErrors = errors.map((error) => new GraphQLError(error));
@@ -32,7 +33,7 @@ interface Input {
   endDate?: string;
   errors?: string[];
   startDate?: string;
-  transactions?: Transaction[];
+  transactions?: CoreTransaction[];
 }
 
 export default buildApiTransactionsMock;

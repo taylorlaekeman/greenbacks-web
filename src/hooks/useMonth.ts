@@ -1,0 +1,44 @@
+import { useParams as useRouteParams } from 'react-router-dom';
+
+import useNow from 'hooks/useNow';
+import datetime from 'utils/datetime';
+import getMonth from 'utils/getMonth';
+
+const useMonth = (): {
+  endDate: string;
+  iso: string;
+  nextMonth: string;
+  previousMonth: string;
+  readable: string;
+  startDate: string;
+} => {
+  const { routeMonth } = useRouteMonth();
+  const { now } = useNow();
+  const month = routeMonth || now;
+  const {
+    firstDay,
+    iso: currentMonth,
+    lastDay,
+    readable: readableMonth,
+  } = getMonth({
+    datetime: month,
+  });
+  const { iso: nextMonth } = getMonth({ datetime: month, offset: 1 });
+  const { iso: previousMonth } = getMonth({ datetime: month, offset: -1 });
+  return {
+    endDate: lastDay,
+    iso: currentMonth,
+    nextMonth,
+    previousMonth,
+    readable: readableMonth,
+    startDate: firstDay,
+  };
+};
+
+const useRouteMonth = (): { routeMonth?: datetime } => {
+  const { month } = useRouteParams();
+  if (!month) return {};
+  return { routeMonth: datetime.fromISO(month) };
+};
+
+export default useMonth;
