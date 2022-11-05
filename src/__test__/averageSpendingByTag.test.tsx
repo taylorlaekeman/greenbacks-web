@@ -55,6 +55,9 @@ test('correctly averages spending', async () => {
   expect(items[0]).toHaveTextContent(/second tag: \$2.00/);
   expect(items[1]).toHaveTextContent(/first tag: \$1.00/);
   expect(items).toHaveLength(2);
+  const graph = await screen.findByTestId('average-spending-by-tag-graph');
+  expect(graph).toHaveAttribute('data-tag-first-tag', '100');
+  expect(graph).toHaveAttribute('data-tag-second-tag', '200');
 });
 
 test('excludes savings', async () => {
@@ -102,6 +105,8 @@ test('excludes savings', async () => {
   const items = await findAllByRole('listitem');
   expect(items[0]).toHaveTextContent(/second tag: \$1.00/);
   expect(items).toHaveLength(1);
+  const graph = await screen.findByTestId('average-spending-by-tag-graph');
+  expect(graph).toHaveAttribute('data-tag-second-tag', '100');
 });
 
 test('excludes earnings', async () => {
@@ -149,6 +154,8 @@ test('excludes earnings', async () => {
   const items = await findAllByRole('listitem');
   expect(items[0]).toHaveTextContent(/second tag: \$1.00/);
   expect(items).toHaveLength(1);
+  const graph = await screen.findByTestId('average-spending-by-tag-graph');
+  expect(graph).toHaveAttribute('data-tag-second-tag', '100');
 });
 
 test('excludes hidden transactions', async () => {
@@ -196,6 +203,8 @@ test('excludes hidden transactions', async () => {
   const items = await findAllByRole('listitem');
   expect(items[0]).toHaveTextContent(/second tag: \$1.00/);
   expect(items).toHaveLength(1);
+  const graph = await screen.findByTestId('average-spending-by-tag-graph');
+  expect(graph).toHaveAttribute('data-tag-second-tag', '100');
 });
 
 test('groups untagged transactions', async () => {
@@ -228,6 +237,8 @@ test('groups untagged transactions', async () => {
   const items = await findAllByRole('listitem');
   expect(items[0]).toHaveTextContent(/Untagged: \$2.00/);
   expect(items).toHaveLength(1);
+  const graph = await screen.findByTestId('average-spending-by-tag-graph');
+  expect(graph).toHaveAttribute('data-tag-Untagged', '200');
 });
 
 test('shows loading indicator', async () => {
@@ -239,4 +250,7 @@ test('shows loading indicator', async () => {
   expect(
     screen.getByTestId('loading-indicator-average-spending-by-tag')
   ).toBeVisible();
+  expect(
+    screen.queryByTestId('average-spending-by-tag-graph')
+  ).not.toBeInTheDocument();
 });

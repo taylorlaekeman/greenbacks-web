@@ -75,6 +75,7 @@ const Overview: FC = () => {
       </BadgeGrid>
       <TransactionsByTag
         id="average-spending-by-tag"
+        isGraphVisible
         isLoading={isLoadingTransactionsByTag}
         months={count}
         name="Average Spending by Tag"
