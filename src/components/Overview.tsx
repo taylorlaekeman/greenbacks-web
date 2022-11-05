@@ -1,6 +1,7 @@
 import React, { FC } from 'react';
 
 import AmountBadge from 'components/AmountBadge';
+import AverageCashFlowGraph from 'components/AverageCashFlowGraph';
 import ArticleContainer from 'components/ArticleContainer';
 import PercentBadge from 'components/PercentBadge';
 import SectionContainer from 'components/SectionContainer';
@@ -45,6 +46,7 @@ const Overview: FC = () => {
 
   return (
     <ArticleContainer id="overview" title="Overview">
+      <AverageCashFlowGraph />
       <BadgeGrid>
         <AmountBadge
           amount={averageMonthlyEarning}
