@@ -276,6 +276,55 @@ test('shows totals by month', async () => {
   expect(items[35]).toHaveTextContent('Spending: $1.02');
   expect(titles).toHaveLength(13);
   expect(items).toHaveLength(36);
+  const graph = await screen.findByTestId('totals-by-month-graph');
+  expect(graph).toHaveAttribute(
+    'data-total-January-2020',
+    'earning-100-saving-101-spending-102'
+  );
+  expect(graph).toHaveAttribute(
+    'data-total-February-2020',
+    'earning-200-saving-201-spending-202'
+  );
+  expect(graph).toHaveAttribute(
+    'data-total-March-2020',
+    'earning-300-saving-301-spending-302'
+  );
+  expect(graph).toHaveAttribute(
+    'data-total-April-2020',
+    'earning-400-saving-401-spending-402'
+  );
+  expect(graph).toHaveAttribute(
+    'data-total-May-2020',
+    'earning-500-saving-501-spending-502'
+  );
+  expect(graph).toHaveAttribute(
+    'data-total-June-2020',
+    'earning-600-saving-601-spending-602'
+  );
+  expect(graph).toHaveAttribute(
+    'data-total-July-2020',
+    'earning-700-saving-701-spending-702'
+  );
+  expect(graph).toHaveAttribute(
+    'data-total-August-2020',
+    'earning-800-saving-801-spending-802'
+  );
+  expect(graph).toHaveAttribute(
+    'data-total-September-2020',
+    'earning-900-saving-901-spending-902'
+  );
+  expect(graph).toHaveAttribute(
+    'data-total-October-2020',
+    'earning-1000-saving-1001-spending-1002'
+  );
+  expect(graph).toHaveAttribute(
+    'data-total-November-2020',
+    'earning-1100-saving-1101-spending-1102'
+  );
+  expect(graph).toHaveAttribute(
+    'data-total-December-2020',
+    'earning-1200-saving-1201-spending-1202'
+  );
 });
 
 test('shows loading indicator while transactions are loading', async () => {
@@ -285,4 +334,5 @@ test('shows loading indicator while transactions are loading', async () => {
     </TestGreenbacksProvider>
   );
   expect(screen.getByTestId('loading-indicator-totals-by-month')).toBeVisible();
+  expect(screen.queryByTestId('totals-by-month-graph')).not.toBeInTheDocument();
 });
