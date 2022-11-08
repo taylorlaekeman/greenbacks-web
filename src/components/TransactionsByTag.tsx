@@ -49,33 +49,73 @@ const Graph: FC<{ id: string; months: number; transactions: TagGroup[] }> = ({
   id,
   months,
   transactions,
-}) => (
-  <>
-    <div
-      data-testid={`${id}-graph`}
-      {...transactions.reduce(
-        (dataTags, { tag, totalAmount }) => ({
-          ...dataTags,
-          [`data-tag-${tag.replace(' ', '-')}`]: totalAmount / months,
-        }),
-        {}
-      )}
-    />
-    <ResponsiveContainer aspect={1.5} minWidth={300} width="100%">
-      <PieChart>
-        <Pie
-          cx="50%"
-          cy="50%"
-          data={formatData({ transactions })}
-          dataKey="amount"
-          fill="#8884d8"
-          nameKey="name"
-          outerRadius={80}
-        />
-      </PieChart>
-    </ResponsiveContainer>
-  </>
-);
+}) => {
+  const groupedTags = groupSmallTags({ transactions });
+  return (
+    <>
+      <div
+        data-testid={`${id}-graph`}
+        {...transactions.reduce((dataTags, { tag, totalAmount }) => {
+          const key = `data-tag-${tag.replace(' ', '-')}`.toLowerCase();
+          return {
+            ...dataTags,
+            [key]: totalAmount / months,
+          };
+        }, {})}
+      />
+      <ResponsiveContainer aspect={1.5} minWidth={300} width="100%">
+        <PieChart>
+          <Pie
+            cx="50%"
+            cy="50%"
+            data={formatData({ transactions: groupedTags })}
+            dataKey="amount"
+            fill="#8884d8"
+            nameKey="name"
+            outerRadius={80}
+          />
+        </PieChart>
+      </ResponsiveContainer>
+    </>
+  );
+};
+
+const groupSmallTags = ({
+  transactions,
+}: {
+  transactions: TagGroup[];
+}): TagGroup[] => {
+  const total = transactions?.reduce(
+    (sum, { totalAmount }) => sum + totalAmount,
+    0
+  );
+  const largeTags: TagGroup[] = [];
+  const smallTags: TagGroup[] = [];
+  transactions.forEach((tagGroup) => {
+    const { totalAmount: groupTotal } = tagGroup;
+    if (groupTotal / total > 0.01) largeTags.push(tagGroup);
+    else smallTags.push(tagGroup);
+  });
+  const tags = [...largeTags];
+  if (smallTags.length > 0) {
+    tags.push(
+      smallTags.reduce(
+        (
+          {
+            totalAmount: consolidatedTotal,
+            transactions: consolidatedTransactions,
+          },
+          { totalAmount: tagTotal, transactions: tagTransactions }
+        ) => ({
+          tag: 'Small Tags',
+          totalAmount: consolidatedTotal + tagTotal,
+          transactions: [...consolidatedTransactions, ...tagTransactions],
+        })
+      )
+    );
+  }
+  return tags;
+};
 
 const formatData = ({
   transactions,
