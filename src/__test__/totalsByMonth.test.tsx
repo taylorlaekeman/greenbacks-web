@@ -224,107 +224,93 @@ test('shows totals by month', async () => {
   const { getAllByRole } = within(
     await screen.findByTestId('section-totals-by-month')
   );
-  const titles = getAllByRole('heading');
   const items = getAllByRole('listitem');
-  expect(titles[1]).toHaveTextContent('December 2020');
-  expect(items[0]).toHaveTextContent('Earning: $12.00');
-  expect(items[1]).toHaveTextContent('Saving: $12.01');
-  expect(items[2]).toHaveTextContent('Spending: $12.02');
-  expect(titles[2]).toHaveTextContent('November 2020');
-  expect(items[3]).toHaveTextContent('Earning: $11.00');
-  expect(items[4]).toHaveTextContent('Saving: $11.01');
-  expect(items[5]).toHaveTextContent('Spending: $11.02');
-  expect(titles[3]).toHaveTextContent('October 2020');
-  expect(items[6]).toHaveTextContent('Earning: $10.00');
-  expect(items[7]).toHaveTextContent('Saving: $10.01');
-  expect(items[8]).toHaveTextContent('Spending: $10.02');
-  expect(titles[4]).toHaveTextContent('September 2020');
-  expect(items[9]).toHaveTextContent('Earning: $9.00');
-  expect(items[10]).toHaveTextContent('Saving: $9.01');
-  expect(items[11]).toHaveTextContent('Spending: $9.02');
-  expect(titles[5]).toHaveTextContent('August 2020');
-  expect(items[12]).toHaveTextContent('Earning: $8.00');
-  expect(items[13]).toHaveTextContent('Saving: $8.01');
-  expect(items[14]).toHaveTextContent('Spending: $8.02');
-  expect(titles[6]).toHaveTextContent('July 2020');
-  expect(items[15]).toHaveTextContent('Earning: $7.00');
-  expect(items[16]).toHaveTextContent('Saving: $7.01');
-  expect(items[17]).toHaveTextContent('Spending: $7.02');
-  expect(titles[7]).toHaveTextContent('June 2020');
-  expect(items[18]).toHaveTextContent('Earning: $6.00');
-  expect(items[19]).toHaveTextContent('Saving: $6.01');
-  expect(items[20]).toHaveTextContent('Spending: $6.02');
-  expect(titles[8]).toHaveTextContent('May 2020');
-  expect(items[21]).toHaveTextContent('Earning: $5.00');
-  expect(items[22]).toHaveTextContent('Saving: $5.01');
-  expect(items[23]).toHaveTextContent('Spending: $5.02');
-  expect(titles[9]).toHaveTextContent('April 2020');
-  expect(items[24]).toHaveTextContent('Earning: $4.00');
-  expect(items[25]).toHaveTextContent('Saving: $4.01');
-  expect(items[26]).toHaveTextContent('Spending: $4.02');
-  expect(titles[10]).toHaveTextContent('March 2020');
-  expect(items[27]).toHaveTextContent('Earning: $3.00');
-  expect(items[28]).toHaveTextContent('Saving: $3.01');
-  expect(items[29]).toHaveTextContent('Spending: $3.02');
-  expect(titles[11]).toHaveTextContent('February 2020');
-  expect(items[30]).toHaveTextContent('Earning: $2.00');
-  expect(items[31]).toHaveTextContent('Saving: $2.01');
-  expect(items[32]).toHaveTextContent('Spending: $2.02');
-  expect(titles[12]).toHaveTextContent('January 2020');
-  expect(items[33]).toHaveTextContent('Earning: $1.00');
-  expect(items[34]).toHaveTextContent('Saving: $1.01');
-  expect(items[35]).toHaveTextContent('Spending: $1.02');
-  expect(titles).toHaveLength(13);
-  expect(items).toHaveLength(36);
   const graph = await screen.findByTestId('totals-by-month-graph');
-  expect(graph).toHaveAttribute(
-    'data-total-January-2020',
-    'earning-100-saving-101-spending-102'
+  expect(items[0]).toHaveTextContent(
+    'December 2020 Earning: $12.00 Saving: $12.01 Spending: $12.02'
   );
   expect(graph).toHaveAttribute(
-    'data-total-February-2020',
-    'earning-200-saving-201-spending-202'
-  );
-  expect(graph).toHaveAttribute(
-    'data-total-March-2020',
-    'earning-300-saving-301-spending-302'
-  );
-  expect(graph).toHaveAttribute(
-    'data-total-April-2020',
-    'earning-400-saving-401-spending-402'
-  );
-  expect(graph).toHaveAttribute(
-    'data-total-May-2020',
-    'earning-500-saving-501-spending-502'
-  );
-  expect(graph).toHaveAttribute(
-    'data-total-June-2020',
-    'earning-600-saving-601-spending-602'
-  );
-  expect(graph).toHaveAttribute(
-    'data-total-July-2020',
-    'earning-700-saving-701-spending-702'
-  );
-  expect(graph).toHaveAttribute(
-    'data-total-August-2020',
-    'earning-800-saving-801-spending-802'
-  );
-  expect(graph).toHaveAttribute(
-    'data-total-September-2020',
-    'earning-900-saving-901-spending-902'
-  );
-  expect(graph).toHaveAttribute(
-    'data-total-October-2020',
-    'earning-1000-saving-1001-spending-1002'
-  );
-  expect(graph).toHaveAttribute(
-    'data-total-November-2020',
-    'earning-1100-saving-1101-spending-1102'
-  );
-  expect(graph).toHaveAttribute(
-    'data-total-December-2020',
+    'data-month-december-2020',
     'earning-1200-saving-1201-spending-1202'
   );
+  expect(items[1]).toHaveTextContent(
+    'November 2020 Earning: $11.00 Saving: $11.01 Spending: $11.02'
+  );
+  expect(graph).toHaveAttribute(
+    'data-month-november-2020',
+    'earning-1100-saving-1101-spending-1102'
+  );
+  expect(items[2]).toHaveTextContent(
+    'October 2020 Earning: $10.00 Saving: $10.01 Spending: $10.02'
+  );
+  expect(graph).toHaveAttribute(
+    'data-month-october-2020',
+    'earning-1000-saving-1001-spending-1002'
+  );
+  expect(items[3]).toHaveTextContent(
+    'September 2020 Earning: $9.00 Saving: $9.01 Spending: $9.02'
+  );
+  expect(graph).toHaveAttribute(
+    'data-month-september-2020',
+    'earning-900-saving-901-spending-902'
+  );
+  expect(items[4]).toHaveTextContent(
+    'August 2020 Earning: $8.00 Saving: $8.01 Spending: $8.02'
+  );
+  expect(graph).toHaveAttribute(
+    'data-month-august-2020',
+    'earning-800-saving-801-spending-802'
+  );
+  expect(items[5]).toHaveTextContent(
+    'July 2020 Earning: $7.00 Saving: $7.01 Spending: $7.02'
+  );
+  expect(graph).toHaveAttribute(
+    'data-month-july-2020',
+    'earning-700-saving-701-spending-702'
+  );
+  expect(items[6]).toHaveTextContent(
+    'June 2020 Earning: $6.00 Saving: $6.01 Spending: $6.02'
+  );
+  expect(graph).toHaveAttribute(
+    'data-month-june-2020',
+    'earning-600-saving-601-spending-602'
+  );
+  expect(items[7]).toHaveTextContent(
+    'May 2020 Earning: $5.00 Saving: $5.01 Spending: $5.02'
+  );
+  expect(graph).toHaveAttribute(
+    'data-month-may-2020',
+    'earning-500-saving-501-spending-502'
+  );
+  expect(items[8]).toHaveTextContent(
+    'April 2020 Earning: $4.00 Saving: $4.01 Spending: $4.02'
+  );
+  expect(graph).toHaveAttribute(
+    'data-month-april-2020',
+    'earning-400-saving-401-spending-402'
+  );
+  expect(items[9]).toHaveTextContent(
+    'March 2020 Earning: $3.00 Saving: $3.01 Spending: $3.02'
+  );
+  expect(graph).toHaveAttribute(
+    'data-month-march-2020',
+    'earning-300-saving-301-spending-302'
+  );
+  expect(items[10]).toHaveTextContent(
+    'February 2020 Earning: $2.00 Saving: $2.01 Spending: $2.02'
+  );
+  expect(graph).toHaveAttribute(
+    'data-month-february-2020',
+    'earning-200-saving-201-spending-202'
+  );
+  expect(items[11]).toHaveTextContent(
+    'January 2020 Earning: $1.00 Saving: $1.01 Spending: $1.02'
+  );
+  expect(graph).toHaveAttribute(
+    'data-month-january-2020',
+    'earning-100-saving-101-spending-102'
+  );
+  expect(items).toHaveLength(12);
 });
 
 test('shows loading indicator while transactions are loading', async () => {

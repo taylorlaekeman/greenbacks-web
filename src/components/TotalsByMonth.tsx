@@ -20,25 +20,19 @@ const TotalsByMonth: FC = () => {
   return (
     <SectionContainer id="totals-by-month" title="Totals by Month">
       <Graph totalsByMonth={totalsByMonth} />
-      {totalsByMonth?.map(({ earning, month, saving, spending }) => (
-        <Fragment key={month}>
-          <h4>{month}</h4>
-          <ul>
-            <li>
-              Earning:&nbsp;
-              {format({ value: earning })}
-            </li>
-            <li>
-              Saving:&nbsp;
-              {format({ value: saving })}
-            </li>
-            <li>
-              Spending:&nbsp;
-              {format({ value: spending })}
-            </li>
-          </ul>
-        </Fragment>
-      ))}
+      <ul>
+        {totalsByMonth?.map(({ earning, month, saving, spending }) => (
+          <li key={month}>
+            {month}
+            &nbsp; Earning: &nbsp;
+            {format({ value: earning })}
+            &nbsp; Saving: &nbsp;
+            {format({ value: saving })}
+            &nbsp; Spending: &nbsp;
+            {format({ value: spending })}
+          </li>
+        ))}
+      </ul>
     </SectionContainer>
   );
 };
@@ -48,13 +42,13 @@ const Graph: FC<{ totalsByMonth?: MonthTotals[] }> = ({ totalsByMonth }) => (
     <div
       data-testid="totals-by-month-graph"
       {...totalsByMonth?.reduce(
-        (dataTags, { earning, month, saving, spending }) => ({
-          ...dataTags,
-          [`data-total-${month.replace(
-            ' ',
-            '-'
-          )}`]: `earning-${earning}-saving-${saving}-spending-${spending}`,
-        }),
+        (dataTags, { earning, month, saving, spending }) => {
+          const key = `data-month-${month.replace(' ', '-')}`.toLowerCase();
+          return {
+            ...dataTags,
+            [key]: `earning-${earning}-saving-${saving}-spending-${spending}`,
+          };
+        },
         {}
       )}
     />
