@@ -20,19 +20,35 @@ const TotalsByMonth: FC = () => {
   return (
     <SectionContainer id="totals-by-month" title="Totals by Month">
       <Graph totalsByMonth={totalsByMonth} />
-      <ul>
-        {totalsByMonth?.map(({ earning, month, saving, spending }) => (
-          <li key={month}>
-            {month}
-            &nbsp; Earning: &nbsp;
-            {format({ value: earning })}
-            &nbsp; Saving: &nbsp;
-            {format({ value: saving })}
-            &nbsp; Spending: &nbsp;
-            {format({ value: spending })}
-          </li>
-        ))}
-      </ul>
+      <table>
+        <thead>
+          <tr>
+            <td />
+            <th>Earning</th>
+            <th>Saving</th>
+            <th>Spending</th>
+          </tr>
+        </thead>
+        <tbody>
+          {totalsByMonth?.map(({ earning, month, saving, spending }) => {
+            const monthId = month.replace(' ', '-').toLowerCase();
+            return (
+              <tr key={monthId}>
+                <th>{month}</th>
+                <td aria-label={`${monthId}-earning`}>
+                  {format({ value: earning })}
+                </td>
+                <td aria-label={`${monthId}-saving`}>
+                  {format({ value: saving })}
+                </td>
+                <td aria-label={`${monthId}-spending`}>
+                  {format({ value: spending })}
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
     </SectionContainer>
   );
 };

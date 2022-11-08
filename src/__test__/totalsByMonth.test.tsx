@@ -221,96 +221,166 @@ test('shows totals by month', async () => {
   await waitForElementToBeRemoved(() =>
     screen.queryByTestId('loading-indicator-totals-by-month')
   );
-  const { getAllByRole } = within(
+  const { getByRole } = within(
     await screen.findByTestId('section-totals-by-month')
   );
-  const items = getAllByRole('listitem');
   const graph = await screen.findByTestId('totals-by-month-graph');
-  expect(items[0]).toHaveTextContent(
-    'December 2020 Earning: $12.00 Saving: $12.01 Spending: $12.02'
+  expect(
+    getByRole('cell', { name: 'december-2020-earning' })
+  ).toHaveTextContent('$12.00');
+  expect(getByRole('cell', { name: 'december-2020-saving' })).toHaveTextContent(
+    '$12.01'
   );
+  expect(
+    getByRole('cell', { name: 'december-2020-spending' })
+  ).toHaveTextContent('$12.02');
   expect(graph).toHaveAttribute(
     'data-month-december-2020',
     'earning-1200-saving-1201-spending-1202'
   );
-  expect(items[1]).toHaveTextContent(
-    'November 2020 Earning: $11.00 Saving: $11.01 Spending: $11.02'
+  expect(
+    getByRole('cell', { name: 'november-2020-earning' })
+  ).toHaveTextContent('$11.00');
+  expect(getByRole('cell', { name: 'november-2020-saving' })).toHaveTextContent(
+    '$11.01'
   );
+  expect(
+    getByRole('cell', { name: 'november-2020-spending' })
+  ).toHaveTextContent('$11.02');
   expect(graph).toHaveAttribute(
     'data-month-november-2020',
     'earning-1100-saving-1101-spending-1102'
   );
-  expect(items[2]).toHaveTextContent(
-    'October 2020 Earning: $10.00 Saving: $10.01 Spending: $10.02'
+  expect(getByRole('cell', { name: 'october-2020-earning' })).toHaveTextContent(
+    '$10.00'
   );
+  expect(getByRole('cell', { name: 'october-2020-saving' })).toHaveTextContent(
+    '$10.01'
+  );
+  expect(
+    getByRole('cell', { name: 'october-2020-spending' })
+  ).toHaveTextContent('$10.02');
   expect(graph).toHaveAttribute(
     'data-month-october-2020',
     'earning-1000-saving-1001-spending-1002'
   );
-  expect(items[3]).toHaveTextContent(
-    'September 2020 Earning: $9.00 Saving: $9.01 Spending: $9.02'
-  );
+  expect(
+    getByRole('cell', { name: 'september-2020-earning' })
+  ).toHaveTextContent('$9.00');
+  expect(
+    getByRole('cell', { name: 'september-2020-saving' })
+  ).toHaveTextContent('$9.01');
+  expect(
+    getByRole('cell', { name: 'september-2020-spending' })
+  ).toHaveTextContent('$9.02');
   expect(graph).toHaveAttribute(
     'data-month-september-2020',
     'earning-900-saving-901-spending-902'
   );
-  expect(items[4]).toHaveTextContent(
-    'August 2020 Earning: $8.00 Saving: $8.01 Spending: $8.02'
+  expect(getByRole('cell', { name: 'august-2020-earning' })).toHaveTextContent(
+    '$8.00'
+  );
+  expect(getByRole('cell', { name: 'august-2020-saving' })).toHaveTextContent(
+    '$8.01'
+  );
+  expect(getByRole('cell', { name: 'august-2020-spending' })).toHaveTextContent(
+    '$8.02'
   );
   expect(graph).toHaveAttribute(
     'data-month-august-2020',
     'earning-800-saving-801-spending-802'
   );
-  expect(items[5]).toHaveTextContent(
-    'July 2020 Earning: $7.00 Saving: $7.01 Spending: $7.02'
+  expect(getByRole('cell', { name: 'july-2020-earning' })).toHaveTextContent(
+    '$7.00'
+  );
+  expect(getByRole('cell', { name: 'july-2020-saving' })).toHaveTextContent(
+    '$7.01'
+  );
+  expect(getByRole('cell', { name: 'july-2020-spending' })).toHaveTextContent(
+    '$7.02'
   );
   expect(graph).toHaveAttribute(
     'data-month-july-2020',
     'earning-700-saving-701-spending-702'
   );
-  expect(items[6]).toHaveTextContent(
-    'June 2020 Earning: $6.00 Saving: $6.01 Spending: $6.02'
+  expect(getByRole('cell', { name: 'june-2020-earning' })).toHaveTextContent(
+    '$6.00'
+  );
+  expect(getByRole('cell', { name: 'june-2020-saving' })).toHaveTextContent(
+    '$6.01'
+  );
+  expect(getByRole('cell', { name: 'june-2020-spending' })).toHaveTextContent(
+    '$6.02'
   );
   expect(graph).toHaveAttribute(
     'data-month-june-2020',
     'earning-600-saving-601-spending-602'
   );
-  expect(items[7]).toHaveTextContent(
-    'May 2020 Earning: $5.00 Saving: $5.01 Spending: $5.02'
+  expect(getByRole('cell', { name: 'may-2020-earning' })).toHaveTextContent(
+    '$5.00'
+  );
+  expect(getByRole('cell', { name: 'may-2020-saving' })).toHaveTextContent(
+    '$5.01'
+  );
+  expect(getByRole('cell', { name: 'may-2020-spending' })).toHaveTextContent(
+    '$5.02'
   );
   expect(graph).toHaveAttribute(
     'data-month-may-2020',
     'earning-500-saving-501-spending-502'
   );
-  expect(items[8]).toHaveTextContent(
-    'April 2020 Earning: $4.00 Saving: $4.01 Spending: $4.02'
+  expect(getByRole('cell', { name: 'april-2020-earning' })).toHaveTextContent(
+    '$4.00'
+  );
+  expect(getByRole('cell', { name: 'april-2020-saving' })).toHaveTextContent(
+    '$4.01'
+  );
+  expect(getByRole('cell', { name: 'april-2020-spending' })).toHaveTextContent(
+    '$4.02'
   );
   expect(graph).toHaveAttribute(
     'data-month-april-2020',
     'earning-400-saving-401-spending-402'
   );
-  expect(items[9]).toHaveTextContent(
-    'March 2020 Earning: $3.00 Saving: $3.01 Spending: $3.02'
+  expect(getByRole('cell', { name: 'march-2020-earning' })).toHaveTextContent(
+    '$3.00'
+  );
+  expect(getByRole('cell', { name: 'march-2020-saving' })).toHaveTextContent(
+    '$3.01'
+  );
+  expect(getByRole('cell', { name: 'march-2020-spending' })).toHaveTextContent(
+    '$3.02'
   );
   expect(graph).toHaveAttribute(
     'data-month-march-2020',
     'earning-300-saving-301-spending-302'
   );
-  expect(items[10]).toHaveTextContent(
-    'February 2020 Earning: $2.00 Saving: $2.01 Spending: $2.02'
+  expect(
+    getByRole('cell', { name: 'february-2020-earning' })
+  ).toHaveTextContent('$2.00');
+  expect(getByRole('cell', { name: 'february-2020-saving' })).toHaveTextContent(
+    '$2.01'
   );
+  expect(
+    getByRole('cell', { name: 'february-2020-spending' })
+  ).toHaveTextContent('$2.02');
   expect(graph).toHaveAttribute(
     'data-month-february-2020',
     'earning-200-saving-201-spending-202'
   );
-  expect(items[11]).toHaveTextContent(
-    'January 2020 Earning: $1.00 Saving: $1.01 Spending: $1.02'
+  expect(getByRole('cell', { name: 'january-2020-earning' })).toHaveTextContent(
+    '$1.00'
   );
+  expect(getByRole('cell', { name: 'january-2020-saving' })).toHaveTextContent(
+    '$1.01'
+  );
+  expect(
+    getByRole('cell', { name: 'january-2020-spending' })
+  ).toHaveTextContent('$1.02');
   expect(graph).toHaveAttribute(
     'data-month-january-2020',
     'earning-100-saving-101-spending-102'
   );
-  expect(items).toHaveLength(12);
 });
 
 test('shows loading indicator while transactions are loading', async () => {
