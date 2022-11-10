@@ -1,8 +1,8 @@
 import React, { FC } from 'react';
 
 import AmountBadge from 'components/AmountBadge';
-import AverageCashFlowGraph from 'components/AverageCashFlowGraph';
 import ArticleContainer from 'components/ArticleContainer';
+import CashFlowGraph from 'components/CashFlowGraph';
 import PercentBadge from 'components/PercentBadge';
 import SectionContainer from 'components/SectionContainer';
 import TotalsByMonth from 'components/TotalsByMonth';
@@ -46,7 +46,17 @@ const Overview: FC = () => {
 
   return (
     <ArticleContainer id="overview" title="Overview">
-      <AverageCashFlowGraph />
+      <CashFlowGraph
+        earning={averageMonthlyEarning}
+        idPrefix="average"
+        isLoading={
+          isLoadingAverageEarning ||
+          isLoadingAverageSaving ||
+          isLoadingAverageSpending
+        }
+        saving={averageMonthlySaving}
+        spending={averageMonthlySpending}
+      />
       <BadgeGrid>
         <AmountBadge
           amount={averageMonthlyEarning}

@@ -197,3 +197,63 @@ test('shows loading indicator while transactions are loading', async () => {
     screen.getByTestId('loading-indicator-monthly-overview')
   ).toBeVisible();
 });
+
+test('shows savings rate', async () => {
+  const apiMocks = [
+    buildApiTransactionsMock({
+      endDate: '2020-01-31',
+      startDate: '2020-01-01',
+      transactions: [
+        buildTransaction({
+          amount: 101,
+          name: 'earning',
+        }),
+        buildTransaction({
+          amount: 102,
+          name: 'saving',
+        }),
+        buildTransaction({
+          amount: 103,
+          name: 'spending',
+        }),
+        buildTransaction({
+          amount: 104,
+          name: 'hidden',
+        }),
+      ],
+    }),
+  ];
+  const filters = [
+    buildFilter({
+      categoryToAssign: Category.Earning,
+      matchers: [buildMatcher({ expectedValue: 'earning', property: 'name' })],
+    }),
+    buildFilter({
+      categoryToAssign: Category.Hidden,
+      matchers: [buildMatcher({ expectedValue: 'hidden', property: 'name' })],
+    }),
+    buildFilter({
+      categoryToAssign: Category.Saving,
+      matchers: [buildMatcher({ expectedValue: 'saving', property: 'name' })],
+    }),
+    buildFilter({
+      categoryToAssign: Category.Spending,
+      matchers: [buildMatcher({ expectedValue: 'spending', property: 'name' })],
+    }),
+  ];
+  render(
+    <TestGreenbacksProvider
+      mocks={apiMocks}
+      filters={filters}
+      route="/months/2020-01/"
+    >
+      <Greenbacks />
+    </TestGreenbacksProvider>
+  );
+  const graphDataContainer = await screen.findByTestId(
+    'monthly-cash-flow-graph'
+  );
+  expect(graphDataContainer).toHaveAttribute('data-earning', '101');
+  expect(graphDataContainer).toHaveAttribute('data-saving', '102');
+  expect(graphDataContainer).toHaveAttribute('data-spending', '103');
+});

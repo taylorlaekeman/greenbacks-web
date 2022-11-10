@@ -1,30 +1,16 @@
 import React, { FC } from 'react';
 import { Pie, PieChart, ResponsiveContainer } from 'recharts';
 
-import useAverageMonthlyEarning from 'hooks/useAverageMonthlyEarning';
-import useAverageMonthlySaving from 'hooks/useAverageMonthlySaving';
-import useAverageMonthlySpending from 'hooks/useAverageMonthlySpending';
-
-const AverageCashFlowGraph: FC = () => {
-  const {
-    averageMonthlyEarning: earning,
-    isLoading: isLoadingAverageEarning,
-  } = useAverageMonthlyEarning();
-  const {
-    averageMonthlySpending: spending,
-    isLoading: isLoadingAverageSpending,
-  } = useAverageMonthlySpending();
-  const {
-    averageMonthlySaving: saving,
-    isLoading: isLoadingAverageSaving,
-  } = useAverageMonthlySaving();
-
-  const isLoading =
-    isLoadingAverageEarning ||
-    isLoadingAverageSpending ||
-    isLoadingAverageSaving;
-
+const CashFlowGraph: FC<{
+  earning?: number;
+  idPrefix?: string;
+  isLoading?: boolean;
+  saving?: number;
+  spending?: number;
+}> = ({ earning, idPrefix, isLoading = false, saving, spending }) => {
   if (isLoading) return null;
+
+  const testId = idPrefix ? `${idPrefix}-cash-flow-graph` : 'cash-flow-graph';
 
   return (
     <>
@@ -32,7 +18,7 @@ const AverageCashFlowGraph: FC = () => {
         data-earning={Math.round(earning || 0)}
         data-saving={Math.round(saving || 0)}
         data-spending={Math.round(spending || 0)}
-        data-testid="average-cash-flow-graph"
+        data-testid={testId}
       />
       <ResponsiveContainer aspect={1.5} minWidth={300} width="100%">
         <PieChart>
@@ -73,4 +59,4 @@ const formatData = ({
   return result;
 };
 
-export default AverageCashFlowGraph;
+export default CashFlowGraph;
