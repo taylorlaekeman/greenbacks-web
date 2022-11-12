@@ -32,6 +32,7 @@ const CashFlowGraph: FC<{
             })}
             dataKey="amount"
             fill="#8884d8"
+            label={({ name }) => name}
             nameKey="name"
             outerRadius={80}
           />

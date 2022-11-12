@@ -71,6 +71,7 @@ const Graph: FC<{ id: string; months: number; transactions: TagGroup[] }> = ({
             data={formatData({ transactions: groupedTags })}
             dataKey="amount"
             fill="#8884d8"
+            label={({ name }) => name}
             nameKey="name"
             outerRadius={80}
           />
@@ -93,7 +94,7 @@ const groupSmallTags = ({
   const smallTags: TagGroup[] = [];
   transactions.forEach((tagGroup) => {
     const { totalAmount: groupTotal } = tagGroup;
-    if (groupTotal / total > 0.01) largeTags.push(tagGroup);
+    if (groupTotal / total > 0.02) largeTags.push(tagGroup);
     else smallTags.push(tagGroup);
   });
   const tags = [...largeTags];
