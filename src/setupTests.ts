@@ -1,5 +1,17 @@
 import '@testing-library/jest-dom';
 
-const TEST_TIMEOUT_IN_MS = 10 * 1000;
+import noop from 'utils/noop';
+
+const TEST_TIMEOUT_IN_MS = 15 * 1000;
 
 jest.setTimeout(TEST_TIMEOUT_IN_MS);
+
+class TestResizeObserver {
+  disconnect = noop;
+
+  observe = noop;
+
+  unobserve = noop;
+}
+
+window.ResizeObserver = TestResizeObserver;

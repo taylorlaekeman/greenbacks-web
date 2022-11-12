@@ -102,14 +102,19 @@ test('groups transactions by tag', async () => {
       <Greenbacks />
     </TestGreenbacksProvider>
   );
-  const { getAllByRole } = within(
+  const { findAllByRole } = within(
     await screen.findByTestId('section-monthly-spending-by-tag')
   );
-  const items = getAllByRole('listitem');
+  const items = await findAllByRole('listitem');
   expect(items[0]).toHaveTextContent(/second tag: \$3.00/);
   expect(items[1]).toHaveTextContent(/first tag: \$2.00/);
   expect(items[2]).toHaveTextContent(/third tag: \$1.00/);
   expect(items).toHaveLength(3);
+  const graph = await screen.findByTestId('monthly-spending-by-tag-graph');
+  screen.debug(graph);
+  expect(graph).toHaveAttribute('data-tag-first-tag', '200');
+  expect(graph).toHaveAttribute('data-tag-second-tag', '300');
+  expect(graph).toHaveAttribute('data-tag-third-tag', '100');
 });
 
 test('groups untagged transactions', async () => {
@@ -160,6 +165,8 @@ test('groups untagged transactions', async () => {
     await screen.findByTestId('section-monthly-spending-by-tag')
   );
   expect(getByText(/Untagged: \$2.00/)).toBeVisible();
+  const graph = await screen.findByTestId('monthly-spending-by-tag-graph');
+  expect(graph).toHaveAttribute('data-tag-untagged', '200');
 });
 
 test('shows current month when no month is present in route', async () => {

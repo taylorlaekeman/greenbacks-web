@@ -87,7 +87,7 @@ const combineMonthlyTotals = ({
     }));
 };
 
-interface MonthTotals {
+export interface MonthTotals {
   earning?: number;
   month: string;
   saving?: number;

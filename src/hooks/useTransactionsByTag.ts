@@ -8,21 +8,30 @@ const useTransactionsByTag = ({
 }: {
   endDate: string;
   startDate: string;
-}): { earning: TagGroup[]; isLoading: boolean; spending: TagGroup[] } => {
-  const { earning, isLoading, spending } = useTransactionsByCategory({
+}): {
+  earning: TagGroup[];
+  isLoading: boolean;
+  saving: TagGroup[];
+  spending: TagGroup[];
+} => {
+  const { earning, isLoading, saving, spending } = useTransactionsByCategory({
     endDate,
     startDate,
   });
   const earningByTag = groupByTag({
     transactions: earning,
   });
+  const savingByTag = groupByTag({
+    transactions: saving,
+  });
   const spendingByTag = groupByTag({
     transactions: spending,
   });
   return {
     earning: earningByTag,
-    spending: spendingByTag,
     isLoading,
+    saving: savingByTag,
+    spending: spendingByTag,
   };
 };
 

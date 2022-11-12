@@ -1,5 +1,6 @@
 import React, { FC } from 'react';
 
+import CashFlowGraph from 'components/CashFlowGraph';
 import LoadingIndicator from 'components/LoadingIndicator';
 import SectionContainer from 'components/SectionContainer';
 import useCurrencyFormatter from 'hooks/useCurrencyFormatter';
@@ -35,6 +36,12 @@ const MonthlyOverview: FC = () => {
 
   return (
     <SectionContainer id="monthly-overview" title="Monthly Overview">
+      <CashFlowGraph
+        earning={totalEarning}
+        idPrefix="monthly"
+        saving={totalSaving}
+        spending={totalSpending}
+      />
       <p>
         Total Earning:&nbsp;
         {format({ value: totalEarning })}
