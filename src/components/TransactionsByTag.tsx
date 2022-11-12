@@ -56,7 +56,7 @@ const Graph: FC<{ id: string; months: number; transactions: TagGroup[] }> = ({
       <div
         data-testid={`${id}-graph`}
         {...transactions.reduce((dataTags, { tag, totalAmount }) => {
-          const key = `data-tag-${tag.replace(' ', '-')}`.toLowerCase();
+          const key = `data-tag-${tag.replaceAll(' ', '-')}`.toLowerCase();
           return {
             ...dataTags,
             [key]: totalAmount / months,
