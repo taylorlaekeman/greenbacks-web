@@ -198,7 +198,7 @@ test('shows loading indicator while transactions are loading', async () => {
   ).toBeVisible();
 });
 
-test('shows savings rate', async () => {
+test('shows cash flow graph', async () => {
   const apiMocks = [
     buildApiTransactionsMock({
       endDate: '2020-01-31',

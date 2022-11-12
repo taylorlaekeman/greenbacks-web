@@ -26,6 +26,7 @@ const MonthlySummary: FC = () => {
       <MonthlyOverview />
       <TransactionsByTag
         id="monthly-spending-by-tag"
+        isGraphVisible
         isLoading={isLoading}
         transactions={spending}
       />
