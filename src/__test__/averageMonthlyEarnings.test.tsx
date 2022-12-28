@@ -19,6 +19,7 @@ test('displays loading indicator while transactions are loading', () => {
     'loading-indicator-average-monthly-earnings'
   );
   expect(loadingIndicator).toBeInTheDocument();
+  expect(screen.queryByText('per month on average')).not.toBeInTheDocument();
 });
 
 test('shows zero without any earnings', async () => {
@@ -30,6 +31,9 @@ test('shows zero without any earnings', async () => {
   );
   const text = await screen.findByTestId('average-monthly-earnings');
   expect(text).toHaveTextContent('$0.00');
+  expect(
+    await screen.findByText('You earn $0.00 per month on average')
+  ).toBeVisible();
 });
 
 test('correctly averages transactions', async () => {
@@ -65,6 +69,9 @@ test('correctly averages transactions', async () => {
   );
   const text = await screen.findByTestId('average-monthly-earnings');
   expect(text).toHaveTextContent('$1.50');
+  expect(
+    await screen.findByText('You earn $1.50 per month on average')
+  ).toBeVisible();
 });
 
 test('handles months without earnings', async () => {
@@ -84,6 +91,9 @@ test('handles months without earnings', async () => {
   );
   const text = await screen.findByTestId('average-monthly-earnings');
   expect(text).toHaveTextContent('$1.00');
+  expect(
+    await screen.findByText('You earn $1.00 per month on average')
+  ).toBeVisible();
 });
 
 test('excludes expenses', async () => {
@@ -112,6 +122,9 @@ test('excludes expenses', async () => {
   );
   const text = await screen.findByTestId('average-monthly-earnings');
   expect(text).toHaveTextContent('$1.00');
+  expect(
+    await screen.findByText('You earn $1.00 per month on average')
+  ).toBeVisible();
 });
 
 test('shows label text', async () => {
