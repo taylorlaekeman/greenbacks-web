@@ -6,6 +6,7 @@ import Button from 'components/Button';
 import Home from 'components/Home';
 import Link from 'components/Link';
 import LoadingIndicator from 'components/LoadingIndicator';
+import Spending from 'components/Spending';
 import useIsApiReady from 'hooks/useIsApiReady';
 import useIsAuthenticated from 'hooks/useIsAuthenticated';
 import useLogin from 'hooks/useLogin';
@@ -38,6 +39,7 @@ const Greenbacks: FC = () => {
         <Route path="/" element={<Home />} />
         <Route path="/months/:month/" element={<Home />} />
         <Route path="/accounts" element={<Accounts />} />
+        <Route path="/spending" element={<Spending />} />
       </Routes>
     </>
   );

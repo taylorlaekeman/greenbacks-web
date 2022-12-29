@@ -2,8 +2,8 @@ import React, { FC } from 'react';
 
 import AmountBadge from 'components/AmountBadge';
 import ArticleContainer from 'components/ArticleContainer';
+import AverageSpendingSummary from 'components/AverageSpendingSummary';
 import CashFlowGraph from 'components/CashFlowGraph';
-import Link from 'components/Link';
 import PercentBadge from 'components/PercentBadge';
 import SectionContainer from 'components/SectionContainer';
 import TotalsByMonth from 'components/TotalsByMonth';
@@ -15,7 +15,6 @@ import useAverageMonthlySpending from 'hooks/useAverageMonthlySpending';
 import useAveragingPeriod from 'hooks/useAveragingPeriod';
 import useCurrencyFormatter from 'hooks/useCurrencyFormatter';
 import useSavingsRate from 'hooks/useSavingsRate';
-import useSpendingRate from 'hooks/useSpendingRate';
 import useTransactionsByTag from 'hooks/useTransactionsByTag';
 import useUntaggedTransactions from 'hooks/useUntaggedTransactions';
 import styled from 'utils/styled';
@@ -35,7 +34,6 @@ const Overview: FC = () => {
     isLoading: isLoadingAverageSaving,
   } = useAverageMonthlySaving();
   const { savingsRate, isLoading: isLoadingSavingsRate } = useSavingsRate();
-  const { spendingRate, isLoading: isLoadingSpendingRate } = useSpendingRate();
   const {
     isLoading: isLoadingTransactionsByTag,
     spending: spendingByTag,
@@ -51,11 +49,8 @@ const Overview: FC = () => {
 
   const isAverageSavingVisible =
     !isLoadingAverageSaving && !isLoadingSavingsRate;
-  const isAverageSpendingVisible =
-    !isLoadingAverageSpending && !isLoadingSpendingRate;
   const formattedAverageEarning = format({ value: averageMonthlyEarning });
   const formattedAverageSaving = format({ value: averageMonthlySaving });
-  const formattedAverageSpending = format({ value: averageMonthlySpending });
 
   return (
     <ArticleContainer id="overview" title="Overview">
@@ -82,18 +77,7 @@ const Overview: FC = () => {
           })}
         </p>
       )}
-      {isAverageSpendingVisible && (
-        <>
-          <p>
-            {getSummaryText({
-              formattedAmount: formattedAverageSpending,
-              rate: spendingRate,
-              verb: 'spend',
-            })}
-          </p>
-          <Link href="/spending">Explore spending</Link>
-        </>
-      )}
+      <AverageSpendingSummary hasLinkToSpendingPage />
       <BadgeGrid>
         <AmountBadge
           amount={averageMonthlyEarning}
