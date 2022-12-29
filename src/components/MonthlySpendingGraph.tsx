@@ -1,5 +1,12 @@
 import React, { FC } from 'react';
-import { Bar, BarChart, ResponsiveContainer, XAxis } from 'recharts';
+import {
+  Bar,
+  BarChart,
+  CartesianGrid,
+  ResponsiveContainer,
+  XAxis,
+  YAxis,
+} from 'recharts';
 
 import LoadingIndicator from 'components/LoadingIndicator';
 import useTotalsByMonth, { MonthTotals } from 'hooks/useTotalsByMonth';
@@ -17,8 +24,17 @@ const MonthlySpendingGraph: FC = () => {
       />
       <ResponsiveContainer aspect={1.5} minWidth={300} width="100%">
         <BarChart barGap={0} data={formatData({ totalsByMonth })}>
-          <Bar dataKey="spending" fill="orange" />
+          <CartesianGrid strokeDasharray="2 4" vertical={false} />
           <XAxis dataKey="name" interval="preserveStartEnd" reversed />
+          <YAxis
+            axisLine={false}
+            tickFormatter={(amount) => {
+              if (amount < 100000) return `${amount / 100}`;
+              return `${amount / 100000}k`;
+            }}
+            tickLine={false}
+          />
+          <Bar dataKey="spending" fill="orange" />
         </BarChart>
       </ResponsiveContainer>
     </>
