@@ -50,7 +50,7 @@ const Greenbacks: FC = () => {
       </ul>
       <Routes>
         <Route path="/" element={home} />
-        <Route path="/months/:month/" element={<Home />} />
+        <Route path="/months/:month/" element={home} />
         <Route path="/accounts" element={<Accounts />} />
         <Route path="/spending" element={spending} />
       </Routes>
