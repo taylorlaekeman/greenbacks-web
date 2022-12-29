@@ -9,12 +9,42 @@ import {
 } from 'recharts';
 
 import LoadingIndicator from 'components/LoadingIndicator';
+import useNow from 'hooks/useNow';
+import useProjectedRemainingSpending from 'hooks/useProjectedRemainingSpending';
 import useTotalsByMonth, { MonthTotals } from 'hooks/useTotalsByMonth';
+import useTotalSpending from 'hooks/useTotalSpending';
+import getMonth from 'utils/getMonth';
 
 const MonthlySpendingGraph: FC = () => {
-  const { isLoading, totalsByMonth } = useTotalsByMonth();
+  const { now } = useNow();
+  const { firstDay, lastDay, readable: readableMonth } = getMonth({
+    datetime: now,
+  });
+  const {
+    isLoading: isLoadingTotalsByMonth,
+    totalsByMonth,
+  } = useTotalsByMonth();
+  const {
+    isLoading: isLoadingSpending,
+    totalSpending: currentMonthSpending,
+  } = useTotalSpending({
+    endDate: lastDay,
+    startDate: firstDay,
+  });
+  const {
+    isLoading: isLoadingProjectedRemainingSpending,
+    projectedRemainingSpending,
+  } = useProjectedRemainingSpending({
+    dayInMonth: now.day,
+    daysInMonth: now.daysInMonth,
+  });
 
-  if (isLoading) return <LoadingIndicator name="monthly-spending-graph" />;
+  if (
+    isLoadingTotalsByMonth ||
+    isLoadingSpending ||
+    isLoadingProjectedRemainingSpending
+  )
+    return <LoadingIndicator name="monthly-spending-graph" />;
 
   return (
     <>
@@ -23,8 +53,18 @@ const MonthlySpendingGraph: FC = () => {
         {...getDataTags({ totalsByMonth })}
       />
       <ResponsiveContainer aspect={1.5} minWidth={300} width="100%">
-        <BarChart barGap={0} data={formatData({ totalsByMonth })}>
+        <BarChart
+          barGap={0}
+          data={formatData({
+            currentMonthSpending,
+            projectedRemainingCurrentMonthSpending: projectedRemainingSpending,
+            readableMonth,
+            totalsByMonth,
+          })}
+        >
           <CartesianGrid strokeDasharray="2 4" vertical={false} />
+          <Bar dataKey="spending" fill="orange" stackId="a" />
+          <Bar dataKey="projectedRemainingSpending" fill="grey" stackId="a" />
           <XAxis dataKey="name" interval="preserveStartEnd" reversed />
           <YAxis
             axisLine={false}
@@ -34,7 +74,6 @@ const MonthlySpendingGraph: FC = () => {
             }}
             tickLine={false}
           />
-          <Bar dataKey="spending" fill="orange" />
         </BarChart>
       </ResponsiveContainer>
     </>
@@ -51,15 +90,37 @@ const getDataTags = ({ totalsByMonth }: { totalsByMonth?: MonthTotals[] }) =>
   }, {});
 
 const formatData = ({
+  currentMonthSpending,
+  projectedRemainingCurrentMonthSpending,
+  readableMonth,
   totalsByMonth,
 }: {
+  currentMonthSpending?: number;
+  projectedRemainingCurrentMonthSpending?: number;
+  readableMonth: string;
   totalsByMonth?: MonthTotals[];
-}): { name: string; spending: number }[] => {
-  if (!totalsByMonth) return [];
-  const result = totalsByMonth.map(({ month, spending }) => ({
-    name: month,
-    spending: spending || 0,
-  }));
+}): {
+  name: string;
+  spending: number;
+  projectedRemainingSpending?: number;
+}[] => {
+  if (
+    !currentMonthSpending ||
+    !projectedRemainingCurrentMonthSpending ||
+    !totalsByMonth
+  )
+    return [];
+  const result = [
+    {
+      name: readableMonth,
+      spending: currentMonthSpending,
+      projectedRemainingSpending: projectedRemainingCurrentMonthSpending,
+    },
+    ...totalsByMonth.map(({ month, spending }) => ({
+      name: month,
+      spending: spending || 0,
+    })),
+  ];
   return result;
 };
 

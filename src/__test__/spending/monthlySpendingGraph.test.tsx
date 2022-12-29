@@ -76,6 +76,11 @@ test('shows totals by month', async () => {
           datetime: '2020-12-01',
           name: 'spending',
         }),
+        buildTransaction({
+          amount: 1300,
+          datetime: '2021-01-01',
+          name: 'spending',
+        }),
       ],
     }),
   ];
@@ -88,6 +93,7 @@ test('shows totals by month', async () => {
     screen.queryByTestId('loading-indicator-monthly-spending-graph')
   );
   const graph = await screen.findByTestId('monthly-spending-graph');
+  expect(graph).toHaveAttribute('data-january-2021', '1300');
   expect(graph).toHaveAttribute('data-december-2020', '1200');
   expect(graph).toHaveAttribute('data-november-2020', '1100');
   expect(graph).toHaveAttribute('data-october-2020', '1000');
