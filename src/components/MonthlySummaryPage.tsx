@@ -1,11 +1,21 @@
 import React, { FC } from 'react';
 
 import PageWrapper from 'components/PageWrapper';
+import useAverageMonthlySpending from 'hooks/useAverageMonthlySpending';
+import useCurrencyFormatter from 'hooks/useCurrencyFormatter';
 
-const Home: FC = () => (
-  <PageWrapper name="monthly-summary">
-    <p>monthly summary</p>
-  </PageWrapper>
-);
+const MonthlySummaryPage: FC = () => {
+  const { averageMonthlySpending } = useAverageMonthlySpending();
+  const { format } = useCurrencyFormatter();
 
-export default Home;
+  const formattedAverageMonthlySpending = format({
+    value: averageMonthlySpending,
+  });
+  return (
+    <PageWrapper name="monthly-summary">
+      <p>{`Average monthly spending: ${formattedAverageMonthlySpending}`}</p>
+    </PageWrapper>
+  );
+};
+
+export default MonthlySummaryPage;
