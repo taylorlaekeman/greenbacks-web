@@ -7,6 +7,7 @@ import Button from 'components/Button';
 import Home from 'components/Home';
 import Link from 'components/Link';
 import LoadingIndicator from 'components/LoadingIndicator';
+import MonthlySummaryPage from 'components/MonthlySummaryPage';
 import Spending from 'components/Spending';
 import useIsApiReady from 'hooks/useIsApiReady';
 import useIsAuthenticated from 'hooks/useIsAuthenticated';
@@ -29,6 +30,12 @@ const Greenbacks: FC = () => {
     </AccountConnectionBarrier>
   );
 
+  const monthlySummary = (
+    <AccountConnectionBarrier>
+      <MonthlySummaryPage />
+    </AccountConnectionBarrier>
+  );
+
   const spending = (
     <AccountConnectionBarrier>
       <Spending />
@@ -45,6 +52,9 @@ const Greenbacks: FC = () => {
           <Link href="/accounts">Accounts</Link>
         </li>
         <li>
+          <Link href="/monthly-summary">Monthly Summary</Link>
+        </li>
+        <li>
           <Button onClick={logout}>Logout</Button>
         </li>
       </ul>
@@ -52,6 +62,7 @@ const Greenbacks: FC = () => {
         <Route path="/" element={home} />
         <Route path="/months/:month/" element={home} />
         <Route path="/accounts" element={<Accounts />} />
+        <Route path="/monthly-summary" element={monthlySummary} />
         <Route path="/spending" element={spending} />
       </Routes>
     </>
