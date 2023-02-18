@@ -2,6 +2,7 @@ import React, { FC } from 'react';
 
 import AmountBadge from 'components/AmountBadge';
 import ArticleContainer from 'components/ArticleContainer';
+import AverageSpendingSummary from 'components/AverageSpendingSummary';
 import CashFlowGraph from 'components/CashFlowGraph';
 import PercentBadge from 'components/PercentBadge';
 import SectionContainer from 'components/SectionContainer';
@@ -12,6 +13,7 @@ import useAverageMonthlyEarning from 'hooks/useAverageMonthlyEarning';
 import useAverageMonthlySaving from 'hooks/useAverageMonthlySaving';
 import useAverageMonthlySpending from 'hooks/useAverageMonthlySpending';
 import useAveragingPeriod from 'hooks/useAveragingPeriod';
+import useCurrencyFormatter from 'hooks/useCurrencyFormatter';
 import useSavingsRate from 'hooks/useSavingsRate';
 import useTransactionsByTag from 'hooks/useTransactionsByTag';
 import useUntaggedTransactions from 'hooks/useUntaggedTransactions';
@@ -43,6 +45,12 @@ const Overview: FC = () => {
     endDate,
     startDate,
   });
+  const { format } = useCurrencyFormatter();
+
+  const isAverageSavingVisible =
+    !isLoadingAverageSaving && !isLoadingSavingsRate;
+  const formattedAverageEarning = format({ value: averageMonthlyEarning });
+  const formattedAverageSaving = format({ value: averageMonthlySaving });
 
   return (
     <ArticleContainer id="overview" title="Overview">
@@ -57,6 +65,19 @@ const Overview: FC = () => {
         saving={averageMonthlySaving}
         spending={averageMonthlySpending}
       />
+      {!isLoadingAverageEarning && (
+        <p>{`You earn ${formattedAverageEarning} per month on average`}</p>
+      )}
+      {isAverageSavingVisible && (
+        <p>
+          {getSummaryText({
+            formattedAmount: formattedAverageSaving,
+            rate: savingsRate,
+            verb: 'save',
+          })}
+        </p>
+      )}
+      <AverageSpendingSummary hasLinkToSpendingPage />
       <BadgeGrid>
         <AmountBadge
           amount={averageMonthlyEarning}
@@ -116,5 +137,21 @@ const BadgeGrid = styled.section`
   grid-template-columns: 1fr 1fr;
   margin-bottom: 50px;
 `;
+
+const getSummaryText = ({
+  formattedAmount,
+  rate,
+  verb,
+}: {
+  formattedAmount: string;
+  rate?: number;
+  verb: string;
+}) => {
+  const amountText = `You ${verb} ${formattedAmount} per month on average`;
+  if (!rate) return amountText;
+  const formattedRate = `${Math.round((rate || 0) * 100)}%`;
+  const rateText = `(${formattedRate} of earning)`;
+  return `${amountText} ${rateText}`;
+};
 
 export default Overview;

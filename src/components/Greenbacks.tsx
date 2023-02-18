@@ -1,11 +1,13 @@
 import React, { FC } from 'react';
 import { Route, Routes } from 'react-router-dom';
 
+import AccountConnectionBarrier from 'components/AccountConnectionBarrier';
 import Accounts from 'components/Accounts';
 import Button from 'components/Button';
 import Home from 'components/Home';
 import Link from 'components/Link';
 import LoadingIndicator from 'components/LoadingIndicator';
+import Spending from 'components/Spending';
 import useIsApiReady from 'hooks/useIsApiReady';
 import useIsAuthenticated from 'hooks/useIsAuthenticated';
 import useLogin from 'hooks/useLogin';
@@ -21,6 +23,18 @@ const Greenbacks: FC = () => {
 
   if (!isApiReady) return <LoadingIndicator />;
 
+  const home = (
+    <AccountConnectionBarrier>
+      <Home />
+    </AccountConnectionBarrier>
+  );
+
+  const spending = (
+    <AccountConnectionBarrier>
+      <Spending />
+    </AccountConnectionBarrier>
+  );
+
   return (
     <>
       <ul>
@@ -35,9 +49,10 @@ const Greenbacks: FC = () => {
         </li>
       </ul>
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/months/:month/" element={<Home />} />
+        <Route path="/" element={home} />
+        <Route path="/months/:month/" element={home} />
         <Route path="/accounts" element={<Accounts />} />
+        <Route path="/spending" element={spending} />
       </Routes>
     </>
   );

@@ -20,6 +20,7 @@ test('shows loading indicator while transactions are loading', () => {
     'loading-indicator-average-monthly-savings'
   );
   expect(loadingIndicator).toBeInTheDocument();
+  expect(screen.queryByText('per month on average')).not.toBeInTheDocument();
 });
 
 test('shows zero without any savings', async () => {
@@ -32,6 +33,9 @@ test('shows zero without any savings', async () => {
   await act(() => wait({ cycles: 2 }));
   const text = screen.getByTestId('average-monthly-savings');
   expect(text).toHaveTextContent('$0.00');
+  expect(
+    await screen.findByText('You save $0.00 per month on average')
+  ).toBeVisible();
 });
 
 test('correctly averages savings', async () => {
@@ -75,6 +79,11 @@ test('correctly averages savings', async () => {
           datetime: '2020-06-01',
           name: 'hidden',
         }),
+        buildTransaction({
+          amount: -3600,
+          datetime: '2020-01-01',
+          name: 'earning',
+        }),
       ],
     }),
   ];
@@ -100,9 +109,13 @@ test('correctly averages savings', async () => {
       <Greenbacks />
     </TestGreenbacksProvider>
   );
-  await act(() => wait({ cycles: 2 }));
-  const text = screen.getByTestId('average-monthly-savings');
+  const text = await screen.findByTestId('average-monthly-savings');
   expect(text).toHaveTextContent('$1.50');
+  expect(
+    await screen.findByText(
+      'You save $1.50 per month on average (50% of earning)'
+    )
+  ).toBeVisible();
 });
 
 test('handles months without savings', async () => {
@@ -140,44 +153,9 @@ test('handles months without savings', async () => {
   await act(() => wait({ cycles: 2 }));
   const text = screen.getByTestId('average-monthly-savings');
   expect(text).toHaveTextContent('$1.00');
-});
-
-test('excludes earnings', async () => {
-  const mocks = [
-    buildApiTransactionsMock({
-      endDate: '2020-12-31',
-      startDate: '2020-01-01',
-      transactions: [
-        buildTransaction({ amount: -1200, datetime: '2020-01-01' }),
-        buildTransaction({
-          amount: 1200,
-          datetime: '2020-01-01',
-          name: 'SAVINGS!',
-        }),
-      ],
-    }),
-  ];
-  const filters = [
-    buildFilter({
-      categoryToAssign: Category.Saving,
-      id: 'test-filter-id-1',
-      matchers: [
-        {
-          expectedValue: 'SAVINGS!',
-          property: 'name' as keyof CoreTransaction,
-        },
-      ],
-      tagToAssign: 'retirement',
-    }),
-  ];
-  render(
-    <TestGreenbacksProvider mocks={mocks} now="2021-01-01" filters={filters}>
-      <Greenbacks />
-    </TestGreenbacksProvider>
-  );
-  await act(() => wait({ cycles: 2 }));
-  const text = screen.getByTestId('average-monthly-savings');
-  expect(text).toHaveTextContent('$1.00');
+  expect(
+    await screen.findByText('You save $1.00 per month on average')
+  ).toBeVisible();
 });
 
 test('excludes expenses', async () => {
@@ -216,6 +194,9 @@ test('excludes expenses', async () => {
   await act(() => wait({ cycles: 2 }));
   const text = screen.getByTestId('average-monthly-savings');
   expect(text).toHaveTextContent('$1.00');
+  expect(
+    await screen.findByText('You save $1.00 per month on average')
+  ).toBeVisible();
 });
 
 test('shows label text', async () => {
@@ -236,4 +217,41 @@ test('shows label text', async () => {
   await act(() => wait({ cycles: 2 }));
   const label = screen.getByTestId('average-monthly-savings-label');
   expect(label).toHaveTextContent(/^Average monthly saving/);
+});
+
+test('does not show savings rate when average earnings are 0', async () => {
+  const mocks = [
+    buildApiTransactionsMock({
+      endDate: '2020-12-31',
+      startDate: '2020-01-01',
+      transactions: [
+        buildTransaction({
+          amount: 1200,
+          datetime: '2020-01-01',
+          name: 'saving',
+        }),
+      ],
+    }),
+  ];
+  const filters = [
+    buildFilter({
+      categoryToAssign: Category.Saving,
+      id: 'test-filter-id-1',
+      matchers: [
+        {
+          expectedValue: 'saving',
+          property: 'name' as keyof CoreTransaction,
+        },
+      ],
+      tagToAssign: 'retirement',
+    }),
+  ];
+  render(
+    <TestGreenbacksProvider mocks={mocks} now="2021-01-01" filters={filters}>
+      <Greenbacks />
+    </TestGreenbacksProvider>
+  );
+  expect(
+    await screen.findByText('You save $1.00 per month on average')
+  ).toBeVisible();
 });
