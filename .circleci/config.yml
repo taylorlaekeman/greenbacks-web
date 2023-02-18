@@ -13,12 +13,12 @@ executors:
       - image: cimg/python:3.6
 
 jobs:
-  test_pr:
+  build:
     executor: node
     steps:
       - checkout
       - node/install-packages
-      - run: npm run check
+      - run: npm run build
 
   deploy:
     executor: node
@@ -30,11 +30,39 @@ jobs:
           from: build
           to: s3://greenbacks.app
 
+  lint:
+    executor: node
+    steps:
+      - checkout
+      - node/install-packages
+      - run: npm run lint
+
+  test:
+    executor: node
+    steps:
+      - checkout
+      - node/install-packages
+      - run: npm run test
+
+  test_pr:
+    executor: node
+    steps:
+      - checkout
+      - node/install-packages
+      - run: npm run check
+
+  typecheck:
+    executor: node
+    steps:
+      - checkout
+      - node/install-packages
+      - run: npm run typecheck
+
 workflows:
   version: 2
-  test_pr:
+  build:
     jobs:
-      - test_pr:
+      - build:
           filters:
             branches:
               ignore: main
@@ -46,3 +74,21 @@ workflows:
           filters:
             branches:
               only: main
+  lint:
+    jobs:
+      - lint:
+          filters:
+            branches:
+              ignore: main
+  test:
+    jobs:
+      - test:
+          filters:
+            branches:
+              ignore: main
+  typecheck:
+    jobs:
+      - typecheck:
+          filters:
+            branches:
+              ignore: main
