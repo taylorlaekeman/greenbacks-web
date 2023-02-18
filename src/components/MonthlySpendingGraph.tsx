@@ -46,6 +46,13 @@ const MonthlySpendingGraph: FC = () => {
   )
     return <LoadingIndicator name="monthly-spending-graph" />;
 
+  const graphData = formatData({
+    currentMonthSpending,
+    projectedRemainingCurrentMonthSpending: projectedRemainingSpending,
+    readableMonth,
+    totalsByMonth,
+  });
+
   return (
     <>
       <div
@@ -53,15 +60,7 @@ const MonthlySpendingGraph: FC = () => {
         {...getDataTags({ totalsByMonth })}
       />
       <ResponsiveContainer aspect={1.5} minWidth={300} width="100%">
-        <BarChart
-          barGap={0}
-          data={formatData({
-            currentMonthSpending,
-            projectedRemainingCurrentMonthSpending: projectedRemainingSpending,
-            readableMonth,
-            totalsByMonth,
-          })}
-        >
+        <BarChart barGap={0} data={graphData}>
           <CartesianGrid strokeDasharray="2 4" vertical={false} />
           <Bar dataKey="spending" fill="orange" stackId="a" />
           <Bar dataKey="projectedRemainingSpending" fill="grey" stackId="a" />
@@ -105,8 +104,8 @@ const formatData = ({
   projectedRemainingSpending?: number;
 }[] => {
   if (
-    !currentMonthSpending ||
-    !projectedRemainingCurrentMonthSpending ||
+    currentMonthSpending === undefined ||
+    projectedRemainingCurrentMonthSpending === undefined ||
     !totalsByMonth
   )
     return [];
