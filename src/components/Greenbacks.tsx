@@ -12,6 +12,7 @@ import useIsApiReady from 'hooks/useIsApiReady';
 import useIsAuthenticated from 'hooks/useIsAuthenticated';
 import useLogin from 'hooks/useLogin';
 import useLogout from 'hooks/useLogout';
+import noop from 'utils/noop';
 
 const Greenbacks: FC = () => {
   const { isReady: isApiReady } = useIsApiReady();
@@ -37,17 +38,7 @@ const Greenbacks: FC = () => {
 
   return (
     <>
-      <ul>
-        <li>
-          <Link href="/">Greenbacks</Link>
-        </li>
-        <li>
-          <Link href="/accounts">Accounts</Link>
-        </li>
-        <li>
-          <Button onClick={logout}>Logout</Button>
-        </li>
-      </ul>
+      <Header onLogout={logout} />
       <Routes>
         <Route path="/" element={home} />
         <Route path="/months/:month/" element={home} />
@@ -57,5 +48,19 @@ const Greenbacks: FC = () => {
     </>
   );
 };
+
+const Header: FC<{ onLogout?: () => void }> = ({ onLogout = noop }) => (
+  <ul>
+    <li>
+      <Link href="/">Greenbacks</Link>
+    </li>
+    <li>
+      <Link href="/accounts">Accounts</Link>
+    </li>
+    <li>
+      <Button onClick={onLogout}>Logout</Button>
+    </li>
+  </ul>
+);
 
 export default Greenbacks;
