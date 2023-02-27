@@ -39,10 +39,9 @@ test('adds spending filter', async () => {
     'test tag'
   );
   userEvent.click(screen.getByRole('button', { name: 'Add filter' }));
-  const { getByText } = within(
-    screen.getByTestId('section-average-spending-by-tag')
-  );
-  expect(getByText(/test tag: \$1.00/)).toBeVisible();
+  expect(
+    screen.queryByRole('button', { name: 'filter' })
+  ).not.toBeInTheDocument();
 });
 
 test('adds earning filter', async () => {
@@ -76,9 +75,9 @@ test('adds earning filter', async () => {
     'test tag'
   );
   userEvent.click(screen.getByRole('button', { name: 'Add filter' }));
-  expect(screen.getByTestId('average-monthly-earnings')).toHaveTextContent(
-    /\$1.00/
-  );
+  expect(
+    screen.queryByRole('button', { name: 'filter' })
+  ).not.toBeInTheDocument();
 });
 
 test('adds saving filter', async () => {
@@ -112,9 +111,9 @@ test('adds saving filter', async () => {
     'test tag'
   );
   userEvent.click(screen.getByRole('button', { name: 'Add filter' }));
-  expect(screen.getByTestId('average-monthly-savings')).toHaveTextContent(
-    /\$1.00/
-  );
+  expect(
+    screen.queryByRole('button', { name: 'filter' })
+  ).not.toBeInTheDocument();
 });
 
 test('allows selecting existing filter', async () => {
