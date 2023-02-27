@@ -1,11 +1,15 @@
-import React, { FC } from 'react';
-import { Route, Routes } from 'react-router-dom';
+import React, { FC, useState } from 'react';
+import { Route, Routes, useNavigate } from 'react-router-dom';
 
+import AccountConnectionBarrier from 'components/AccountConnectionBarrier';
 import Accounts from 'components/Accounts';
+import AverageCashFlow from 'components/AverageCashFlow';
 import Button from 'components/Button';
 import Home from 'components/Home';
 import Link from 'components/Link';
 import LoadingIndicator from 'components/LoadingIndicator';
+import Select from 'components/Select';
+import Spending from 'components/Spending';
 import useIsApiReady from 'hooks/useIsApiReady';
 import useIsAuthenticated from 'hooks/useIsAuthenticated';
 import useLogin from 'hooks/useLogin';
@@ -16,10 +20,24 @@ const Greenbacks: FC = () => {
   const { isAuthenticated } = useIsAuthenticated();
   const { login } = useLogin();
   const { logout } = useLogout();
+  const navigate = useNavigate();
+  const [page, setPage] = useState<string>('');
 
   if (!isAuthenticated) return <Button onClick={login}>Login</Button>;
 
   if (!isApiReady) return <LoadingIndicator />;
+
+  const home = (
+    <AccountConnectionBarrier>
+      <Home />
+    </AccountConnectionBarrier>
+  );
+
+  const spending = (
+    <AccountConnectionBarrier>
+      <Spending />
+    </AccountConnectionBarrier>
+  );
 
   return (
     <>
@@ -34,10 +52,21 @@ const Greenbacks: FC = () => {
           <Button onClick={logout}>Logout</Button>
         </li>
       </ul>
+      <Select
+        id="page-selector"
+        onChange={(newPage) => {
+          setPage(newPage);
+          navigate(`/${newPage}`);
+        }}
+        options={[{ label: 'Average Cashflow', value: 'average-cashflow' }]}
+        value={page}
+      />
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/months/:month/" element={<Home />} />
+        <Route path="/" element={home} />
+        <Route path="/months/:month/" element={home} />
         <Route path="/accounts" element={<Accounts />} />
+        <Route path="/spending" element={spending} />
+        <Route path="/average-cashflow" element={<AverageCashFlow />} />
       </Routes>
     </>
   );

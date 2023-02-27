@@ -1,25 +1,22 @@
 import React from 'react';
-import { act, render, screen } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 
 import Greenbacks from 'components/Greenbacks';
 import { TestGreenbacksProvider } from 'context/Greenbacks';
 import buildApiTransactionsMock from '__test__/utils/buildApiTransactionsMock';
-import buildOneTransactionFilter, {
-  buildMatcher,
-} from '__test__/utils/buildFilter';
+import buildFilter, { buildMatcher } from '__test__/utils/buildFilter';
 import buildTransaction from '__test__/utils/buildTransaction';
 import { Category, CoreTransaction } from 'types/transaction';
-import wait from 'utils/wait';
 
 test('shows loading indicator while transactions are loading', () => {
   const mocks = [buildApiTransactionsMock()];
   render(
-    <TestGreenbacksProvider mocks={mocks} now="2021-01-01">
+    <TestGreenbacksProvider mocks={mocks} route="/spending" now="2021-01-01">
       <Greenbacks />
     </TestGreenbacksProvider>
   );
   const loadingIndicator = screen.getByTestId(
-    'loading-indicator-average-monthly-expenses'
+    'loading-indicator-average-monthly-spending'
   );
   expect(loadingIndicator).toBeInTheDocument();
 });
@@ -27,13 +24,13 @@ test('shows loading indicator while transactions are loading', () => {
 test('shows zero without any expenses', async () => {
   const mocks = [buildApiTransactionsMock()];
   render(
-    <TestGreenbacksProvider mocks={mocks} now="2021-01-01">
+    <TestGreenbacksProvider mocks={mocks} route="/spending" now="2021-01-01">
       <Greenbacks />
     </TestGreenbacksProvider>
   );
-  await act(() => wait({ cycles: 2 }));
-  const text = screen.getByTestId('average-monthly-expenses');
-  expect(text).toHaveTextContent('$0.00');
+  expect(
+    await screen.findByText('You spend $0.00 per month on average')
+  ).toBeVisible();
 });
 
 test('correctly averages transactions', async () => {
@@ -53,23 +50,35 @@ test('correctly averages transactions', async () => {
           datetime: '2020-06-01',
           name: 'hidden',
         }),
+        buildTransaction({
+          amount: -3600,
+          datetime: '2020-01-01',
+          name: 'earning',
+        }),
       ],
     }),
   ];
   const filters = [
-    buildOneTransactionFilter({
+    buildFilter({
       categoryToAssign: Category.Hidden,
       matchers: [buildMatcher({ expectedValue: 'hidden', property: 'name' })],
     }),
   ];
   render(
-    <TestGreenbacksProvider filters={filters} mocks={mocks} now="2021-01-01">
+    <TestGreenbacksProvider
+      filters={filters}
+      mocks={mocks}
+      route="/spending"
+      now="2021-01-01"
+    >
       <Greenbacks />
     </TestGreenbacksProvider>
   );
-  await act(() => wait({ cycles: 2 }));
-  const text = screen.getByTestId('average-monthly-expenses');
-  expect(text).toHaveTextContent('$1.50');
+  expect(
+    await screen.findByText(
+      'You spend $1.50 per month on average (50% of earning)'
+    )
+  ).toBeVisible();
 });
 
 test('handles months without expenses', async () => {
@@ -83,34 +92,13 @@ test('handles months without expenses', async () => {
     }),
   ];
   render(
-    <TestGreenbacksProvider mocks={mocks} now="2021-01-01">
+    <TestGreenbacksProvider mocks={mocks} route="/spending" now="2021-01-01">
       <Greenbacks />
     </TestGreenbacksProvider>
   );
-  await act(() => wait({ cycles: 2 }));
-  const text = screen.getByTestId('average-monthly-expenses');
-  expect(text).toHaveTextContent('$1.00');
-});
-
-test('excludes earnings', async () => {
-  const mocks = [
-    buildApiTransactionsMock({
-      endDate: '2020-12-31',
-      startDate: '2020-01-01',
-      transactions: [
-        buildTransaction({ amount: -1200, datetime: '2020-01-01' }),
-        buildTransaction({ amount: 1200, datetime: '2020-01-01' }),
-      ],
-    }),
-  ];
-  render(
-    <TestGreenbacksProvider mocks={mocks} now="2021-01-01">
-      <Greenbacks />
-    </TestGreenbacksProvider>
-  );
-  await act(() => wait({ cycles: 2 }));
-  const text = screen.getByTestId('average-monthly-expenses');
-  expect(text).toHaveTextContent('$1.00');
+  expect(
+    await screen.findByText('You spend $1.00 per month on average')
+  ).toBeVisible();
 });
 
 test('excludes savings', async () => {
@@ -139,7 +127,7 @@ test('excludes savings', async () => {
     }),
   ];
   const filters = [
-    buildOneTransactionFilter({
+    buildFilter({
       categoryToAssign: Category.Saving,
       id: 'test-filter-id',
       matchers: [
@@ -152,31 +140,58 @@ test('excludes savings', async () => {
     }),
   ];
   render(
-    <TestGreenbacksProvider filters={filters} mocks={mocks} now="2021-01-01">
+    <TestGreenbacksProvider
+      filters={filters}
+      mocks={mocks}
+      route="/spending"
+      now="2021-01-01"
+    >
       <Greenbacks />
     </TestGreenbacksProvider>
   );
-  await act(() => wait({ cycles: 2 }));
-  const text = screen.getByTestId('average-monthly-expenses');
-  expect(text).toHaveTextContent('$1.00');
+  expect(
+    await screen.findByText('You spend $1.00 per month on average')
+  ).toBeVisible();
 });
 
-test('shows label text', async () => {
+test('does not show spending rate when average earnings are 0', async () => {
   const mocks = [
     buildApiTransactionsMock({
       endDate: '2020-12-31',
       startDate: '2020-01-01',
       transactions: [
-        buildTransaction({ amount: 1200, datetime: '2020-01-01' }),
+        buildTransaction({
+          amount: 1200,
+          datetime: '2020-01-01',
+          name: 'saving',
+        }),
       ],
     }),
   ];
+  const filters = [
+    buildFilter({
+      categoryToAssign: Category.Spending,
+      id: 'test-filter-id-1',
+      matchers: [
+        {
+          expectedValue: 'saving',
+          property: 'name' as keyof CoreTransaction,
+        },
+      ],
+      tagToAssign: 'retirement',
+    }),
+  ];
   render(
-    <TestGreenbacksProvider mocks={mocks} now="2021-01-01">
+    <TestGreenbacksProvider
+      mocks={mocks}
+      route="/spending"
+      now="2021-01-01"
+      filters={filters}
+    >
       <Greenbacks />
     </TestGreenbacksProvider>
   );
-  await act(() => wait({ cycles: 2 }));
-  const label = screen.getByTestId('average-monthly-expenses-label');
-  expect(label).toHaveTextContent(/^Average monthly spending/);
+  expect(
+    await screen.findByText('You spend $1.00 per month on average')
+  ).toBeVisible();
 });
