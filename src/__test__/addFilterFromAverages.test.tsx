@@ -150,10 +150,9 @@ test('allows selecting existing filter', async () => {
   userEvent.click(getByRole('radio', { name: 'Spending' }));
   userEvent.click(getByRole('radio', { name: 'test tag' }));
   userEvent.click(screen.getByRole('button', { name: 'Add filter' }));
-  const { getByText } = within(
-    screen.getByTestId('section-average-spending-by-tag')
-  );
-  expect(getByText(/test tag: \$1.00/)).toBeVisible();
+  expect(
+    screen.queryByRole('button', { name: 'Add filter' })
+  ).not.toBeInTheDocument();
 });
 
 test('defaults to name filter', async () => {
@@ -264,8 +263,7 @@ test('adds merchant filter', async () => {
     'test tag'
   );
   userEvent.click(screen.getByRole('button', { name: 'Add filter' }));
-  const { getByText } = within(
-    screen.getByTestId('section-average-spending-by-tag')
-  );
-  expect(getByText(/test tag: \$1.00/)).toBeVisible();
+  expect(
+    screen.queryByRole('button', { name: 'Add filter' })
+  ).not.toBeInTheDocument();
 });

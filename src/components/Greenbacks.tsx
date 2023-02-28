@@ -4,6 +4,7 @@ import { Route, Routes, useNavigate } from 'react-router-dom';
 import AccountConnectionBarrier from 'components/AccountConnectionBarrier';
 import Accounts from 'components/Accounts';
 import AverageCashFlow from 'components/AverageCashFlow';
+import AverageSpendingByTag from 'components/AverageSpendingByTag';
 import Button from 'components/Button';
 import Home from 'components/Home';
 import Link from 'components/Link';
@@ -58,7 +59,13 @@ const Greenbacks: FC = () => {
           setPage(newPage);
           navigate(`/${newPage}`);
         }}
-        options={[{ label: 'Average Cashflow', value: 'average-cashflow' }]}
+        options={[
+          { label: 'Average Cashflow', value: 'average-cashflow' },
+          {
+            label: 'Average Spending by Tag',
+            value: 'average-spending-by-tag',
+          },
+        ]}
         value={page}
       />
       <Routes>
@@ -67,6 +74,10 @@ const Greenbacks: FC = () => {
         <Route path="/accounts" element={<Accounts />} />
         <Route path="/spending" element={spending} />
         <Route path="/average-cashflow" element={<AverageCashFlow />} />
+        <Route
+          path="/average-spending-by-tag"
+          element={<AverageSpendingByTag />}
+        />
       </Routes>
     </>
   );

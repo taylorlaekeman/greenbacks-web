@@ -4,17 +4,11 @@ import ArticleContainer from 'components/ArticleContainer';
 import SectionContainer from 'components/SectionContainer';
 import TotalsByMonth from 'components/TotalsByMonth';
 import Transactions from 'components/Transactions';
-import TransactionsByTag from 'components/TransactionsByTag';
 import useAveragingPeriod from 'hooks/useAveragingPeriod';
-import useTransactionsByTag from 'hooks/useTransactionsByTag';
 import useUntaggedTransactions from 'hooks/useUntaggedTransactions';
 
 const Overview: FC = () => {
-  const { count, endIso: endDate, startIso: startDate } = useAveragingPeriod();
-  const {
-    isLoading: isLoadingTransactionsByTag,
-    spending: spendingByTag,
-  } = useTransactionsByTag({ endDate, startDate });
+  const { endIso: endDate, startIso: startDate } = useAveragingPeriod();
   const {
     earning: untaggedEarning,
     spending: untaggedSpending,
@@ -25,14 +19,6 @@ const Overview: FC = () => {
 
   return (
     <ArticleContainer id="overview" title="Overview">
-      <TransactionsByTag
-        id="average-spending-by-tag"
-        isGraphVisible
-        isLoading={isLoadingTransactionsByTag}
-        months={count}
-        name="Average Spending by Tag"
-        transactions={spendingByTag}
-      />
       {untaggedEarning && (
         <SectionContainer id="untagged-earning" title="Untagged Earning">
           <Transactions transactions={untaggedEarning} />
