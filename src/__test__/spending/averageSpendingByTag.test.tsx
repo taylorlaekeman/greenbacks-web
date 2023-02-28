@@ -263,7 +263,7 @@ test('groups untagged transactions', async () => {
 
 test('shows loading indicator', async () => {
   render(
-    <TestGreenbacksProvider>
+    <TestGreenbacksProvider route="/spending">
       <Greenbacks />
     </TestGreenbacksProvider>
   );

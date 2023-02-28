@@ -44,7 +44,12 @@ test('correctly averages spending', async () => {
     }),
   ];
   render(
-    <TestGreenbacksProvider mocks={apiMocks} now="2021-01-01" filters={filters}>
+    <TestGreenbacksProvider
+      mocks={apiMocks}
+      now="2021-01-01"
+      filters={filters}
+      route="/average-spending-by-tag"
+    >
       <Greenbacks />
     </TestGreenbacksProvider>
   );
@@ -95,7 +100,12 @@ test('excludes savings', async () => {
     }),
   ];
   render(
-    <TestGreenbacksProvider mocks={apiMocks} now="2021-01-01" filters={filters}>
+    <TestGreenbacksProvider
+      mocks={apiMocks}
+      now="2021-01-01"
+      filters={filters}
+      route="/average-spending-by-tag"
+    >
       <Greenbacks />
     </TestGreenbacksProvider>
   );
@@ -144,7 +154,12 @@ test('excludes earnings', async () => {
     }),
   ];
   render(
-    <TestGreenbacksProvider mocks={apiMocks} now="2021-01-01" filters={filters}>
+    <TestGreenbacksProvider
+      mocks={apiMocks}
+      now="2021-01-01"
+      filters={filters}
+      route="/average-spending-by-tag"
+    >
       <Greenbacks />
     </TestGreenbacksProvider>
   );
@@ -193,7 +208,12 @@ test('excludes hidden transactions', async () => {
     }),
   ];
   render(
-    <TestGreenbacksProvider mocks={apiMocks} now="2021-01-01" filters={filters}>
+    <TestGreenbacksProvider
+      mocks={apiMocks}
+      now="2021-01-01"
+      filters={filters}
+      route="/average-spending-by-tag"
+    >
       <Greenbacks />
     </TestGreenbacksProvider>
   );
@@ -227,7 +247,11 @@ test('groups untagged transactions', async () => {
     }),
   ];
   render(
-    <TestGreenbacksProvider mocks={apiMocks} now="2021-01-01">
+    <TestGreenbacksProvider
+      mocks={apiMocks}
+      now="2021-01-01"
+      route="/average-spending-by-tag"
+    >
       <Greenbacks />
     </TestGreenbacksProvider>
   );
@@ -243,7 +267,7 @@ test('groups untagged transactions', async () => {
 
 test('shows loading indicator', async () => {
   render(
-    <TestGreenbacksProvider>
+    <TestGreenbacksProvider route="/average-spending-by-tag">
       <Greenbacks />
     </TestGreenbacksProvider>
   );
