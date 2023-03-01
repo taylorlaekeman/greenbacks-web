@@ -11,6 +11,7 @@ import Link from 'components/Link';
 import LoadingIndicator from 'components/LoadingIndicator';
 import Select from 'components/Select';
 import Spending from 'components/Spending';
+import UntaggedTransactions from 'components/UntaggedTransactions';
 import useIsApiReady from 'hooks/useIsApiReady';
 import useIsAuthenticated from 'hooks/useIsAuthenticated';
 import useLogin from 'hooks/useLogin';
@@ -65,6 +66,10 @@ const Greenbacks: FC = () => {
             label: 'Average Spending by Tag',
             value: 'average-spending-by-tag',
           },
+          {
+            label: 'Untagged Transactions',
+            value: 'untagged-transactions',
+          },
         ]}
         value={page}
       />
@@ -77,6 +82,10 @@ const Greenbacks: FC = () => {
         <Route
           path="/average-spending-by-tag"
           element={<AverageSpendingByTag />}
+        />
+        <Route
+          path="/untagged-transactions"
+          element={<UntaggedTransactions />}
         />
       </Routes>
     </>
