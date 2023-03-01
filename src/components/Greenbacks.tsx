@@ -51,6 +51,9 @@ const Greenbacks: FC = () => {
           <Link href="/accounts">Accounts</Link>
         </li>
         <li>
+          <Link href="/spending">Spending</Link>
+        </li>
+        <li>
           <Button onClick={logout}>Logout</Button>
         </li>
       </ul>
