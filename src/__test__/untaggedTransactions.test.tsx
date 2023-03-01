@@ -9,7 +9,7 @@ import buildTransaction from '__test__/utils/buildTransaction';
 test('shows untagged debits', async () => {
   const apiMocks = [
     buildApiTransactionsMock({
-      endDate: '2020-12-31',
+      endDate: '2021-01-15',
       startDate: '2020-01-01',
       transactions: [
         buildTransaction({
@@ -32,7 +32,7 @@ test('shows untagged debits', async () => {
   render(
     <TestGreenbacksProvider
       mocks={apiMocks}
-      now="2021-01-01"
+      now="2021-01-15"
       route="/untagged-transactions"
     >
       <Greenbacks />
@@ -55,7 +55,7 @@ test('shows untagged debits', async () => {
 test('shows untagged credits', async () => {
   const apiMocks = [
     buildApiTransactionsMock({
-      endDate: '2020-12-31',
+      endDate: '2021-01-15',
       startDate: '2020-01-01',
       transactions: [
         buildTransaction({
@@ -78,7 +78,7 @@ test('shows untagged credits', async () => {
   render(
     <TestGreenbacksProvider
       mocks={apiMocks}
-      now="2021-01-01"
+      now="2021-01-15"
       route="/untagged-transactions"
     >
       <Greenbacks />
