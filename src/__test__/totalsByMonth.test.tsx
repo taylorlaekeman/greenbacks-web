@@ -214,7 +214,12 @@ test('shows totals by month', async () => {
     }),
   ];
   render(
-    <TestGreenbacksProvider filters={filters} mocks={apiMocks} now="2021-01-01">
+    <TestGreenbacksProvider
+      filters={filters}
+      mocks={apiMocks}
+      now="2021-01-01"
+      route="/totals-by-month"
+    >
       <Greenbacks />
     </TestGreenbacksProvider>
   );
@@ -385,7 +390,7 @@ test('shows totals by month', async () => {
 
 test('shows loading indicator while transactions are loading', async () => {
   render(
-    <TestGreenbacksProvider>
+    <TestGreenbacksProvider route="/totals-by-month">
       <Greenbacks />
     </TestGreenbacksProvider>
   );

@@ -11,6 +11,7 @@ import Link from 'components/Link';
 import LoadingIndicator from 'components/LoadingIndicator';
 import Select from 'components/Select';
 import Spending from 'components/Spending';
+import TotalsByMonth from 'components/TotalsByMonth';
 import UntaggedTransactions from 'components/UntaggedTransactions';
 import useIsApiReady from 'hooks/useIsApiReady';
 import useIsAuthenticated from 'hooks/useIsAuthenticated';
@@ -73,6 +74,10 @@ const Greenbacks: FC = () => {
             label: 'Untagged Transactions',
             value: 'untagged-transactions',
           },
+          {
+            label: 'Totals by Month',
+            value: 'totals-by-month',
+          },
         ]}
         value={page}
       />
@@ -90,6 +95,7 @@ const Greenbacks: FC = () => {
           path="/untagged-transactions"
           element={<UntaggedTransactions />}
         />
+        <Route path="/totals-by-month" element={<TotalsByMonth />} />
       </Routes>
     </>
   );
