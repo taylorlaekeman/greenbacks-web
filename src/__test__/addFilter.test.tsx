@@ -11,7 +11,7 @@ import buildTransaction from '__test__/utils/buildTransaction';
 test('adds spending filter', async () => {
   const apiMocks = [
     buildApiTransactionsMock({
-      endDate: '2020-12-31',
+      endDate: '2021-01-01',
       startDate: '2020-01-01',
       transactions: [
         buildTransaction({
@@ -51,7 +51,7 @@ test('adds spending filter', async () => {
 test('adds earning filter', async () => {
   const apiMocks = [
     buildApiTransactionsMock({
-      endDate: '2020-12-31',
+      endDate: '2021-01-01',
       startDate: '2020-01-01',
       transactions: [
         buildTransaction({
@@ -91,7 +91,7 @@ test('adds earning filter', async () => {
 test('adds saving filter', async () => {
   const apiMocks = [
     buildApiTransactionsMock({
-      endDate: '2020-12-31',
+      endDate: '2021-01-01',
       startDate: '2020-01-01',
       transactions: [
         buildTransaction({
@@ -131,7 +131,7 @@ test('adds saving filter', async () => {
 test('allows selecting existing filter', async () => {
   const apiMocks = [
     buildApiTransactionsMock({
-      endDate: '2020-12-31',
+      endDate: '2021-01-01',
       startDate: '2020-01-01',
       transactions: [
         buildTransaction({
@@ -175,7 +175,7 @@ test('allows selecting existing filter', async () => {
 test('defaults to name filter', async () => {
   const apiMocks = [
     buildApiTransactionsMock({
-      endDate: '2020-12-31',
+      endDate: '2021-01-01',
       startDate: '2020-01-01',
       transactions: [
         buildTransaction({
@@ -206,7 +206,7 @@ test('defaults to name filter', async () => {
 test('untagged spending defaults to spending category', async () => {
   const apiMocks = [
     buildApiTransactionsMock({
-      endDate: '2020-12-31',
+      endDate: '2021-01-01',
       startDate: '2020-01-01',
       transactions: [
         buildTransaction({
@@ -235,7 +235,7 @@ test('untagged spending defaults to spending category', async () => {
 test('untagged earning defaults to earning category', async () => {
   const apiMocks = [
     buildApiTransactionsMock({
-      endDate: '2020-12-31',
+      endDate: '2021-01-01',
       startDate: '2020-01-01',
       transactions: [
         buildTransaction({
@@ -264,7 +264,7 @@ test('untagged earning defaults to earning category', async () => {
 test('adds merchant filter', async () => {
   const apiMocks = [
     buildApiTransactionsMock({
-      endDate: '2020-12-31',
+      endDate: '2021-01-01',
       startDate: '2020-01-01',
       transactions: [
         buildTransaction({
