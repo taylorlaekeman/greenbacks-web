@@ -22,12 +22,16 @@ test('adds spending filter', async () => {
     }),
   ];
   render(
-    <TestGreenbacksProvider mocks={apiMocks} now="2021-01-01">
+    <TestGreenbacksProvider
+      mocks={apiMocks}
+      now="2021-01-01"
+      route="/untagged-transactions"
+    >
       <Greenbacks />
     </TestGreenbacksProvider>
   );
   const { getByRole } = within(
-    await screen.findByTestId('section-untagged-spending')
+    await screen.findByTestId('section-untagged-debits')
   );
   userEvent.click(getByRole('button', { name: 'filter' }));
   userEvent.click(
@@ -58,12 +62,16 @@ test('adds earning filter', async () => {
     }),
   ];
   render(
-    <TestGreenbacksProvider mocks={apiMocks} now="2021-01-01">
+    <TestGreenbacksProvider
+      mocks={apiMocks}
+      now="2021-01-01"
+      route="/untagged-transactions"
+    >
       <Greenbacks />
     </TestGreenbacksProvider>
   );
   const { getByRole } = within(
-    await screen.findByTestId('section-untagged-earning')
+    await screen.findByTestId('section-untagged-credits')
   );
   userEvent.click(getByRole('button', { name: 'filter' }));
   userEvent.click(
@@ -94,12 +102,16 @@ test('adds saving filter', async () => {
     }),
   ];
   render(
-    <TestGreenbacksProvider mocks={apiMocks} now="2021-01-01">
+    <TestGreenbacksProvider
+      mocks={apiMocks}
+      now="2021-01-01"
+      route="/untagged-transactions"
+    >
       <Greenbacks />
     </TestGreenbacksProvider>
   );
   const { getByRole } = within(
-    await screen.findByTestId('section-untagged-spending')
+    await screen.findByTestId('section-untagged-debits')
   );
   userEvent.click(getByRole('button', { name: 'filter' }));
   userEvent.click(
@@ -136,12 +148,17 @@ test('allows selecting existing filter', async () => {
     }),
   ];
   render(
-    <TestGreenbacksProvider mocks={apiMocks} now="2021-01-01" filters={filters}>
+    <TestGreenbacksProvider
+      mocks={apiMocks}
+      now="2021-01-01"
+      filters={filters}
+      route="/untagged-transactions"
+    >
       <Greenbacks />
     </TestGreenbacksProvider>
   );
   const { getByRole } = within(
-    await screen.findByTestId('section-untagged-spending')
+    await screen.findByTestId('section-untagged-debits')
   );
   userEvent.click(getByRole('button', { name: 'filter' }));
   userEvent.click(
@@ -169,12 +186,16 @@ test('defaults to name filter', async () => {
     }),
   ];
   render(
-    <TestGreenbacksProvider mocks={apiMocks} now="2021-01-01">
+    <TestGreenbacksProvider
+      mocks={apiMocks}
+      now="2021-01-01"
+      route="/untagged-transactions"
+    >
       <Greenbacks />
     </TestGreenbacksProvider>
   );
   const { getByRole } = within(
-    await screen.findByTestId('section-untagged-spending')
+    await screen.findByTestId('section-untagged-debits')
   );
   userEvent.click(getByRole('button', { name: 'filter' }));
   expect(
@@ -196,12 +217,16 @@ test('untagged spending defaults to spending category', async () => {
     }),
   ];
   render(
-    <TestGreenbacksProvider mocks={apiMocks} now="2021-01-01">
+    <TestGreenbacksProvider
+      mocks={apiMocks}
+      now="2021-01-01"
+      route="/untagged-transactions"
+    >
       <Greenbacks />
     </TestGreenbacksProvider>
   );
   const { getByRole } = within(
-    await screen.findByTestId('section-untagged-spending')
+    await screen.findByTestId('section-untagged-debits')
   );
   userEvent.click(getByRole('button', { name: 'filter' }));
   expect(getByRole('radio', { name: 'Spending' })).toHaveAttribute('checked');
@@ -221,12 +246,16 @@ test('untagged earning defaults to earning category', async () => {
     }),
   ];
   render(
-    <TestGreenbacksProvider mocks={apiMocks} now="2021-01-01">
+    <TestGreenbacksProvider
+      mocks={apiMocks}
+      now="2021-01-01"
+      route="/untagged-transactions"
+    >
       <Greenbacks />
     </TestGreenbacksProvider>
   );
   const { getByRole } = within(
-    await screen.findByTestId('section-untagged-earning')
+    await screen.findByTestId('section-untagged-credits')
   );
   userEvent.click(getByRole('button', { name: 'filter' }));
   expect(getByRole('radio', { name: 'Earning' })).toHaveProperty('checked');
@@ -246,12 +275,16 @@ test('adds merchant filter', async () => {
     }),
   ];
   render(
-    <TestGreenbacksProvider mocks={apiMocks} now="2021-01-01">
+    <TestGreenbacksProvider
+      mocks={apiMocks}
+      now="2021-01-01"
+      route="/untagged-transactions"
+    >
       <Greenbacks />
     </TestGreenbacksProvider>
   );
   const { getByRole } = within(
-    await screen.findByTestId('section-untagged-spending')
+    await screen.findByTestId('section-untagged-debits')
   );
   userEvent.click(getByRole('button', { name: 'filter' }));
   userEvent.click(
