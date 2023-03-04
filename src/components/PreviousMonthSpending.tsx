@@ -10,6 +10,7 @@ import {
   YAxis,
 } from 'recharts';
 
+import Link from 'components/Link';
 import LoadingIndicator from 'components/LoadingIndicator';
 import useNow from 'hooks/useNow';
 import useSpendingTimeline, { DailyTotal } from 'hooks/useSpendingTimeline';
@@ -27,11 +28,15 @@ const PreviousMonthSpending: FC = () => {
   return (
     <>
       <h2>{month}</h2>
+      <Link href={`/previous-month-spending/${getPreviousMonth(month)}`}>
+        previous
+      </Link>
+      <Link href={`/previous-month-spending/${getNextMonth(month)}`}>next</Link>
       <div data-testid="spending-timeline-graph" {...dataTags} />
       <ResponsiveContainer aspect={1.5} minWidth={300} width="100%">
         <LineChart data={timeline}>
           <CartesianGrid vertical={false} />
-          <Line dataKey="average" dot={false} />
+          <Line dataKey="average" dot={false} stroke="orange" />
           <Line dataKey="actual" dot={false} />
           <XAxis dataKey="day" />
           <YAxis
@@ -70,5 +75,11 @@ const getDataTags = ({
     {}
   );
 };
+
+const getPreviousMonth = (month: string): string =>
+  DateTime.fromISO(month).minus({ months: 1 }).toFormat('yyyy-LL');
+
+const getNextMonth = (month: string): string =>
+  DateTime.fromISO(month).plus({ months: 1 }).toFormat('yyyy-LL');
 
 export default PreviousMonthSpending;
