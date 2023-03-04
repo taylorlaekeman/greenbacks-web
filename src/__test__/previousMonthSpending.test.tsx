@@ -10,12 +10,25 @@ test('renders last month by default', async () => {
   const apiMocks = [
     buildApiTransactionsMock({
       endDate: '2020-12-31',
+      startDate: '2020-01-01',
+      transactions: [
+        buildTransaction({
+          amount: 2400,
+          datetime: '2020-11-15',
+        }),
+        buildTransaction({
+          amount: 3600,
+          datetime: '2020-11-14',
+        }),
+      ],
+    }),
+    buildApiTransactionsMock({
+      endDate: '2020-12-31',
       startDate: '2020-12-01',
       transactions: [
         buildTransaction({
           amount: 1200,
           datetime: '2020-12-15',
-          name: 'test name',
         }),
       ],
     }),
@@ -30,11 +43,27 @@ test('renders last month by default', async () => {
     </TestGreenbacksProvider>
   );
   const graph = await screen.findByTestId('spending-timeline-graph');
-  expect(graph).toHaveAttribute('data-2020-12-15', '1200');
+  expect(graph).toHaveAttribute('data-15-actual', '1200');
+  expect(graph).toHaveAttribute('data-14-average', '300');
+  expect(graph).toHaveAttribute('data-15-average', '500');
 });
 
 test('renders month from url', async () => {
   const apiMocks = [
+    buildApiTransactionsMock({
+      endDate: '2021-12-31',
+      startDate: '2021-01-01',
+      transactions: [
+        buildTransaction({
+          amount: 2400,
+          datetime: '2021-11-15',
+        }),
+        buildTransaction({
+          amount: 3600,
+          datetime: '2021-11-14',
+        }),
+      ],
+    }),
     buildApiTransactionsMock({
       endDate: '2020-12-31',
       startDate: '2020-12-01',
@@ -56,5 +85,7 @@ test('renders month from url', async () => {
     </TestGreenbacksProvider>
   );
   const graph = await screen.findByTestId('spending-timeline-graph');
-  expect(graph).toHaveAttribute('data-2020-12-15', '1200');
+  expect(graph).toHaveAttribute('data-15-actual', '1200');
+  expect(graph).toHaveAttribute('data-14-average', '300');
+  expect(graph).toHaveAttribute('data-15-average', '500');
 });

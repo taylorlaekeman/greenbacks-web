@@ -8,7 +8,7 @@ const useSpendingByDayOfMonth = ({
 }: {
   endDate: string;
   startDate: string;
-}): { isLoading: boolean; spendingByDayOfMonth?: Record<string, number> } => {
+}): { isLoading: boolean; spending?: Record<string, number> } => {
   const { isLoading, spending } = useTransactionsByCategory({
     endDate,
     startDate,
@@ -22,7 +22,7 @@ const useSpendingByDayOfMonth = ({
     },
     {}
   );
-  return { isLoading, spendingByDayOfMonth };
+  return { isLoading, spending: spendingByDayOfMonth };
 };
 
 const getDayOfMonth = (datetime: string): number => {
