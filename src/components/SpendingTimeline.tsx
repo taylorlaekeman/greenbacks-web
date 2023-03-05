@@ -38,7 +38,7 @@ const PreviousMonthSpending: FC = () => {
           <CartesianGrid vertical={false} />
           <Line dataKey="average" dot={false} stroke="orange" />
           <Line dataKey="actual" dot={false} />
-          <XAxis dataKey="day" />
+          <XAxis dataKey="day" tick={false} tickLine={false} />
           <YAxis
             axisLine={false}
             tickFormatter={(amount) => {
