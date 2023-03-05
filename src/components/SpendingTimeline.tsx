@@ -57,7 +57,7 @@ const useMonth = (): string => {
   const { month } = useParams();
   const { now } = useNow();
   if (month) return DateTime.fromISO(month).toFormat('yyyy-LL');
-  return now.minus({ months: 1 }).toFormat('yyyy-LL');
+  return now.toFormat('yyyy-LL');
 };
 
 const getDataTags = ({

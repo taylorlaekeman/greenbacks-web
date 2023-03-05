@@ -6,7 +6,7 @@ import { TestGreenbacksProvider } from 'context/Greenbacks';
 import buildApiTransactionsMock from '__test__/utils/buildApiTransactionsMock';
 import buildTransaction from '__test__/utils/buildTransaction';
 
-test('renders last month by default', async () => {
+test('renders current month by default', async () => {
   const apiMocks = [
     buildApiTransactionsMock({
       endDate: '2020-12-31',
@@ -23,12 +23,12 @@ test('renders last month by default', async () => {
       ],
     }),
     buildApiTransactionsMock({
-      endDate: '2020-12-31',
-      startDate: '2020-12-01',
+      endDate: '2021-01-31',
+      startDate: '2021-01-01',
       transactions: [
         buildTransaction({
           amount: 1200,
-          datetime: '2020-12-15',
+          datetime: '2020-01-15',
         }),
       ],
     }),
@@ -37,7 +37,7 @@ test('renders last month by default', async () => {
     <TestGreenbacksProvider
       mocks={apiMocks}
       now="2021-01-01"
-      route="/previous-month-spending"
+      route="/spending-timeline"
     >
       <Greenbacks />
     </TestGreenbacksProvider>
@@ -79,7 +79,7 @@ test('renders month from url', async () => {
     <TestGreenbacksProvider
       mocks={apiMocks}
       now="2022-01-01"
-      route="/previous-month-spending/2020-12"
+      route="/spending-timeline/2020-12"
     >
       <Greenbacks />
     </TestGreenbacksProvider>
