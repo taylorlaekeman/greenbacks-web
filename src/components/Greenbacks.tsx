@@ -9,6 +9,7 @@ import Button from 'components/Button';
 import Home from 'components/Home';
 import Link from 'components/Link';
 import LoadingIndicator from 'components/LoadingIndicator';
+import SpendingTimeline from 'components/SpendingTimeline';
 import Select from 'components/Select';
 import Spending from 'components/Spending';
 import TotalsByMonth from 'components/TotalsByMonth';
@@ -78,6 +79,10 @@ const Greenbacks: FC = () => {
             label: 'Totals by Month',
             value: 'totals-by-month',
           },
+          {
+            label: 'Spending Timeline',
+            value: 'spending-timeline',
+          },
         ]}
         value={page}
       />
@@ -96,6 +101,11 @@ const Greenbacks: FC = () => {
           element={<UntaggedTransactions />}
         />
         <Route path="/totals-by-month" element={<TotalsByMonth />} />
+        <Route
+          path="/spending-timeline/:month"
+          element={<SpendingTimeline />}
+        />
+        <Route path="/spending-timeline" element={<SpendingTimeline />} />
       </Routes>
     </>
   );
