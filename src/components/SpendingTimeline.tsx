@@ -28,15 +28,16 @@ const PreviousMonthSpending: FC = () => {
   return (
     <>
       <h2>{month}</h2>
-      <Link href={`/previous-month-spending/${getPreviousMonth(month)}`}>
+      <Link href={`/spending-timeline/${getPreviousMonth(month)}`}>
         previous
       </Link>
-      <Link href={`/previous-month-spending/${getNextMonth(month)}`}>next</Link>
+      <Link href={`/spending-timeline/${getNextMonth(month)}`}>next</Link>
       <div data-testid="spending-timeline-graph" {...dataTags} />
       <ResponsiveContainer aspect={1.5} minWidth={300} width="100%">
         <LineChart data={timeline}>
           <CartesianGrid vertical={false} />
           <Line dataKey="average" dot={false} stroke="orange" />
+          <Line dataKey="predicted" dot={false} strokeDasharray="4 4" />
           <Line dataKey="actual" dot={false} />
           <XAxis dataKey="day" tick={false} tickLine={false} />
           <YAxis
@@ -66,14 +67,16 @@ const getDataTags = ({
   timeline?: DailyTotal[];
 }): Record<string, string> => {
   if (!timeline) return {};
-  return timeline.reduce(
-    (tags, { actual, average, day }) => ({
+  return timeline.reduce((tags, { actual, average, day, predicted }) => {
+    const paddedDay = String(day).padStart(2, '0');
+    const result: Record<string, number> = {
       ...tags,
-      [`data-${day}-actual`]: actual,
-      [`data-${day}-average`]: average,
-    }),
-    {}
-  );
+      [`data-${paddedDay}-average`]: average,
+    };
+    if (actual) result[`data-${paddedDay}-actual`] = actual;
+    if (predicted) result[`data-${paddedDay}-predicted`] = predicted;
+    return result;
+  }, {});
 };
 
 const getPreviousMonth = (month: string): string =>
