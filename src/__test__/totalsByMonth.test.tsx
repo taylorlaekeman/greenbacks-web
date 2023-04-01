@@ -10,6 +10,7 @@ import Greenbacks from 'components/Greenbacks';
 import { TestGreenbacksProvider } from 'context/Greenbacks';
 import buildApiTransactionsMock from '__test__/utils/buildApiTransactionsMock';
 import buildFilter, { buildMatcher } from '__test__/utils/buildFilter';
+import buildFiltersMock from '__test__/utils/buildFiltersMock';
 import buildTransaction from '__test__/utils/buildTransaction';
 import { Category } from 'types/transaction';
 
@@ -201,21 +202,22 @@ test('shows totals by month', async () => {
         }),
       ],
     }),
-  ];
-  const filters = [
-    buildFilter({
-      categoryToAssign: Category.Saving,
-      matchers: [
-        buildMatcher({
-          expectedValue: 'saving',
-          property: 'name',
+    buildFiltersMock({
+      filters: [
+        buildFilter({
+          categoryToAssign: Category.Saving,
+          matchers: [
+            buildMatcher({
+              expectedValue: 'saving',
+              property: 'name',
+            }),
+          ],
         }),
       ],
     }),
   ];
   render(
     <TestGreenbacksProvider
-      filters={filters}
       mocks={apiMocks}
       now="2021-01-01"
       route="/totals-by-month"

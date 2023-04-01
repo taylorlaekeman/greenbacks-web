@@ -5,6 +5,7 @@ import Greenbacks from 'components/Greenbacks';
 import { TestGreenbacksProvider } from 'context/Greenbacks';
 import buildApiTransactionsMock from '__test__/utils/buildApiTransactionsMock';
 import buildFilter, { buildMatcher } from '__test__/utils/buildFilter';
+import buildFiltersMock from '__test__/utils/buildFiltersMock';
 import buildTransaction from '__test__/utils/buildTransaction';
 import { Category, CoreTransaction } from 'types/transaction';
 
@@ -26,19 +27,19 @@ test('shows total earning', async () => {
         }),
       ],
     }),
-  ];
-  const filters = [
-    buildFilter({
-      categoryToAssign: Category.Hidden,
-      matchers: [buildMatcher({ expectedValue: 'hidden', property: 'name' })],
+    buildFiltersMock({
+      filters: [
+        buildFilter({
+          categoryToAssign: Category.Hidden,
+          matchers: [
+            buildMatcher({ expectedValue: 'hidden', property: 'name' }),
+          ],
+        }),
+      ],
     }),
   ];
   render(
-    <TestGreenbacksProvider
-      filters={filters}
-      mocks={apiMocks}
-      route="/months/2020-01/"
-    >
+    <TestGreenbacksProvider mocks={apiMocks} route="/months/2020-01/">
       <Greenbacks />
     </TestGreenbacksProvider>
   );
@@ -66,19 +67,19 @@ test('shows total spending', async () => {
         }),
       ],
     }),
-  ];
-  const filters = [
-    buildFilter({
-      categoryToAssign: Category.Hidden,
-      matchers: [buildMatcher({ expectedValue: 'hidden', property: 'name' })],
+    buildFiltersMock({
+      filters: [
+        buildFilter({
+          categoryToAssign: Category.Hidden,
+          matchers: [
+            buildMatcher({ expectedValue: 'hidden', property: 'name' }),
+          ],
+        }),
+      ],
     }),
   ];
   render(
-    <TestGreenbacksProvider
-      mocks={apiMocks}
-      filters={filters}
-      route="/months/2020-01/"
-    >
+    <TestGreenbacksProvider mocks={apiMocks} route="/months/2020-01/">
       <Greenbacks />
     </TestGreenbacksProvider>
   );
@@ -104,29 +105,29 @@ test('shows total saving', async () => {
         }),
       ],
     }),
-  ];
-  const filters = [
-    buildFilter({
-      categoryToAssign: Category.Saving,
-      id: 'test-filter-id-1',
-      matchers: [
-        {
-          expectedValue: 'test name',
-          property: 'name' as keyof CoreTransaction,
-        },
+    buildFiltersMock({
+      filters: [
+        buildFilter({
+          categoryToAssign: Category.Saving,
+          id: 'test-filter-id-1',
+          matchers: [
+            {
+              expectedValue: 'test name',
+              property: 'name' as keyof CoreTransaction,
+            },
+          ],
+        }),
+        buildFilter({
+          categoryToAssign: Category.Hidden,
+          matchers: [
+            buildMatcher({ expectedValue: 'hidden', property: 'name' }),
+          ],
+        }),
       ],
-    }),
-    buildFilter({
-      categoryToAssign: Category.Hidden,
-      matchers: [buildMatcher({ expectedValue: 'hidden', property: 'name' })],
     }),
   ];
   render(
-    <TestGreenbacksProvider
-      mocks={apiMocks}
-      filters={filters}
-      route="/months/2020-01/"
-    >
+    <TestGreenbacksProvider mocks={apiMocks} route="/months/2020-01/">
       <Greenbacks />
     </TestGreenbacksProvider>
   );
@@ -155,29 +156,29 @@ test('shows savings rate', async () => {
         }),
       ],
     }),
-  ];
-  const filters = [
-    buildFilter({
-      categoryToAssign: Category.Saving,
-      id: 'test-filter-id-1',
-      matchers: [
-        {
-          expectedValue: 'test name',
-          property: 'name',
-        },
+    buildFiltersMock({
+      filters: [
+        buildFilter({
+          categoryToAssign: Category.Saving,
+          id: 'test-filter-id-1',
+          matchers: [
+            {
+              expectedValue: 'test name',
+              property: 'name',
+            },
+          ],
+        }),
+        buildFilter({
+          categoryToAssign: Category.Hidden,
+          matchers: [
+            buildMatcher({ expectedValue: 'hidden', property: 'name' }),
+          ],
+        }),
       ],
-    }),
-    buildFilter({
-      categoryToAssign: Category.Hidden,
-      matchers: [buildMatcher({ expectedValue: 'hidden', property: 'name' })],
     }),
   ];
   render(
-    <TestGreenbacksProvider
-      mocks={apiMocks}
-      filters={filters}
-      route="/months/2020-01/"
-    >
+    <TestGreenbacksProvider mocks={apiMocks} route="/months/2020-01/">
       <Greenbacks />
     </TestGreenbacksProvider>
   );
@@ -222,31 +223,37 @@ test('shows cash flow graph', async () => {
         }),
       ],
     }),
-  ];
-  const filters = [
-    buildFilter({
-      categoryToAssign: Category.Earning,
-      matchers: [buildMatcher({ expectedValue: 'earning', property: 'name' })],
-    }),
-    buildFilter({
-      categoryToAssign: Category.Hidden,
-      matchers: [buildMatcher({ expectedValue: 'hidden', property: 'name' })],
-    }),
-    buildFilter({
-      categoryToAssign: Category.Saving,
-      matchers: [buildMatcher({ expectedValue: 'saving', property: 'name' })],
-    }),
-    buildFilter({
-      categoryToAssign: Category.Spending,
-      matchers: [buildMatcher({ expectedValue: 'spending', property: 'name' })],
+    buildFiltersMock({
+      filters: [
+        buildFilter({
+          categoryToAssign: Category.Earning,
+          matchers: [
+            buildMatcher({ expectedValue: 'earning', property: 'name' }),
+          ],
+        }),
+        buildFilter({
+          categoryToAssign: Category.Hidden,
+          matchers: [
+            buildMatcher({ expectedValue: 'hidden', property: 'name' }),
+          ],
+        }),
+        buildFilter({
+          categoryToAssign: Category.Saving,
+          matchers: [
+            buildMatcher({ expectedValue: 'saving', property: 'name' }),
+          ],
+        }),
+        buildFilter({
+          categoryToAssign: Category.Spending,
+          matchers: [
+            buildMatcher({ expectedValue: 'spending', property: 'name' }),
+          ],
+        }),
+      ],
     }),
   ];
   render(
-    <TestGreenbacksProvider
-      mocks={apiMocks}
-      filters={filters}
-      route="/months/2020-01/"
-    >
+    <TestGreenbacksProvider mocks={apiMocks} route="/months/2020-01/">
       <Greenbacks />
     </TestGreenbacksProvider>
   );

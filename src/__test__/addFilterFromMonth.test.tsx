@@ -4,9 +4,13 @@ import userEvent from '@testing-library/user-event';
 
 import Greenbacks from 'components/Greenbacks';
 import { TestGreenbacksProvider } from 'context/Greenbacks';
+import buildFiltersMock from '__test__/utils/buildFiltersMock';
 import buildApiTransactionsMock from '__test__/utils/buildApiTransactionsMock';
+import buildAddFilterMock from '__test__/utils/buildAddFilterMock';
 import buildFilter from '__test__/utils/buildFilter';
 import buildTransaction from '__test__/utils/buildTransaction';
+import { Comparator } from 'types/filter';
+import { Category } from 'types/transaction';
 
 test('adds spending filter', async () => {
   const apiMocks = [
@@ -19,6 +23,19 @@ test('adds spending filter', async () => {
           name: 'test name',
         }),
       ],
+    }),
+    buildAddFilterMock({
+      filter: {
+        categoryToAssign: Category.Spending,
+        matchers: [
+          {
+            comparator: Comparator.Equals,
+            expectedValue: 'test name',
+            property: 'name',
+          },
+        ],
+        tagToAssign: 'test tag',
+      },
     }),
   ];
   render(
@@ -39,10 +56,7 @@ test('adds spending filter', async () => {
     'test tag'
   );
   userEvent.click(screen.getByRole('button', { name: 'Add filter' }));
-  const { getByText } = within(
-    screen.getByTestId('section-monthly-spending-by-tag')
-  );
-  expect(getByText(/test tag: \$1.00/)).toBeVisible();
+  expect(await screen.findByText('Added!')).toBeVisible();
 });
 
 test('adds saving filter', async () => {
@@ -56,6 +70,19 @@ test('adds saving filter', async () => {
           name: 'test name',
         }),
       ],
+    }),
+    buildAddFilterMock({
+      filter: {
+        categoryToAssign: Category.Saving,
+        matchers: [
+          {
+            comparator: Comparator.Equals,
+            expectedValue: 'test name',
+            property: 'name',
+          },
+        ],
+        tagToAssign: 'test tag',
+      },
     }),
   ];
   render(
@@ -76,7 +103,7 @@ test('adds saving filter', async () => {
     'test tag'
   );
   userEvent.click(screen.getByRole('button', { name: 'Add filter' }));
-  expect(screen.getByText(/Total Saving: \$1.00/)).toBeVisible();
+  expect(await screen.findByText('Added!')).toBeVisible();
 });
 
 test('allows selecting existing filter', async () => {
@@ -91,15 +118,30 @@ test('allows selecting existing filter', async () => {
         }),
       ],
     }),
-  ];
-  const filters = [
-    buildFilter({
-      matchers: [],
-      tagToAssign: 'test tag',
+    buildFiltersMock({
+      filters: [
+        buildFilter({
+          matchers: [],
+          tagToAssign: 'test tag',
+        }),
+      ],
+    }),
+    buildAddFilterMock({
+      filter: {
+        categoryToAssign: Category.Spending,
+        matchers: [
+          {
+            comparator: Comparator.Equals,
+            expectedValue: 'test name',
+            property: 'name',
+          },
+        ],
+        tagToAssign: 'test tag',
+      },
     }),
   ];
   render(
-    <TestGreenbacksProvider mocks={apiMocks} now="2020-01-01" filters={filters}>
+    <TestGreenbacksProvider mocks={apiMocks} now="2020-01-01">
       <Greenbacks />
     </TestGreenbacksProvider>
   );
@@ -113,10 +155,7 @@ test('allows selecting existing filter', async () => {
   userEvent.click(getByRole('radio', { name: 'Spending' }));
   userEvent.click(getByRole('radio', { name: 'test tag' }));
   userEvent.click(screen.getByRole('button', { name: 'Add filter' }));
-  const { getByText } = within(
-    screen.getByTestId('section-monthly-spending-by-tag')
-  );
-  expect(getByText(/test tag: \$1.00/)).toBeVisible();
+  expect(await screen.findByText('Added!')).toBeVisible();
 });
 
 test('defaults to name filter', async () => {
@@ -183,6 +222,19 @@ test('adds merchant filter', async () => {
         }),
       ],
     }),
+    buildAddFilterMock({
+      filter: {
+        categoryToAssign: Category.Spending,
+        matchers: [
+          {
+            comparator: Comparator.Equals,
+            expectedValue: 'test merchant',
+            property: 'merchant',
+          },
+        ],
+        tagToAssign: 'test tag',
+      },
+    }),
   ];
   render(
     <TestGreenbacksProvider mocks={apiMocks} now="2020-01-01">
@@ -202,8 +254,5 @@ test('adds merchant filter', async () => {
     'test tag'
   );
   userEvent.click(screen.getByRole('button', { name: 'Add filter' }));
-  const { getByText } = within(
-    screen.getByTestId('section-monthly-spending-by-tag')
-  );
-  expect(getByText(/test tag: \$1.00/)).toBeVisible();
+  expect(await screen.findByText('Added!')).toBeVisible();
 });

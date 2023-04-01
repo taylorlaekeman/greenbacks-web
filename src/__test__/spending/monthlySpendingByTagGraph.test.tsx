@@ -10,6 +10,7 @@ import Greenbacks from 'components/Greenbacks';
 import { TestGreenbacksProvider } from 'context/Greenbacks';
 import buildApiTransactionsMock from '__test__/utils/buildApiTransactionsMock';
 import buildFilter from '__test__/utils/buildFilter';
+import buildFiltersMock from '__test__/utils/buildFiltersMock';
 import buildTransaction from '__test__/utils/buildTransaction';
 
 test('shows totals by month', async () => {
@@ -150,24 +151,21 @@ test('shows totals by month', async () => {
         }),
       ],
     }),
-  ];
-  const filters = [
-    buildFilter({
-      matchers: [{ expectedValue: 'spending-1', property: 'name' }],
-      tagToAssign: 'spending-1',
-    }),
-    buildFilter({
-      matchers: [{ expectedValue: 'spending-2', property: 'name' }],
-      tagToAssign: 'spending-2',
+    buildFiltersMock({
+      filters: [
+        buildFilter({
+          matchers: [{ expectedValue: 'spending-1', property: 'name' }],
+          tagToAssign: 'spending-1',
+        }),
+        buildFilter({
+          matchers: [{ expectedValue: 'spending-2', property: 'name' }],
+          tagToAssign: 'spending-2',
+        }),
+      ],
     }),
   ];
   render(
-    <TestGreenbacksProvider
-      filters={filters}
-      mocks={apiMocks}
-      route="/spending"
-      now="2021-01-01"
-    >
+    <TestGreenbacksProvider mocks={apiMocks} route="/spending" now="2021-01-01">
       <Greenbacks />
     </TestGreenbacksProvider>
   );
@@ -342,24 +340,21 @@ test('only shows selected tags', async () => {
         }),
       ],
     }),
-  ];
-  const filters = [
-    buildFilter({
-      matchers: [{ expectedValue: 'spending-1', property: 'name' }],
-      tagToAssign: 'spending-1',
-    }),
-    buildFilter({
-      matchers: [{ expectedValue: 'spending-2', property: 'name' }],
-      tagToAssign: 'spending-2',
+    buildFiltersMock({
+      filters: [
+        buildFilter({
+          matchers: [{ expectedValue: 'spending-1', property: 'name' }],
+          tagToAssign: 'spending-1',
+        }),
+        buildFilter({
+          matchers: [{ expectedValue: 'spending-2', property: 'name' }],
+          tagToAssign: 'spending-2',
+        }),
+      ],
     }),
   ];
   render(
-    <TestGreenbacksProvider
-      filters={filters}
-      mocks={apiMocks}
-      route="/spending"
-      now="2021-01-01"
-    >
+    <TestGreenbacksProvider mocks={apiMocks} route="/spending" now="2021-01-01">
       <Greenbacks />
     </TestGreenbacksProvider>
   );

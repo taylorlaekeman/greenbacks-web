@@ -5,6 +5,7 @@ import userEvent from '@testing-library/user-event';
 import Greenbacks from 'components/Greenbacks';
 import { TestGreenbacksProvider } from 'context/Greenbacks';
 import buildApiTransactionsMock from '__test__/utils/buildApiTransactionsMock';
+import buildFiltersMock from '__test__/utils/buildFiltersMock';
 import buildFilter, { buildMatcher } from '__test__/utils/buildFilter';
 import buildTransaction from '__test__/utils/buildTransaction';
 import { Category } from 'types/transaction';
@@ -73,21 +74,23 @@ test('excludes tagged spending', async () => {
         }),
       ],
     }),
-  ];
-  const filters = [
-    buildFilter({
-      categoryToAssign: Category.Spending,
-      matchers: [
-        buildMatcher({
-          expectedValue: 'first name',
-          property: 'name',
+    buildFiltersMock({
+      filters: [
+        buildFilter({
+          categoryToAssign: Category.Spending,
+          matchers: [
+            buildMatcher({
+              expectedValue: 'first name',
+              property: 'name',
+            }),
+          ],
+          tagToAssign: 'test tag',
         }),
       ],
-      tagToAssign: 'test tag',
     }),
   ];
   render(
-    <TestGreenbacksProvider mocks={apiMocks} now="2020-01-01" filters={filters}>
+    <TestGreenbacksProvider mocks={apiMocks} now="2020-01-01">
       <Greenbacks />
     </TestGreenbacksProvider>
   );
@@ -123,20 +126,22 @@ test('excludes saving', async () => {
         }),
       ],
     }),
-  ];
-  const filters = [
-    buildFilter({
-      categoryToAssign: Category.Saving,
-      matchers: [
-        buildMatcher({
-          expectedValue: 'first name',
-          property: 'name',
+    buildFiltersMock({
+      filters: [
+        buildFilter({
+          categoryToAssign: Category.Saving,
+          matchers: [
+            buildMatcher({
+              expectedValue: 'first name',
+              property: 'name',
+            }),
+          ],
         }),
       ],
     }),
   ];
   render(
-    <TestGreenbacksProvider mocks={apiMocks} now="2020-01-01" filters={filters}>
+    <TestGreenbacksProvider mocks={apiMocks} now="2020-01-01">
       <Greenbacks />
     </TestGreenbacksProvider>
   );
@@ -172,21 +177,23 @@ test('excludes earning', async () => {
         }),
       ],
     }),
-  ];
-  const filters = [
-    buildFilter({
-      categoryToAssign: Category.Earning,
-      matchers: [
-        buildMatcher({
-          expectedValue: 'first name',
-          property: 'name',
+    buildFiltersMock({
+      filters: [
+        buildFilter({
+          categoryToAssign: Category.Earning,
+          matchers: [
+            buildMatcher({
+              expectedValue: 'first name',
+              property: 'name',
+            }),
+          ],
+          tagToAssign: 'test tag',
         }),
       ],
-      tagToAssign: 'test tag',
     }),
   ];
   render(
-    <TestGreenbacksProvider mocks={apiMocks} now="2020-01-01" filters={filters}>
+    <TestGreenbacksProvider mocks={apiMocks} now="2020-01-01">
       <Greenbacks />
     </TestGreenbacksProvider>
   );
@@ -222,21 +229,23 @@ test('excludes hidden transactions', async () => {
         }),
       ],
     }),
-  ];
-  const filters = [
-    buildFilter({
-      categoryToAssign: Category.Hidden,
-      matchers: [
-        buildMatcher({
-          expectedValue: 'first name',
-          property: 'name',
+    buildFiltersMock({
+      filters: [
+        buildFilter({
+          categoryToAssign: Category.Hidden,
+          matchers: [
+            buildMatcher({
+              expectedValue: 'first name',
+              property: 'name',
+            }),
+          ],
+          tagToAssign: 'test tag',
         }),
       ],
-      tagToAssign: 'test tag',
     }),
   ];
   render(
-    <TestGreenbacksProvider mocks={apiMocks} now="2020-01-01" filters={filters}>
+    <TestGreenbacksProvider mocks={apiMocks} now="2020-01-01">
       <Greenbacks />
     </TestGreenbacksProvider>
   );
@@ -272,21 +281,23 @@ test('section is not present when no untagged transactions exist', async () => {
         }),
       ],
     }),
-  ];
-  const filters = [
-    buildFilter({
-      categoryToAssign: Category.Spending,
-      matchers: [
-        buildMatcher({
-          expectedValue: 'test name',
-          property: 'name',
+    buildFiltersMock({
+      filters: [
+        buildFilter({
+          categoryToAssign: Category.Spending,
+          matchers: [
+            buildMatcher({
+              expectedValue: 'test name',
+              property: 'name',
+            }),
+          ],
+          tagToAssign: 'test tag',
         }),
       ],
-      tagToAssign: 'test tag',
     }),
   ];
   render(
-    <TestGreenbacksProvider mocks={apiMocks} filters={filters}>
+    <TestGreenbacksProvider mocks={apiMocks}>
       <Greenbacks />
     </TestGreenbacksProvider>
   );

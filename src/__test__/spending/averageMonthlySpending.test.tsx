@@ -5,6 +5,7 @@ import Greenbacks from 'components/Greenbacks';
 import { TestGreenbacksProvider } from 'context/Greenbacks';
 import buildApiTransactionsMock from '__test__/utils/buildApiTransactionsMock';
 import buildFilter, { buildMatcher } from '__test__/utils/buildFilter';
+import buildFiltersMock from '__test__/utils/buildFiltersMock';
 import buildTransaction from '__test__/utils/buildTransaction';
 import { Category, CoreTransaction } from 'types/transaction';
 
@@ -57,20 +58,19 @@ test('correctly averages transactions', async () => {
         }),
       ],
     }),
-  ];
-  const filters = [
-    buildFilter({
-      categoryToAssign: Category.Hidden,
-      matchers: [buildMatcher({ expectedValue: 'hidden', property: 'name' })],
+    buildFiltersMock({
+      filters: [
+        buildFilter({
+          categoryToAssign: Category.Hidden,
+          matchers: [
+            buildMatcher({ expectedValue: 'hidden', property: 'name' }),
+          ],
+        }),
+      ],
     }),
   ];
   render(
-    <TestGreenbacksProvider
-      filters={filters}
-      mocks={mocks}
-      route="/spending"
-      now="2021-01-01"
-    >
+    <TestGreenbacksProvider mocks={mocks} route="/spending" now="2021-01-01">
       <Greenbacks />
     </TestGreenbacksProvider>
   );
@@ -125,27 +125,24 @@ test('excludes savings', async () => {
         }),
       ],
     }),
-  ];
-  const filters = [
-    buildFilter({
-      categoryToAssign: Category.Saving,
-      id: 'test-filter-id',
-      matchers: [
-        {
-          expectedValue: 'SAVINGS!',
-          property: 'name' as keyof CoreTransaction,
-        },
+    buildFiltersMock({
+      filters: [
+        buildFilter({
+          categoryToAssign: Category.Saving,
+          id: 'test-filter-id',
+          matchers: [
+            {
+              expectedValue: 'SAVINGS!',
+              property: 'name' as keyof CoreTransaction,
+            },
+          ],
+          tagToAssign: 'retirement',
+        }),
       ],
-      tagToAssign: 'retirement',
     }),
   ];
   render(
-    <TestGreenbacksProvider
-      filters={filters}
-      mocks={mocks}
-      route="/spending"
-      now="2021-01-01"
-    >
+    <TestGreenbacksProvider mocks={mocks} route="/spending" now="2021-01-01">
       <Greenbacks />
     </TestGreenbacksProvider>
   );
@@ -167,27 +164,24 @@ test('does not show spending rate when average earnings are 0', async () => {
         }),
       ],
     }),
-  ];
-  const filters = [
-    buildFilter({
-      categoryToAssign: Category.Spending,
-      id: 'test-filter-id-1',
-      matchers: [
-        {
-          expectedValue: 'saving',
-          property: 'name' as keyof CoreTransaction,
-        },
+    buildFiltersMock({
+      filters: [
+        buildFilter({
+          categoryToAssign: Category.Spending,
+          id: 'test-filter-id-1',
+          matchers: [
+            {
+              expectedValue: 'saving',
+              property: 'name' as keyof CoreTransaction,
+            },
+          ],
+          tagToAssign: 'retirement',
+        }),
       ],
-      tagToAssign: 'retirement',
     }),
   ];
   render(
-    <TestGreenbacksProvider
-      mocks={mocks}
-      route="/spending"
-      now="2021-01-01"
-      filters={filters}
-    >
+    <TestGreenbacksProvider mocks={mocks} route="/spending" now="2021-01-01">
       <Greenbacks />
     </TestGreenbacksProvider>
   );

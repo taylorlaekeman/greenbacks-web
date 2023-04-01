@@ -5,25 +5,30 @@ import userEvent from '@testing-library/user-event';
 import Greenbacks from 'components/Greenbacks';
 import { TestGreenbacksProvider } from 'context/Greenbacks';
 import buildFilter from '__test__/utils/buildFilter';
+import buildFiltersMock from '__test__/utils/buildFiltersMock';
 
 test('tags are selected by default', async () => {
-  const filters = [
-    buildFilter({
-      tagToAssign: 'first-tag',
-    }),
-    buildFilter({
-      tagToAssign: 'second-tag',
-    }),
-  ];
+  const filterMock = buildFiltersMock({
+    filters: [
+      buildFilter({
+        tagToAssign: 'first-tag',
+      }),
+      buildFilter({
+        tagToAssign: 'second-tag',
+      }),
+    ],
+  });
   render(
     <TestGreenbacksProvider
-      filters={filters}
       route="/spending"
+      mocks={[filterMock]}
       now="2021-01-01"
     >
       <Greenbacks />
     </TestGreenbacksProvider>
   );
+  await screen.findByRole('checkbox', { name: 'first-tag' });
+  screen.debug();
   expect(
     await screen.findByRole('checkbox', { name: 'first-tag' })
   ).toHaveAttribute('data-checked', 'true');
@@ -33,15 +38,17 @@ test('tags are selected by default', async () => {
 });
 
 test('clicking checkbox for selected tag deselects and reselects it', async () => {
-  const filters = [
-    buildFilter({
-      tagToAssign: 'test-tag',
-    }),
-  ];
+  const filtersMock = buildFiltersMock({
+    filters: [
+      buildFilter({
+        tagToAssign: 'test-tag',
+      }),
+    ],
+  });
   render(
     <TestGreenbacksProvider
-      filters={filters}
       route="/spending"
+      mocks={[filtersMock]}
       now="2021-01-01"
     >
       <Greenbacks />
@@ -55,18 +62,20 @@ test('clicking checkbox for selected tag deselects and reselects it', async () =
 });
 
 test('clicking deselect all deselects all', async () => {
-  const filters = [
-    buildFilter({
-      tagToAssign: 'first-tag',
-    }),
-    buildFilter({
-      tagToAssign: 'second-tag',
-    }),
-  ];
+  const filtersMock = buildFiltersMock({
+    filters: [
+      buildFilter({
+        tagToAssign: 'first-tag',
+      }),
+      buildFilter({
+        tagToAssign: 'second-tag',
+      }),
+    ],
+  });
   render(
     <TestGreenbacksProvider
-      filters={filters}
       route="/spending"
+      mocks={[filtersMock]}
       now="2021-01-01"
     >
       <Greenbacks />
@@ -82,18 +91,20 @@ test('clicking deselect all deselects all', async () => {
 });
 
 test('clicking select all selects all', async () => {
-  const filters = [
-    buildFilter({
-      tagToAssign: 'first-tag',
-    }),
-    buildFilter({
-      tagToAssign: 'second-tag',
-    }),
-  ];
+  const filtersMock = buildFiltersMock({
+    filters: [
+      buildFilter({
+        tagToAssign: 'first-tag',
+      }),
+      buildFilter({
+        tagToAssign: 'second-tag',
+      }),
+    ],
+  });
   render(
     <TestGreenbacksProvider
-      filters={filters}
       route="/spending"
+      mocks={[filtersMock]}
       now="2021-01-01"
     >
       <Greenbacks />

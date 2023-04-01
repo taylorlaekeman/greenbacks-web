@@ -10,6 +10,7 @@ import Greenbacks from 'components/Greenbacks';
 import { TestGreenbacksProvider } from 'context/Greenbacks';
 import buildApiTransactionsMock from '__test__/utils/buildApiTransactionsMock';
 import buildFilter, { buildMatcher } from '__test__/utils/buildFilter';
+import buildFiltersMock from '__test__/utils/buildFiltersMock';
 import buildTransaction from '__test__/utils/buildTransaction';
 import { Category, CoreTransaction } from 'types/transaction';
 
@@ -39,41 +40,41 @@ test('shows savings', async () => {
         }),
       ],
     }),
-  ];
-  const filters = [
-    buildFilter({
-      categoryToAssign: Category.Saving,
-      id: 'test-filter-id-1',
-      matchers: [
-        {
-          expectedValue: 'first name',
-          property: 'name' as keyof CoreTransaction,
-        },
+    buildFiltersMock({
+      filters: [
+        buildFilter({
+          categoryToAssign: Category.Saving,
+          id: 'test-filter-id-1',
+          matchers: [
+            {
+              expectedValue: 'first name',
+              property: 'name' as keyof CoreTransaction,
+            },
+          ],
+          tagToAssign: 'first tag',
+        }),
+        buildFilter({
+          categoryToAssign: Category.Saving,
+          id: 'test-filter-id-1',
+          matchers: [
+            {
+              expectedValue: 'second name',
+              property: 'name' as keyof CoreTransaction,
+            },
+          ],
+          tagToAssign: 'second tag',
+        }),
+        buildFilter({
+          categoryToAssign: Category.Hidden,
+          matchers: [
+            buildMatcher({ expectedValue: 'hidden', property: 'name' }),
+          ],
+        }),
       ],
-      tagToAssign: 'first tag',
-    }),
-    buildFilter({
-      categoryToAssign: Category.Saving,
-      id: 'test-filter-id-1',
-      matchers: [
-        {
-          expectedValue: 'second name',
-          property: 'name' as keyof CoreTransaction,
-        },
-      ],
-      tagToAssign: 'second tag',
-    }),
-    buildFilter({
-      categoryToAssign: Category.Hidden,
-      matchers: [buildMatcher({ expectedValue: 'hidden', property: 'name' })],
     }),
   ];
   render(
-    <TestGreenbacksProvider
-      mocks={apiMocks}
-      filters={filters}
-      route="/months/2020-01/"
-    >
+    <TestGreenbacksProvider mocks={apiMocks} route="/months/2020-01/">
       <Greenbacks />
     </TestGreenbacksProvider>
   );

@@ -7,6 +7,12 @@ export interface Filter {
   tagToAssign?: string;
 }
 
+export interface FilterInput {
+  categoryToAssign: Category;
+  matchers: MatcherGroup;
+  tagToAssign?: string;
+}
+
 export type MatcherGroup = Matcher[];
 
 export interface Matcher {
@@ -16,7 +22,7 @@ export interface Matcher {
 }
 
 export enum Comparator {
-  Equals = 'equals',
+  Equals = 'Equals',
   GreaterThan = 'greater-than',
   LessThan = 'less-than',
 }

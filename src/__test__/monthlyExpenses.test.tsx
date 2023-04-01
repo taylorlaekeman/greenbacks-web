@@ -5,6 +5,7 @@ import Greenbacks from 'components/Greenbacks';
 import { TestGreenbacksProvider } from 'context/Greenbacks';
 import buildApiTransactionsMock from '__test__/utils/buildApiTransactionsMock';
 import buildFilter, { buildMatcher } from '__test__/utils/buildFilter';
+import buildFiltersMock from '__test__/utils/buildFiltersMock';
 import buildTransaction from '__test__/utils/buildTransaction';
 import { Comparator } from 'types/filter';
 import { Category, CoreTransaction } from 'types/transaction';
@@ -48,15 +49,19 @@ test('shows expenses', async () => {
         }),
       ],
     }),
-  ];
-  const filters = [
-    buildFilter({
-      categoryToAssign: Category.Hidden,
-      matchers: [buildMatcher({ expectedValue: 'hidden', property: 'name' })],
+    buildFiltersMock({
+      filters: [
+        buildFilter({
+          categoryToAssign: Category.Hidden,
+          matchers: [
+            buildMatcher({ expectedValue: 'hidden', property: 'name' }),
+          ],
+        }),
+      ],
     }),
   ];
   render(
-    <TestGreenbacksProvider filters={filters} mocks={mocks} now="2020-01-01">
+    <TestGreenbacksProvider mocks={mocks} now="2020-01-01">
       <Greenbacks />
     </TestGreenbacksProvider>
   );
@@ -85,22 +90,24 @@ test('excludes savings', async () => {
         }),
       ],
     }),
-  ];
-  const filters = [
-    buildFilter({
-      categoryToAssign: Category.Saving,
-      id: 'test-filter-id',
-      matchers: [
-        {
-          expectedValue: 'SAVINGS!',
-          property: 'name' as keyof CoreTransaction,
-        },
+    buildFiltersMock({
+      filters: [
+        buildFilter({
+          categoryToAssign: Category.Saving,
+          id: 'test-filter-id',
+          matchers: [
+            {
+              expectedValue: 'SAVINGS!',
+              property: 'name' as keyof CoreTransaction,
+            },
+          ],
+          tagToAssign: 'retirement',
+        }),
       ],
-      tagToAssign: 'retirement',
     }),
   ];
   render(
-    <TestGreenbacksProvider mocks={mocks} now="2020-01-01" filters={filters}>
+    <TestGreenbacksProvider mocks={mocks} now="2020-01-01">
       <Greenbacks />
     </TestGreenbacksProvider>
   );
@@ -153,22 +160,24 @@ test('shows tag if present', async () => {
       startDate: '2020-01-01',
       transactions: [buildTransaction({ name: 'test-name' })],
     }),
-  ];
-  const filters = [
-    buildFilter({
-      categoryToAssign: Category.Spending,
-      id: 'test-filter-id',
-      matchers: [
-        {
-          expectedValue: 'test-name',
-          property: 'name' as keyof CoreTransaction,
-        },
+    buildFiltersMock({
+      filters: [
+        buildFilter({
+          categoryToAssign: Category.Spending,
+          id: 'test-filter-id',
+          matchers: [
+            {
+              expectedValue: 'test-name',
+              property: 'name' as keyof CoreTransaction,
+            },
+          ],
+          tagToAssign: 'Food',
+        }),
       ],
-      tagToAssign: 'Food',
     }),
   ];
   render(
-    <TestGreenbacksProvider mocks={mocks} now="2020-01-01" filters={filters}>
+    <TestGreenbacksProvider mocks={mocks} now="2020-01-01">
       <Greenbacks />
     </TestGreenbacksProvider>
   );
@@ -182,26 +191,24 @@ test('shows tag from id filter', async () => {
       startDate: '2020-01-01',
       transactions: [buildTransaction({ id: 'test-id' })],
     }),
-  ];
-  const idFilters = [
-    buildFilter({
-      categoryToAssign: Category.Spending,
-      id: 'test-filter-id',
-      matchers: [
-        {
-          expectedValue: 'test-id',
-          property: 'id' as keyof CoreTransaction,
-        },
+    buildFiltersMock({
+      filters: [
+        buildFilter({
+          categoryToAssign: Category.Spending,
+          id: 'test-filter-id',
+          matchers: [
+            {
+              expectedValue: 'test-id',
+              property: 'id' as keyof CoreTransaction,
+            },
+          ],
+          tagToAssign: 'test tag',
+        }),
       ],
-      tagToAssign: 'test tag',
     }),
   ];
   render(
-    <TestGreenbacksProvider
-      idFilters={idFilters}
-      mocks={apiMocks}
-      now="2020-01-01"
-    >
+    <TestGreenbacksProvider mocks={apiMocks} now="2020-01-01">
       <Greenbacks />
     </TestGreenbacksProvider>
   );
@@ -218,23 +225,25 @@ test('shows tag from filter with greater than comparator', async () => {
       startDate: '2020-01-01',
       transactions: [buildTransaction({ amount: 101 })],
     }),
-  ];
-  const filters = [
-    buildFilter({
-      categoryToAssign: Category.Spending,
-      id: 'test-filter-id',
-      matchers: [
-        {
-          comparator: Comparator.GreaterThan,
-          expectedValue: '100',
-          property: 'amount' as keyof CoreTransaction,
-        },
+    buildFiltersMock({
+      filters: [
+        buildFilter({
+          categoryToAssign: Category.Spending,
+          id: 'test-filter-id',
+          matchers: [
+            {
+              comparator: Comparator.GreaterThan,
+              expectedValue: '100',
+              property: 'amount' as keyof CoreTransaction,
+            },
+          ],
+          tagToAssign: 'test tag',
+        }),
       ],
-      tagToAssign: 'test tag',
     }),
   ];
   render(
-    <TestGreenbacksProvider mocks={apiMocks} now="2020-01-01" filters={filters}>
+    <TestGreenbacksProvider mocks={apiMocks} now="2020-01-01">
       <Greenbacks />
     </TestGreenbacksProvider>
   );
@@ -251,23 +260,25 @@ test('shows tag from filter with less than comparator', async () => {
       startDate: '2020-01-01',
       transactions: [buildTransaction({ amount: 99 })],
     }),
-  ];
-  const filters = [
-    buildFilter({
-      categoryToAssign: Category.Spending,
-      id: 'test-filter-id',
-      matchers: [
-        {
-          comparator: Comparator.LessThan,
-          expectedValue: '100',
-          property: 'amount' as keyof CoreTransaction,
-        },
+    buildFiltersMock({
+      filters: [
+        buildFilter({
+          categoryToAssign: Category.Spending,
+          id: 'test-filter-id',
+          matchers: [
+            {
+              comparator: Comparator.LessThan,
+              expectedValue: '100',
+              property: 'amount' as keyof CoreTransaction,
+            },
+          ],
+          tagToAssign: 'test tag',
+        }),
       ],
-      tagToAssign: 'test tag',
     }),
   ];
   render(
-    <TestGreenbacksProvider mocks={apiMocks} now="2020-01-01" filters={filters}>
+    <TestGreenbacksProvider mocks={apiMocks} now="2020-01-01">
       <Greenbacks />
     </TestGreenbacksProvider>
   );
@@ -287,28 +298,30 @@ test('shows tag from filter multiple matchers', async () => {
         buildTransaction({ amount: 99, name: 'test name' }),
       ],
     }),
-  ];
-  const filters = [
-    buildFilter({
-      categoryToAssign: Category.Spending,
-      id: 'test-filter-id',
-      matchers: [
-        {
-          comparator: Comparator.GreaterThan,
-          expectedValue: '100',
-          property: 'amount' as keyof CoreTransaction,
-        },
-        {
-          comparator: Comparator.Equals,
-          expectedValue: 'test name',
-          property: 'name' as keyof CoreTransaction,
-        },
+    buildFiltersMock({
+      filters: [
+        buildFilter({
+          categoryToAssign: Category.Spending,
+          id: 'test-filter-id',
+          matchers: [
+            {
+              comparator: Comparator.GreaterThan,
+              expectedValue: '100',
+              property: 'amount' as keyof CoreTransaction,
+            },
+            {
+              comparator: Comparator.Equals,
+              expectedValue: 'test name',
+              property: 'name' as keyof CoreTransaction,
+            },
+          ],
+          tagToAssign: 'test tag',
+        }),
       ],
-      tagToAssign: 'test tag',
     }),
   ];
   render(
-    <TestGreenbacksProvider mocks={apiMocks} now="2020-01-01" filters={filters}>
+    <TestGreenbacksProvider mocks={apiMocks} now="2020-01-01">
       <Greenbacks />
     </TestGreenbacksProvider>
   );

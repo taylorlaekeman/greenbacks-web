@@ -4,6 +4,7 @@ import { render, screen, within } from '@testing-library/react';
 import Greenbacks from 'components/Greenbacks';
 import { TestGreenbacksProvider } from 'context/Greenbacks';
 import buildApiTransactionsMock from '__test__/utils/buildApiTransactionsMock';
+import buildFiltersMock from '__test__/utils/buildFiltersMock';
 import buildFilter, { buildMatcher } from '__test__/utils/buildFilter';
 import buildTransaction from '__test__/utils/buildTransaction';
 import { Category, CoreTransaction } from 'types/transaction';
@@ -57,48 +58,52 @@ test('groups transactions by tag', async () => {
         }),
       ],
     }),
-  ];
-  const filters = [
-    buildFilter({
-      categoryToAssign: Category.Spending,
-      id: 'test-filter-id-1',
-      matchers: [
-        {
-          expectedValue: 'first name',
-          property: 'name' as keyof CoreTransaction,
-        },
+    buildFiltersMock({
+      filters: [
+        buildFilter({
+          categoryToAssign: Category.Spending,
+          id: 'test-filter-id-1',
+          matchers: [
+            {
+              expectedValue: 'first name',
+              property: 'name' as keyof CoreTransaction,
+            },
+          ],
+          tagToAssign: 'first tag',
+        }),
+        buildFilter({
+          categoryToAssign: Category.Spending,
+          id: 'test-filter-id-1',
+          matchers: [
+            {
+              expectedValue: 'second name',
+              property: 'name' as keyof CoreTransaction,
+            },
+          ],
+          tagToAssign: 'second tag',
+        }),
+        buildFilter({
+          categoryToAssign: Category.Spending,
+          id: 'test-filter-id-1',
+          matchers: [
+            {
+              expectedValue: 'third name',
+              property: 'name' as keyof CoreTransaction,
+            },
+          ],
+          tagToAssign: 'third tag',
+        }),
+        buildFilter({
+          categoryToAssign: Category.Hidden,
+          matchers: [
+            buildMatcher({ expectedValue: 'hidden', property: 'name' }),
+          ],
+        }),
       ],
-      tagToAssign: 'first tag',
-    }),
-    buildFilter({
-      categoryToAssign: Category.Spending,
-      id: 'test-filter-id-1',
-      matchers: [
-        {
-          expectedValue: 'second name',
-          property: 'name' as keyof CoreTransaction,
-        },
-      ],
-      tagToAssign: 'second tag',
-    }),
-    buildFilter({
-      categoryToAssign: Category.Spending,
-      id: 'test-filter-id-1',
-      matchers: [
-        {
-          expectedValue: 'third name',
-          property: 'name' as keyof CoreTransaction,
-        },
-      ],
-      tagToAssign: 'third tag',
-    }),
-    buildFilter({
-      categoryToAssign: Category.Hidden,
-      matchers: [buildMatcher({ expectedValue: 'hidden', property: 'name' })],
     }),
   ];
   render(
-    <TestGreenbacksProvider mocks={apiMocks} now="2020-01-01" filters={filters}>
+    <TestGreenbacksProvider mocks={apiMocks} now="2020-01-01">
       <Greenbacks />
     </TestGreenbacksProvider>
   );
@@ -133,31 +138,33 @@ test('groups untagged transactions', async () => {
         }),
       ],
     }),
-  ];
-  const filters = [
-    buildFilter({
-      categoryToAssign: Category.Spending,
-      id: 'test-filter-id-1',
-      matchers: [
-        {
-          expectedValue: 'first name',
-          property: 'name' as keyof CoreTransaction,
-        },
-      ],
-    }),
-    buildFilter({
-      categoryToAssign: Category.Spending,
-      id: 'test-filter-id-1',
-      matchers: [
-        {
-          expectedValue: 'second name',
-          property: 'name' as keyof CoreTransaction,
-        },
+    buildFiltersMock({
+      filters: [
+        buildFilter({
+          categoryToAssign: Category.Spending,
+          id: 'test-filter-id-1',
+          matchers: [
+            {
+              expectedValue: 'first name',
+              property: 'name' as keyof CoreTransaction,
+            },
+          ],
+        }),
+        buildFilter({
+          categoryToAssign: Category.Spending,
+          id: 'test-filter-id-1',
+          matchers: [
+            {
+              expectedValue: 'second name',
+              property: 'name' as keyof CoreTransaction,
+            },
+          ],
+        }),
       ],
     }),
   ];
   render(
-    <TestGreenbacksProvider mocks={apiMocks} now="2020-01-01" filters={filters}>
+    <TestGreenbacksProvider mocks={apiMocks} now="2020-01-01">
       <Greenbacks />
     </TestGreenbacksProvider>
   );
@@ -181,22 +188,24 @@ test('shows current month when no month is present in route', async () => {
         }),
       ],
     }),
-  ];
-  const filters = [
-    buildFilter({
-      categoryToAssign: Category.Spending,
-      id: 'test-filter-id',
-      matchers: [
-        {
-          expectedValue: 'test name',
-          property: 'name' as keyof CoreTransaction,
-        },
+    buildFiltersMock({
+      filters: [
+        buildFilter({
+          categoryToAssign: Category.Spending,
+          id: 'test-filter-id',
+          matchers: [
+            {
+              expectedValue: 'test name',
+              property: 'name' as keyof CoreTransaction,
+            },
+          ],
+          tagToAssign: 'test tag',
+        }),
       ],
-      tagToAssign: 'test tag',
     }),
   ];
   render(
-    <TestGreenbacksProvider mocks={apiMocks} now="2020-01-01" filters={filters}>
+    <TestGreenbacksProvider mocks={apiMocks} now="2020-01-01">
       <Greenbacks />
     </TestGreenbacksProvider>
   );
