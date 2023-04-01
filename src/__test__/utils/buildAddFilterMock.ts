@@ -4,8 +4,10 @@ import type { FilterInput } from 'types/filter';
 
 const buildAddFilterMock = ({
   filter,
+  id = 'test-id',
 }: {
   filter: FilterInput;
+  id?: string;
 }): MockedApiResponse => ({
   request: {
     query: ADD_FILTER_MUTATION,
@@ -13,7 +15,10 @@ const buildAddFilterMock = ({
   },
   result: {
     data: {
-      filter,
+      addFilter: {
+        ...filter,
+        id,
+      },
     },
   },
 });
