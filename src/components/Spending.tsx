@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 
 import AverageSpendingSummary from 'components/AverageSpendingSummary';
 import Checkboxes from 'components/Checkboxes';
@@ -16,10 +16,11 @@ const Spending: FC = () => {
     isLoading: isLoadingTransactionsByTag,
     spending: spendingByTag,
   } = useTransactionsByTag({ endDate, startDate });
-  const { spending: spendingTags } = useTagsByCategory();
-  const [selectedTags, setSelectedTags] = useState<string[] | undefined>(
-    spendingTags
-  );
+  const { isLoading, spending: spendingTags } = useTagsByCategory();
+  const [selectedTags, setSelectedTags] = useState<string[] | undefined>();
+  useEffect(() => {
+    if (!isLoading && !selectedTags) setSelectedTags(spendingTags);
+  }, [isLoading, selectedTags, setSelectedTags, spendingTags]);
   return (
     <PageWrapper name="spending">
       <AverageSpendingSummary />
