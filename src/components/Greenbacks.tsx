@@ -9,6 +9,7 @@ import Button from 'components/Button';
 import Home from 'components/Home';
 import Link from 'components/Link';
 import LoadingIndicator from 'components/LoadingIndicator';
+import MonthlySpendingByTag from 'components/MonthlySpendingByTag';
 import SpendingTimeline from 'components/SpendingTimeline';
 import Select from 'components/Select';
 import Spending from 'components/Spending';
@@ -83,6 +84,10 @@ const Greenbacks: FC = () => {
             label: 'Spending Timeline',
             value: 'spending-timeline',
           },
+          {
+            label: 'Monthly Spending by Tag',
+            value: 'monthly-spending-by-tag',
+          },
         ]}
         value={page}
       />
@@ -106,6 +111,14 @@ const Greenbacks: FC = () => {
           element={<SpendingTimeline />}
         />
         <Route path="/spending-timeline" element={<SpendingTimeline />} />
+        <Route
+          path="/monthly-spending-by-tag/:month"
+          element={<MonthlySpendingByTag />}
+        />
+        <Route
+          path="/monthly-spending-by-tag"
+          element={<MonthlySpendingByTag />}
+        />
       </Routes>
     </>
   );
