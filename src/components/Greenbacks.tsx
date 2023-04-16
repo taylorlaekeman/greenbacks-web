@@ -13,6 +13,7 @@ import MonthlySpendingByTag from 'components/MonthlySpendingByTag';
 import SpendingTimeline from 'components/SpendingTimeline';
 import Select from 'components/Select';
 import Spending from 'components/Spending';
+import TopSpendingCategories from 'components/TopSpendingCategories';
 import TotalsByMonth from 'components/TotalsByMonth';
 import UntaggedTransactions from 'components/UntaggedTransactions';
 import useIsApiReady from 'hooks/useIsApiReady';
@@ -88,6 +89,10 @@ const Greenbacks: FC = () => {
             label: 'Monthly Spending by Tag',
             value: 'monthly-spending-by-tag',
           },
+          {
+            label: 'Top Spending Categories',
+            value: 'top-spending-categories',
+          },
         ]}
         value={page}
       />
@@ -118,6 +123,14 @@ const Greenbacks: FC = () => {
         <Route
           path="/monthly-spending-by-tag"
           element={<MonthlySpendingByTag />}
+        />
+        <Route
+          path="/top-spending-categories/:month"
+          element={<TopSpendingCategories />}
+        />
+        <Route
+          path="/top-spending-categories"
+          element={<TopSpendingCategories />}
         />
       </Routes>
     </>
