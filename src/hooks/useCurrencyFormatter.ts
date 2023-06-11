@@ -5,7 +5,8 @@ import { CurrencyLocalesContext } from 'context/CurrencyLocales';
 const useCurrencyFormatter = (): UseCurrencyFormatterResult => {
   const { locales } = useContext(CurrencyLocalesContext);
   return {
-    format: ({ currency = 'CAD', value = 0 }) => {
+    format: (input) => {
+      const { currency = 'CAD', value = 0 } = parseInput(input);
       const formatter = Intl.NumberFormat(locales, {
         currency,
         style: 'currency',
@@ -14,6 +15,11 @@ const useCurrencyFormatter = (): UseCurrencyFormatterResult => {
     },
   };
 };
+
+function parseInput(input: FormatInput | number): FormatInput {
+  if (typeof input === 'number') return { value: input };
+  return input;
+}
 
 const prepareValue = ({
   currency,
@@ -38,7 +44,7 @@ interface UseCurrencyFormatterResult {
   format: Format;
 }
 
-type Format = (input: FormatInput) => string;
+type Format = (input: FormatInput | number) => string;
 
 interface FormatInput {
   currency?: string;
