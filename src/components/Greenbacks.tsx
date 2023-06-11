@@ -45,6 +45,36 @@ const Greenbacks: FC = () => {
     </AccountConnectionBarrier>
   );
 
+  const options = [
+    { label: 'Average Cashflow', value: 'average-cashflow' },
+    {
+      label: 'Average Spending by Tag',
+      value: 'average-spending-by-tag',
+    },
+    {
+      label: 'Untagged Transactions',
+      value: 'untagged-transactions',
+    },
+    {
+      label: 'Totals by Month',
+      value: 'totals-by-month',
+    },
+    {
+      label: 'Spending Timeline',
+      value: 'spending-timeline',
+    },
+    {
+      label: 'Monthly Spending by Tag',
+      value: 'monthly-spending-by-tag',
+    },
+    {
+      label: 'Top Spending Categories',
+      value: 'top-spending-categories',
+    },
+  ].sort(({ label: firstLabel }, { label: secondLabel }) =>
+    firstLabel > secondLabel ? 1 : -1
+  );
+
   return (
     <>
       <ul>
@@ -67,33 +97,7 @@ const Greenbacks: FC = () => {
           setPage(newPage);
           navigate(`/${newPage}`);
         }}
-        options={[
-          { label: 'Average Cashflow', value: 'average-cashflow' },
-          {
-            label: 'Average Spending by Tag',
-            value: 'average-spending-by-tag',
-          },
-          {
-            label: 'Untagged Transactions',
-            value: 'untagged-transactions',
-          },
-          {
-            label: 'Totals by Month',
-            value: 'totals-by-month',
-          },
-          {
-            label: 'Spending Timeline',
-            value: 'spending-timeline',
-          },
-          {
-            label: 'Monthly Spending by Tag',
-            value: 'monthly-spending-by-tag',
-          },
-          {
-            label: 'Top Spending Categories',
-            value: 'top-spending-categories',
-          },
-        ]}
+        options={options}
         value={page}
       />
       <Routes>
