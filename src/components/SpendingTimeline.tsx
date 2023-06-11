@@ -1,6 +1,4 @@
 import React, { FC } from 'react';
-import { DateTime } from 'luxon';
-import { useParams } from 'react-router-dom';
 import {
   CartesianGrid,
   Line,
@@ -12,11 +10,11 @@ import {
 
 import Link from 'components/Link';
 import LoadingIndicator from 'components/LoadingIndicator';
-import useNow from 'hooks/useNow';
+import useMonth from 'hooks/useMonth';
 import useSpendingTimeline, { DailyTotal } from 'hooks/useSpendingTimeline';
 
 const PreviousMonthSpending: FC = () => {
-  const month = useMonth();
+  const { iso: month, nextMonth, previousMonth } = useMonth();
   const { isLoading, timeline } = useSpendingTimeline({ month });
 
   if (isLoading) return <LoadingIndicator />;
@@ -28,10 +26,8 @@ const PreviousMonthSpending: FC = () => {
   return (
     <>
       <h2>{month}</h2>
-      <Link href={`/spending-timeline/${getPreviousMonth(month)}`}>
-        previous
-      </Link>
-      <Link href={`/spending-timeline/${getNextMonth(month)}`}>next</Link>
+      <Link href={`/spending-timeline/${previousMonth}`}>previous</Link>
+      <Link href={`/spending-timeline/${nextMonth}`}>next</Link>
       <div data-testid="spending-timeline-graph" {...dataTags} />
       <ResponsiveContainer aspect={1.5} minWidth={300} width="100%">
         <LineChart data={timeline}>
@@ -54,13 +50,6 @@ const PreviousMonthSpending: FC = () => {
   );
 };
 
-const useMonth = (): string => {
-  const { month } = useParams();
-  const { now } = useNow();
-  if (month) return DateTime.fromISO(month).toFormat('yyyy-LL');
-  return now.toFormat('yyyy-LL');
-};
-
 const getDataTags = ({
   timeline,
 }: {
@@ -78,11 +67,5 @@ const getDataTags = ({
     return result;
   }, {});
 };
-
-const getPreviousMonth = (month: string): string =>
-  DateTime.fromISO(month).minus({ months: 1 }).toFormat('yyyy-LL');
-
-const getNextMonth = (month: string): string =>
-  DateTime.fromISO(month).plus({ months: 1 }).toFormat('yyyy-LL');
 
 export default PreviousMonthSpending;
