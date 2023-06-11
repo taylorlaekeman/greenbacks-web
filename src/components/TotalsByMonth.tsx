@@ -70,9 +70,9 @@ const Graph: FC<{ totalsByMonth?: MonthTotals[] }> = ({ totalsByMonth }) => (
     />
     <ResponsiveContainer aspect={1.5} minWidth={300} width="100%">
       <BarChart barGap={0} data={formatData({ totalsByMonth })}>
-        <Bar dataKey="earning" fill="green" />
-        <Bar dataKey="saving" fill="blue" />
-        <Bar dataKey="spending" fill="orange" />
+        <Bar dataKey="earning" fill="green" stackId="a" />
+        <Bar dataKey="spending" fill="orange" stackId="b" />
+        <Bar dataKey="saving" fill="blue" stackId="b" />
         <XAxis dataKey="name" interval="preserveStartEnd" reversed />
       </BarChart>
     </ResponsiveContainer>
