@@ -7,12 +7,16 @@ const Checkboxes: FC<{
   label?: string;
   name?: string;
   onChange?: (input: string[]) => void;
+  onDeselectAll?: () => void;
+  onSelectAll?: () => void;
   options?: (Option | string)[];
   selectedOptions?: string[];
 }> = ({
   label,
   name = 'checkbox',
   onChange = noop,
+  onDeselectAll = noop,
+  onSelectAll = noop,
   options = [],
   selectedOptions = [],
 }) => (
@@ -45,6 +49,7 @@ const Checkboxes: FC<{
     })}
     <Button
       onClick={() => {
+        onSelectAll();
         onChange(
           options.map((option) => {
             if (typeof option === 'string') return option;
@@ -55,7 +60,14 @@ const Checkboxes: FC<{
     >
       Select all
     </Button>
-    <Button onClick={() => onChange([])}>Deselect all</Button>
+    <Button
+      onClick={() => {
+        onDeselectAll();
+        onChange([]);
+      }}
+    >
+      Deselect all
+    </Button>
   </fieldset>
 );
 
