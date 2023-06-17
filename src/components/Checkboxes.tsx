@@ -1,6 +1,7 @@
 import React, { FC, Fragment } from 'react';
 
 import Button from 'components/Button';
+import Checkbox from 'components/Checkbox';
 import noop from 'utils/noop';
 
 const Checkboxes: FC<{
@@ -27,10 +28,9 @@ const Checkboxes: FC<{
       const isChecked = selectedOptions.includes(optionValue);
       return (
         <Fragment key={optionValue}>
-          <input
-            checked={isChecked}
-            data-checked={isChecked}
-            id={optionValue}
+          <Checkbox
+            isChecked={isChecked}
+            label={optionLabel}
             name={name}
             onChange={() => {
               onChange(
@@ -40,10 +40,8 @@ const Checkboxes: FC<{
                 })
               );
             }}
-            type="checkbox"
             value={optionValue}
           />
-          <label htmlFor={optionValue}>{optionLabel}</label>
         </Fragment>
       );
     })}
