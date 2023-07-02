@@ -1,6 +1,7 @@
 import React, { FC } from 'react';
 import {
   CartesianGrid,
+  LabelList,
   Line,
   LineChart,
   ResponsiveContainer,
@@ -11,11 +12,16 @@ import {
 import Link from 'components/Link';
 import LoadingIndicator from 'components/LoadingIndicator';
 import useMonth from 'hooks/useMonth';
+import useNow from 'hooks/useNow';
 import useSpendingTimeline, { DailyTotal } from 'hooks/useSpendingTimeline';
 
 const PreviousMonthSpending: FC = () => {
-  const { iso: month, nextMonth, previousMonth } = useMonth();
+  const { daysInMonth, iso: month, nextMonth, previousMonth } = useMonth();
+  const { now } = useNow();
   const { isLoading, timeline } = useSpendingTimeline({ month });
+
+  const isCurrentMonth = month === now.toFormat('yyyy-LL');
+  const currentDay = now.day;
 
   if (isLoading) return <LoadingIndicator />;
 
@@ -32,17 +38,64 @@ const PreviousMonthSpending: FC = () => {
       <ResponsiveContainer aspect={1.5} minWidth={300} width="100%">
         <LineChart data={timeline}>
           <CartesianGrid vertical={false} />
-          <Line dataKey="average" dot={false} stroke="orange" />
-          <Line dataKey="predicted" dot={false} strokeDasharray="4 4" />
-          <Line dataKey="actual" dot={false} />
-          <XAxis dataKey="day" tick={false} tickLine={false} />
+          <Line dataKey="average" dot={false} stroke="orange">
+            <LabelList
+              formatter={formatThousands}
+              valueAccessor={(entry: {
+                payload: { day: number };
+                value: number;
+              }) => {
+                const {
+                  payload: { day },
+                } = entry;
+                if (isCurrentMonth && day === currentDay) return entry.value;
+                if (day === daysInMonth) return entry.value;
+                return null;
+              }}
+            />
+          </Line>
+          <Line dataKey="predicted" dot={false} strokeDasharray="4 4">
+            <LabelList
+              formatter={formatThousands}
+              valueAccessor={(entry: {
+                payload: { day: number };
+                value: number;
+              }) => {
+                const {
+                  payload: { day },
+                } = entry;
+                if (day === daysInMonth) return entry.value;
+                return null;
+              }}
+            />
+          </Line>
+          <Line dataKey="actual" dot={false}>
+            <LabelList
+              formatter={formatThousands}
+              valueAccessor={(entry: {
+                payload: { day: number };
+                value: number;
+              }) => {
+                const {
+                  payload: { day },
+                } = entry;
+                if (isCurrentMonth && day === currentDay) return entry.value;
+                if (!isCurrentMonth && day === daysInMonth) return entry.value;
+                return null;
+              }}
+            />
+          </Line>
+          <XAxis
+            dataKey="day"
+            padding={{ right: 20 }}
+            tick={false}
+            tickLine={false}
+          />
           <YAxis
             axisLine={false}
-            tickFormatter={(amount) => {
-              if (amount < 100000) return `${amount / 100}`;
-              return `${amount / 100000}k`;
-            }}
+            tickFormatter={formatThousands}
             tickLine={false}
+            width={30}
           />
         </LineChart>
       </ResponsiveContainer>
@@ -67,5 +120,11 @@ const getDataTags = ({
     return result;
   }, {});
 };
+
+function formatThousands(cents: number): string {
+  const dollars = cents / 100;
+  const hundreds = Math.round(dollars / 100);
+  return `${hundreds / 10}k`;
+}
 
 export default PreviousMonthSpending;
