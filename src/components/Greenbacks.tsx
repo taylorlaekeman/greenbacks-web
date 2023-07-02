@@ -3,7 +3,7 @@ import { Route, Routes, useNavigate } from 'react-router-dom';
 
 import AccountConnectionBarrier from 'components/AccountConnectionBarrier';
 import Accounts from 'components/Accounts';
-import AverageCashFlow from 'components/AverageCashFlow';
+import CashFlow from 'components/CashFlow';
 import AverageSpendingByTag from 'components/AverageSpendingByTag';
 import Button from 'components/Button';
 import Home from 'components/Home';
@@ -46,7 +46,7 @@ const Greenbacks: FC = () => {
   );
 
   const options = [
-    { label: 'Average Cashflow', value: 'average-cashflow' },
+    { label: 'Cashflow', value: 'cashflow' },
     {
       label: 'Average Spending by Tag',
       value: 'average-spending-by-tag',
@@ -105,7 +105,7 @@ const Greenbacks: FC = () => {
         <Route path="/months/:month/" element={home} />
         <Route path="/accounts" element={<Accounts />} />
         <Route path="/spending" element={spending} />
-        <Route path="/average-cashflow" element={<AverageCashFlow />} />
+        <Route path="/cashflow" element={<CashFlow />} />
         <Route
           path="/average-spending-by-tag"
           element={<AverageSpendingByTag />}
