@@ -1,8 +1,9 @@
 import React, { FC } from 'react';
-import styled from 'utils/styled';
+import { DateTime } from 'luxon';
 
 import Transaction from 'components/Transaction';
 import TransactionType from 'types/transaction';
+import styled from 'utils/styled';
 
 const Transactions: FC<{ transactions: TransactionType[] }> = ({
   transactions,
@@ -12,7 +13,9 @@ const Transactions: FC<{ transactions: TransactionType[] }> = ({
     <>
       {Object.entries(transactionsByDate).map(([date, dateTransactions]) => (
         <>
-          <Date>{date}</Date>
+          <Date>
+            {DateTime.fromISO(date).toLocaleString(DateTime.DATE_HUGE)}
+          </Date>
           <List>
             {dateTransactions.map((transaction) => (
               <Item key={transaction.id}>
