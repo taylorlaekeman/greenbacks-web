@@ -1,6 +1,7 @@
 import React, { FC } from 'react';
 
 import Checkboxes from 'components/Checkboxes';
+import Link from 'components/Link';
 import Transactions from 'components/Transactions';
 import useCategories from 'hooks/useCategories';
 import useMonth from 'hooks/useMonth';
@@ -10,7 +11,13 @@ import useTransactionsByCategory from 'hooks/useTransactionsByCategory';
 import Transaction, { Category } from 'types/transaction';
 
 const TransactionsPage: FC = () => {
-  const { endDate, readable: readableMonth, startDate } = useMonth();
+  const {
+    endDate,
+    nextMonth,
+    previousMonth,
+    readable: readableMonth,
+    startDate,
+  } = useMonth();
   const categories = useCategories();
   const { tags } = useTags();
   const {
@@ -36,6 +43,8 @@ const TransactionsPage: FC = () => {
     <>
       <h2>Transactions</h2>
       <p>{readableMonth}</p>
+      <Link href={`/transactions/${previousMonth}`}>previous</Link>
+      <Link href={`/transactions/${nextMonth}`}>next</Link>
       <Checkboxes
         onChange={onChangeSelectedCatagories}
         options={categories}
@@ -54,7 +63,6 @@ const TransactionsPage: FC = () => {
 const useVisibleTransactions = ({
   endDate,
   selectedCategories,
-  selectedTags,
   startDate,
 }: {
   endDate: string;
@@ -76,8 +84,6 @@ const useVisibleTransactions = ({
     transactions.push(...(saving || []));
   if (selectedCategories.includes(Category.Earning))
     transactions.push(...(earning || []));
-  console.log(transactions[0]);
-  console.log(selectedTags);
   const sortedTransactions = transactions.sort((first, second) =>
     first.datetime > second.datetime ? -1 : 1
   );
