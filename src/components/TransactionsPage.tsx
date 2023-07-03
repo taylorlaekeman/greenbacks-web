@@ -6,7 +6,6 @@ import Transactions from 'components/Transactions';
 import useCategories from 'hooks/useCategories';
 import useMonth from 'hooks/useMonth';
 import useMultiselect from 'hooks/useMultiselect';
-import useTags from 'hooks/useTags';
 import useTransactionsByCategory from 'hooks/useTransactionsByCategory';
 import Transaction, { Category } from 'types/transaction';
 
@@ -18,25 +17,48 @@ const TransactionsPage: FC = () => {
     readable: readableMonth,
     startDate,
   } = useMonth();
+  const { earning, isLoading, saving, spending } = useTransactionsByCategory({
+    endDate,
+    startDate,
+  });
   const categories = useCategories();
-  const { tags } = useTags();
   const {
-    onChange: onChangeSelectedCatagories,
-    selectedOptions: selectedCategories,
+    earning: earningTags,
+    saving: savingTags,
+    spending: spendingTags,
+  } = getTagsByCategory({ earning, saving, spending });
+  const {
+    onChange: onChangeVisibleCatagories,
+    selectedOptions: visibleCategories,
   } = useMultiselect({
     options: categories,
   });
   const {
-    onChange: onChangeSelectedTags,
-    selectedOptions: selectedTags,
+    onChange: onChangeVisibleEarningTags,
+    selectedOptions: visibleEarningTags,
   } = useMultiselect({
-    options: tags,
+    options: earningTags,
   });
-  const { isLoading, transactions } = useVisibleTransactions({
-    endDate,
-    selectedCategories,
-    selectedTags,
-    startDate,
+  const {
+    onChange: onChangeVisibleSavingTags,
+    selectedOptions: visibleSavingTags,
+  } = useMultiselect({
+    options: savingTags,
+  });
+  const {
+    onChange: onChangeVisibleSpendingTags,
+    selectedOptions: visibleSpendingTags,
+  } = useMultiselect({
+    options: spendingTags,
+  });
+  const transactions = getVisibleTransactions({
+    earning,
+    saving,
+    spending,
+    visibleCategories,
+    visibleEarningTags,
+    visibleSavingTags,
+    visibleSpendingTags,
   });
   if (isLoading) return <p>loading</p>;
   return (
@@ -46,48 +68,109 @@ const TransactionsPage: FC = () => {
       <Link href={`/transactions/${previousMonth}`}>previous</Link>
       <Link href={`/transactions/${nextMonth}`}>next</Link>
       <Checkboxes
-        onChange={onChangeSelectedCatagories}
+        label="Categories"
+        onChange={onChangeVisibleCatagories}
         options={categories}
-        selectedOptions={selectedCategories}
+        selectedOptions={visibleCategories}
       />
-      <Checkboxes
-        onChange={onChangeSelectedTags}
-        options={tags}
-        selectedOptions={selectedTags}
-      />
+      {earningTags.length > 0 &&
+        visibleCategories.includes(Category.Earning) && (
+          <Checkboxes
+            label="Earning Tags"
+            onChange={onChangeVisibleEarningTags}
+            options={earningTags}
+            selectedOptions={visibleEarningTags}
+          />
+        )}
+      {savingTags.length > 0 && visibleCategories.includes(Category.Saving) && (
+        <Checkboxes
+          label="Saving Tags"
+          onChange={onChangeVisibleSavingTags}
+          options={savingTags}
+          selectedOptions={visibleSavingTags}
+        />
+      )}
+      {spendingTags.length > 0 &&
+        visibleCategories.includes(Category.Spending) && (
+          <Checkboxes
+            label="Spending Tags"
+            onChange={onChangeVisibleSpendingTags}
+            options={spendingTags}
+            selectedOptions={visibleSpendingTags}
+          />
+        )}
       <Transactions transactions={transactions || []} />
     </>
   );
 };
 
-const useVisibleTransactions = ({
-  endDate,
-  selectedCategories,
-  startDate,
+function getVisibleTransactions({
+  earning,
+  saving,
+  spending,
+  visibleCategories,
+  visibleEarningTags,
+  visibleSavingTags,
+  visibleSpendingTags,
 }: {
-  endDate: string;
-  selectedCategories: string[];
-  selectedTags: string[];
-  startDate: string;
-}): {
-  isLoading: boolean;
-  transactions?: Transaction[];
-} => {
-  const { earning, isLoading, saving, spending } = useTransactionsByCategory({
-    endDate,
-    startDate,
-  });
-  const transactions: Transaction[] = [];
-  if (selectedCategories.includes(Category.Spending))
-    transactions.push(...(spending || []));
-  if (selectedCategories.includes(Category.Saving))
-    transactions.push(...(saving || []));
-  if (selectedCategories.includes(Category.Earning))
-    transactions.push(...(earning || []));
-  const sortedTransactions = transactions.sort((first, second) =>
+  earning?: Transaction[];
+  saving?: Transaction[];
+  spending?: Transaction[];
+  visibleCategories: string[];
+  visibleEarningTags: string[];
+  visibleSavingTags: string[];
+  visibleSpendingTags: string[];
+}): Transaction[] {
+  const visibleTransactions: Transaction[] = [];
+  if (earning && visibleCategories.includes(Category.Earning)) {
+    const visibleEarning = earning.filter((transaction) =>
+      visibleEarningTags.includes(transaction.tag || 'Untagged')
+    );
+    visibleTransactions.push(...visibleEarning);
+  }
+  if (saving && visibleCategories.includes(Category.Saving)) {
+    const visibleSaving = saving.filter((transaction) =>
+      visibleSavingTags.includes(transaction.tag || 'Untagged')
+    );
+    visibleTransactions.push(...visibleSaving);
+  }
+  if (spending && visibleCategories.includes(Category.Spending)) {
+    const visibleSpending = spending.filter((transaction) =>
+      visibleSpendingTags.includes(transaction.tag || 'Untagged')
+    );
+    visibleTransactions.push(...visibleSpending);
+  }
+  return visibleTransactions.sort((first, second) =>
     first.datetime > second.datetime ? -1 : 1
   );
-  return { isLoading, transactions: sortedTransactions };
-};
+}
+
+function getTagsByCategory({
+  earning,
+  saving,
+  spending,
+}: {
+  earning?: Transaction[];
+  saving?: Transaction[];
+  spending?: Transaction[];
+}): { earning: string[]; saving: string[]; spending: string[] } {
+  const earningTags = getTags(earning);
+  const savingTags = getTags(saving);
+  const spendingTags = getTags(spending);
+  return { earning: earningTags, saving: savingTags, spending: spendingTags };
+}
+
+function getTags(transactions: Transaction[] | undefined): string[] {
+  if (!transactions) return [];
+  return Object.keys(
+    transactions.reduce(
+      (tags: Record<string, string>, transaction: Transaction) => ({
+        ...tags,
+        [transaction.tag || 'Untagged']: '',
+      }),
+      {}
+    )
+  );
+}
 
 export default TransactionsPage;
