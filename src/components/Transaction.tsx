@@ -29,8 +29,9 @@ const Transaction: FC<{
         )}
         <p id="name">{name}</p>
         <Badges>
-          <CategoryBadge category={category} />
-          <p id="tag">{tag}</p>
+          <CategoryBadge $category={category} />
+          <p>{category}</p>
+          <p>{tag}</p>
         </Badges>
       </Grid>
       {isFilterFormVisible && <AddFilter transaction={transaction} />}
@@ -77,31 +78,24 @@ const Grid = styled.div<{ $category: Category }>`
 `;
 
 const Badges = styled.div`
+  align-items: center;
   display: flex;
+  gap: 4px;
   grid-area: badges;
   margin-bottom: 4px;
+  margin-top: 2px;
 
-  #tag {
+  p {
     font-size: 0.6em;
-    padding: 4px 0;
+    padding: 0;
   }
 `;
 
-const CategoryBadge: FC<{ area?: string; category: Category }> = ({
-  area,
-  category,
-}) => (
-  <Badge $area={area} $category={category}>
-    {category}
-  </Badge>
-);
-
-const Badge = styled.p<{ $area?: string; $category: Category }>`
+const CategoryBadge = styled.p<{ $category: Category }>`
   background-color: ${(props) => getCategoryColour(props.$category)};
-  border-radius: 16px;
-  font-size: 0.6em;
-  ${(props) => (props.$area ? `grid-area: ${props.$area};` : undefined)}
-  padding: 4px 8px;
+  border-radius: 50%;
+  height: 12px;
+  width: 12px;
 `;
 
 function getCategoryColour(category: Category): string {
