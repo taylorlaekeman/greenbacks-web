@@ -9,14 +9,14 @@ import {
   YAxis,
 } from 'recharts';
 
-import Link from 'components/Link';
+import MonthSelector from 'components/MonthSelector';
 import LoadingIndicator from 'components/LoadingIndicator';
 import useMonth from 'hooks/useMonth';
 import useNow from 'hooks/useNow';
 import useSpendingTimeline, { DailyTotal } from 'hooks/useSpendingTimeline';
 
 const PreviousMonthSpending: FC = () => {
-  const { daysInMonth, iso: month, nextMonth, previousMonth } = useMonth();
+  const { daysInMonth, iso: month } = useMonth();
   const { now } = useNow();
   const { isLoading, timeline } = useSpendingTimeline({ month });
 
@@ -31,9 +31,8 @@ const PreviousMonthSpending: FC = () => {
 
   return (
     <>
-      <h2>{month}</h2>
-      <Link href={`/spending-timeline/${previousMonth}`}>previous</Link>
-      <Link href={`/spending-timeline/${nextMonth}`}>next</Link>
+      <h2>Spending Timeline</h2>
+      <MonthSelector />
       <div data-testid="spending-timeline-graph" {...dataTags} />
       <ResponsiveContainer aspect={1.5} minWidth={300} width="100%">
         <LineChart data={timeline}>
