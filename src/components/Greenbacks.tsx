@@ -120,10 +120,6 @@ const Greenbacks: FC = () => {
           element={<UntaggedTransactions />}
         />
         <Route path="/totals-by-month" element={<TotalsByMonth />} />
-        <Route
-          path="/spending-timeline/:month"
-          element={<SpendingTimeline />}
-        />
         <Route path="/spending-timeline" element={<SpendingTimeline />} />
         <Route
           path="/monthly-spending-by-tag/:month"
@@ -141,7 +137,6 @@ const Greenbacks: FC = () => {
           path="/top-spending-categories"
           element={<TopSpendingCategories />}
         />
-        <Route path="/transactions/:month" element={<TransactionsPage />} />
         <Route path="/transactions" element={<TransactionsPage />} />
       </Routes>
     </>
