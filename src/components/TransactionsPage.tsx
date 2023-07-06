@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 
 import Checkboxes from 'components/Checkboxes';
-import Link from 'components/Link';
+import MonthSelector from 'components/MonthSelector';
 import Transactions from 'components/Transactions';
 import useCategories from 'hooks/useCategories';
 import useMonth from 'hooks/useMonth';
@@ -10,13 +10,7 @@ import useTransactionsByCategory from 'hooks/useTransactionsByCategory';
 import Transaction, { Category } from 'types/transaction';
 
 const TransactionsPage: FC = () => {
-  const {
-    endDate,
-    nextMonth,
-    previousMonth,
-    readable: readableMonth,
-    startDate,
-  } = useMonth();
+  const { endDate, startDate } = useMonth();
   const { earning, isLoading, saving, spending } = useTransactionsByCategory({
     endDate,
     startDate,
@@ -64,9 +58,7 @@ const TransactionsPage: FC = () => {
   return (
     <>
       <h2>Transactions</h2>
-      <p>{readableMonth}</p>
-      <Link href={`/transactions/${previousMonth}`}>previous</Link>
-      <Link href={`/transactions/${nextMonth}`}>next</Link>
+      <MonthSelector />
       <Checkboxes
         label="Categories"
         onChange={onChangeVisibleCatagories}

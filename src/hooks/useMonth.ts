@@ -1,4 +1,4 @@
-import { useParams as useRouteParams } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 import useNow from 'hooks/useNow';
 import datetime from 'utils/datetime';
@@ -39,7 +39,8 @@ const useMonth = (): {
 };
 
 const useRouteMonth = (): { routeMonth?: datetime } => {
-  const { month } = useRouteParams();
+  const { search } = useLocation();
+  const month = new URLSearchParams(search).get('month');
   if (!month) return {};
   return { routeMonth: datetime.fromISO(month) };
 };
