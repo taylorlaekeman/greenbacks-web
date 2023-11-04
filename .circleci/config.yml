@@ -68,6 +68,9 @@ workflows:
               ignore: main
   deploy:
     jobs:
+      - lint
+      - typecheck
+      - test
       - deploy:
           context:
             - aws
