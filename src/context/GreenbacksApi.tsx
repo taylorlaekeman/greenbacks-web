@@ -3,15 +3,19 @@ import {
   ApolloClient,
   ApolloProvider,
   createHttpLink,
+  from,
   InMemoryCache,
   NormalizedCacheObject,
+  ServerError,
 } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
+import { onError } from '@apollo/client/link/error';
 import { MockedProvider, MockedResponse } from '@apollo/client/testing';
 
 import { useAuth } from 'auth';
 import LoadingIndicator from 'components/LoadingIndicator';
 import useIsAuthenticated from 'hooks/useIsAuthenticated';
+import useLogout from 'hooks/useLogout';
 
 export { GraphQLError } from 'graphql';
 
@@ -25,13 +29,14 @@ export const GreenbacksApiContext = React.createContext<ApiContext>({
 
 const GreenbacksApiProvider: FC<Props> = ({ children, uri }) => {
   const { isAuthenticated } = useIsAuthenticated();
+  const { logout } = useLogout();
   const { getAccessTokenSilently } = useAuth();
   const [token, setToken] = useState<string>();
 
   const client = useMemo(() => {
     if (!token) return undefined;
-    return getClient(uri, token);
-  }, [uri, token]);
+    return getClient({ onAuthError: logout, token, uri });
+  }, [logout, token, uri]);
 
   useEffect(() => {
     if (getAccessTokenSilently && isAuthenticated) {
@@ -58,7 +63,15 @@ interface Props {
   uri: string;
 }
 
-const getClient = (uri: string, token: string) => {
+const getClient = ({
+  onAuthError,
+  token,
+  uri,
+}: {
+  onAuthError: () => void;
+  token: string;
+  uri: string;
+}) => {
   const authLink = setContext((_, { headers }) => {
     const result = {
       headers: {
@@ -68,10 +81,16 @@ const getClient = (uri: string, token: string) => {
     };
     return result;
   });
+  const errorLink = onError(({ networkError }) => {
+    const error = networkError as ServerError | undefined;
+    if (!error?.result) return;
+    const errorCode = error?.result.statusCode;
+    if (errorCode === 401) onAuthError();
+  });
   const httpLink = createHttpLink({ uri });
   return new ApolloClient({
     cache: new InMemoryCache(),
-    link: authLink.concat(httpLink),
+    link: from([authLink, errorLink, httpLink]), // httpLink has to be last
   });
 };
 

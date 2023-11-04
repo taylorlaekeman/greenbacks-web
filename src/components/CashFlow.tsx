@@ -10,12 +10,17 @@ import {
 
 import ArticleContainer from 'components/ArticleContainer';
 import LoadingIndicator from 'components/LoadingIndicator';
+import MonthSelector from 'components/MonthSelector';
 import RadioButtons from 'components/RadioButtons';
 import useAverageMonthlyEarning from 'hooks/useAverageMonthlyEarning';
 import useAverageMonthlySaving from 'hooks/useAverageMonthlySaving';
 import useAverageMonthlySpending from 'hooks/useAverageMonthlySpending';
+import useMonth from 'hooks/useMonth';
+import useTransactionsByCategory from 'hooks/useTransactionsByCategory';
+import Transaction from 'types/transaction';
 
 const CashFlow: FC = () => {
+  const { endDate, startDate } = useMonth();
   const [selectedAverage, setSelectedAverage] = useState<string>('12');
   const monthsToAverage = parseInt(selectedAverage, 10);
   const {
@@ -30,6 +35,20 @@ const CashFlow: FC = () => {
     averageMonthlySaving,
     isLoading: isLoadingAverageSaving,
   } = useAverageMonthlySaving({ months: monthsToAverage });
+  const {
+    earning,
+    isLoading: isLoadingMonthTransactions,
+    saving,
+    spending,
+  } = useTransactionsByCategory({
+    endDate,
+    startDate,
+  });
+  const {
+    earning: totalEarning,
+    saving: totalSaving,
+    spending: totalSpending,
+  } = getTotals({ earning, saving, spending });
 
   const isLoading =
     isLoadingAverageEarning ||
@@ -40,20 +59,30 @@ const CashFlow: FC = () => {
 
   return (
     <ArticleContainer id="cashflow" title="Cashflow">
-      <RadioButtons
-        label="Average"
-        onChange={(value) => setSelectedAverage(value)}
-        options={[
-          { label: '3 month', value: '3' },
-          { label: '6 month', value: '6' },
-          { label: '12 month', value: '12' },
-        ]}
-        value={selectedAverage}
-      />
+      <h3>This Month&apos;s Cashflow</h3>
+      <MonthSelector />
+      {isLoadingMonthTransactions && <p>loading</p>}
+      {!isLoadingMonthTransactions && (
+        <Graph
+          earning={totalEarning}
+          saving={totalSaving}
+          spending={totalSpending}
+        />
+      )}
+      <h3>Average Cashflow</h3>
       <Graph
         earning={averageMonthlyEarning}
         saving={averageMonthlySaving}
         spending={averageMonthlySpending}
+      />
+      <RadioButtons
+        onChange={(value) => setSelectedAverage(value)}
+        options={[
+          { label: '3 month average', value: '3' },
+          { label: '6 month average', value: '6' },
+          { label: '12 month average', value: '12' },
+        ]}
+        value={selectedAverage}
       />
     </ArticleContainer>
   );
@@ -116,5 +145,28 @@ const Graph: FC<{
     </BarChart>
   </ResponsiveContainer>
 );
+
+function getTotals({
+  earning,
+  saving,
+  spending,
+}: {
+  earning?: Transaction[];
+  saving?: Transaction[];
+  spending?: Transaction[];
+}): { earning?: number; saving?: number; spending?: number } {
+  return {
+    earning: getTotal(earning),
+    saving: getTotal(saving),
+    spending: getTotal(spending),
+  };
+}
+
+function getTotal(transactions: Transaction[] | undefined): number | undefined {
+  return transactions?.reduce(
+    (total, transaction) => total + transaction.amount,
+    0
+  );
+}
 
 export default CashFlow;

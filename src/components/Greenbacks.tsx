@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useContext, useState } from 'react';
 import { Route, Routes, useNavigate } from 'react-router-dom';
 
 import AccountConnectionBarrier from 'components/AccountConnectionBarrier';
@@ -13,16 +13,25 @@ import MonthlySpendingByTag from 'components/MonthlySpendingByTag';
 import SpendingTimeline from 'components/SpendingTimeline';
 import Select from 'components/Select';
 import Spending from 'components/Spending';
+import TagModal from 'components/TagModal';
 import TopSpendingCategories from 'components/TopSpendingCategories';
 import TotalsByMonth from 'components/TotalsByMonth';
 import TransactionsPage from 'components/TransactionsPage';
 import UntaggedTransactions from 'components/UntaggedTransactions';
+import TagModalContext, { TagModalProvider } from 'context/TagModal';
 import useIsApiReady from 'hooks/useIsApiReady';
 import useIsAuthenticated from 'hooks/useIsAuthenticated';
 import useLogin from 'hooks/useLogin';
 import useLogout from 'hooks/useLogout';
 
-const Greenbacks: FC = () => {
+const Greenbacks: FC = () => (
+  <TagModalProvider>
+    <GreenbacksInContext />
+  </TagModalProvider>
+);
+
+const GreenbacksInContext: FC = () => {
+  const { transactionToTag } = useContext(TagModalContext);
   const { isReady: isApiReady } = useIsApiReady();
   const { isAuthenticated } = useIsAuthenticated();
   const { login } = useLogin();
@@ -105,6 +114,7 @@ const Greenbacks: FC = () => {
         options={options}
         value={page}
       />
+      {transactionToTag !== undefined && <TagModal />}
       <Routes>
         <Route path="/" element={home} />
         <Route path="/months/:month/" element={home} />

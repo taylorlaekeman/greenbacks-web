@@ -1,4 +1,4 @@
-import React, { FC, Fragment } from 'react';
+import React, { FC } from 'react';
 
 import Button from 'components/Button';
 import Checkbox from 'components/Checkbox';
@@ -24,11 +24,14 @@ const Checkboxes: FC<{
   <fieldset>
     {label && <legend>{label}</legend>}
     {options.map((option) => {
-      const { label: optionLabel, value: optionValue } = getOption(option);
+      const { colour, label: optionLabel, value: optionValue } = getOption(
+        option
+      );
       const isChecked = selectedOptions.includes(optionValue);
       return (
-        <Fragment key={optionValue}>
+        <div key={optionValue}>
           <Checkbox
+            colour={colour}
             isChecked={isChecked}
             label={optionLabel}
             name={name}
@@ -42,7 +45,7 @@ const Checkboxes: FC<{
             }}
             value={optionValue}
           />
-        </Fragment>
+        </div>
       );
     })}
     <Button
@@ -70,6 +73,7 @@ const Checkboxes: FC<{
 );
 
 interface Option {
+  colour?: string;
   label: string;
   value: string;
 }

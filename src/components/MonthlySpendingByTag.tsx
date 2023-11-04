@@ -1,16 +1,18 @@
-import React, { FC } from 'react';
+import React, { FC, useState } from 'react';
 import {
   Bar,
   BarChart,
   LabelList,
   ResponsiveContainer,
+  Tooltip,
   XAxis,
   YAxis,
 } from 'recharts';
 
+import Checkbox from 'components/Checkbox';
 import Checkboxes from 'components/Checkboxes';
-import Link from 'components/Link';
 import LoadingIndicator from 'components/LoadingIndicator';
+import MonthSelector from 'components/MonthSelector';
 import useAveragingPeriod from 'hooks/useAveragingPeriod';
 import useMonth from 'hooks/useMonth';
 import useMultiselect from 'hooks/useMultiselect';
@@ -18,13 +20,7 @@ import useTransactionsByTag from 'hooks/useTransactionsByTag';
 import type { TagGroup } from 'types/tagGroup';
 
 const MonthlySpendingByTag: FC = () => {
-  const {
-    endDate: endOfMonth,
-    nextMonth,
-    previousMonth,
-    readable: readableMonth,
-    startDate: startOfMonth,
-  } = useMonth();
+  const { endDate: endOfMonth, startDate: startOfMonth } = useMonth();
   const {
     count,
     endIso: endOfAveragingPeriod,
@@ -41,9 +37,11 @@ const MonthlySpendingByTag: FC = () => {
     endDate: endOfMonth,
     startDate: startOfMonth,
   });
+  const [isAverageVisible, setIsAverageVisible] = useState<boolean>(false);
   const orderedTags = getOrderedTags({
     averageSpending,
     averagingCount: count,
+    isAverageVisible,
     spending,
   });
   const {
@@ -58,6 +56,7 @@ const MonthlySpendingByTag: FC = () => {
   const spendingBarData = formatSpendingBarData({
     averageSpending,
     averagingCount: count,
+    isAverageVisible,
     spending,
   });
   const coloursByTag: Record<string, string> = orderedTags.reduce(
@@ -67,51 +66,71 @@ const MonthlySpendingByTag: FC = () => {
     }),
     {}
   );
+  const lastTag = orderedTags
+    .slice()
+    .reverse()
+    .find((tag) => selectedTags.includes(tag));
   return (
     <>
-      <Link href={`/monthly-spending-by-tag/${previousMonth}`}>previous</Link>
-      <Link href={`/monthly-spending-by-tag/${nextMonth}`}>next</Link>
       <h2>Monthly Spending by Tag</h2>
-      <p>{readableMonth}</p>
+      <MonthSelector />
       <div
         data-testid="monthly-spending-by-tag-graph"
         {...getDataTags({ averageSpending, averagingCount: count, spending })}
       />
       <ResponsiveContainer
-        aspect={3}
+        aspect={isAverageVisible ? 3 : 5}
         height="max-content"
         minWidth={300}
         width="100%"
       >
         <BarChart data={spendingBarData} layout="vertical">
-          {orderedTags.map((tag, index) => {
+          <Tooltip />
+          {orderedTags.map((tag) => {
             if (!selectedTags.includes(tag)) return <></>;
+            const isLastTag = tag === lastTag;
             return (
               <Bar dataKey={tag} fill={coloursByTag[tag]} key={tag} stackId="a">
                 <LabelList
                   formatter={(label: number) => {
                     const hundreds = Math.round(label / 10000);
+                    const ones = Math.round(label / 100);
+                    if (hundreds <= 10) return ones;
                     return `${hundreds / 10}k`;
                   }}
-                  valueAccessor={(entry: { value: number[] }) => {
-                    const isLastTag = index === orderedTags.length - 1;
-                    if (!isLastTag) return null;
-                    return entry.value[1];
+                  position={isLastTag ? 'right' : undefined}
+                  valueAccessor={(entry: {
+                    value: number[];
+                    width: number;
+                  }) => {
+                    const total = entry.value[1];
+                    const delta = entry.value[1] - entry.value[0];
+                    if (isLastTag) return total;
+                    if (entry.width > 40) return delta;
+                    return null;
                   }}
                 />
               </Bar>
             );
           })}
           <XAxis
+            padding={{ right: 20 }}
             tickFormatter={(amount) => {
               if (amount < 100000) return `${amount / 100}`;
               return `${amount / 100000}k`;
             }}
             type="number"
           />
-          <YAxis dataKey="label" type="category" />
+          <YAxis dataKey="label" hide type="category" />
         </BarChart>
       </ResponsiveContainer>
+      <Checkbox
+        isChecked={isAverageVisible}
+        label="Show Average"
+        onChange={(newIsAverageVisible) => {
+          setIsAverageVisible(newIsAverageVisible);
+        }}
+      />
       <Checkboxes
         onChange={onChange}
         onSelectAll={onSelectAll}
@@ -150,16 +169,19 @@ const formatTag = (tag: string): string =>
 const formatSpendingBarData = ({
   averageSpending,
   averagingCount,
+  isAverageVisible,
   spending,
 }: {
   averageSpending?: TagGroup[];
   averagingCount: number;
+  isAverageVisible: boolean;
   spending?: TagGroup[];
 }) => {
   const spendingGroup = spending?.reduce(
     (group, { tag, totalAmount }) => ({ ...group, [tag]: totalAmount }),
     { label: 'current' }
   );
+  if (!isAverageVisible) return [spendingGroup];
   const averageSpendingGroup = averageSpending?.reduce(
     (group, { tag, totalAmount }) => ({
       ...group,
@@ -173,20 +195,24 @@ const formatSpendingBarData = ({
 const getOrderedTags = ({
   averageSpending,
   averagingCount,
+  isAverageVisible = false,
   spending,
 }: {
   averageSpending?: TagGroup[];
   averagingCount: number;
+  isAverageVisible?: boolean;
   spending?: TagGroup[];
 }): string[] => {
   const amountByTag: Record<string, number> = {};
   spending?.forEach(({ tag, totalAmount }) => {
     amountByTag[tag] = totalAmount;
   });
-  averageSpending?.forEach(({ tag, totalAmount }) => {
-    const currentAmount = amountByTag[tag] || 0;
-    amountByTag[tag] = currentAmount + totalAmount / averagingCount;
-  });
+  if (isAverageVisible) {
+    averageSpending?.forEach(({ tag, totalAmount }) => {
+      const currentAmount = amountByTag[tag] || 0;
+      amountByTag[tag] = currentAmount + totalAmount / averagingCount;
+    });
+  }
   return Object.entries(amountByTag)
     .sort((first, second) => (first[1] > second[1] ? -1 : 1))
     .map(([firstTag]) => firstTag);

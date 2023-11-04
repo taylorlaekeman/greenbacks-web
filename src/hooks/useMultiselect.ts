@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 function useMultiselect({
   options = [],
@@ -20,6 +20,13 @@ function useMultiselect({
       setSelectedOptions(options);
     }
   }, [hasLoadedOptions, options, setHasLoadedOptions]);
+  const memoizedSelectedOptions = useMemo(
+    () =>
+      selectedOptions.map((option) =>
+        typeof option === 'string' ? option : option.value
+      ),
+    [selectedOptions]
+  );
   return {
     onChange: (newSelectedOptions) => {
       setSelectedOptions(newSelectedOptions);
@@ -34,11 +41,9 @@ function useMultiselect({
       setSelectedOptions([value]);
     },
     onToggle: () => {
-      console.log('toggle');
+      /* do nothing */
     },
-    selectedOptions: selectedOptions.map((option) =>
-      typeof option === 'string' ? option : option.value
-    ),
+    selectedOptions: memoizedSelectedOptions,
   };
 }
 

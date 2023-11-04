@@ -60,9 +60,9 @@ function groupTransactions({
 }
 
 export enum GroupBy {
-  Category,
-  Date,
-  Tag,
+  Category = 'Category',
+  Date = 'Date',
+  Tag = 'Tag',
 }
 
 export enum SortDirection {
