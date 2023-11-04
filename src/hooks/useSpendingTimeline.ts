@@ -6,8 +6,10 @@ import useSpendingByDayOfMonth from 'hooks/useSpendingByDayOfMonth';
 
 const useSpendingTimeline = ({
   month,
+  monthsToAverage = 12,
 }: {
   month: string;
+  monthsToAverage?: number;
 }): {
   isLoading: boolean;
   timeline?: DailyTotal[];
@@ -20,6 +22,7 @@ const useSpendingTimeline = ({
     startDate === now.startOf('month').toISODate();
   const { actualSpending, averageSpending, isLoading } = useDailySpending({
     endDate,
+    monthsToAverage,
     startDate,
   });
   if (isLoading) return { isLoading: true };
@@ -56,9 +59,11 @@ const getDateRange = (
 
 const useDailySpending = ({
   endDate,
+  monthsToAverage = 12,
   startDate,
 }: {
   endDate: string;
+  monthsToAverage?: number;
   startDate: string;
 }): {
   actualSpending?: Record<string, number>;
@@ -69,7 +74,7 @@ const useDailySpending = ({
     count,
     endIso: endOfAveragingPeriod,
     startIso: startOfAveragingPeriod,
-  } = useAveragingPeriod();
+  } = useAveragingPeriod({ months: monthsToAverage });
   const {
     isLoading: isLoadingActualSpending,
     spending: actualSpending,

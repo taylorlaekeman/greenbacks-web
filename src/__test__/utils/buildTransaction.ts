@@ -1,7 +1,48 @@
 import uuid from 'utils/uuid';
-import { CoreTransaction } from 'types/transaction';
+import Transaction, {
+  Category,
+  CoreTransaction,
+  TransactionType,
+} from 'types/transaction';
 
-const buildTransaction = ({
+export function buildTransaction({
+  accountId = 'accountId',
+  amount = 100,
+  category = Category.Spending,
+  datetime = '2020-01-01',
+  filteredBy,
+  id = uuid(),
+  merchant = 'merchant',
+  name = 'name',
+  tag,
+  type = TransactionType.Debit,
+}: {
+  accountId?: string;
+  amount?: number;
+  category?: Category;
+  datetime?: string;
+  filteredBy?: string;
+  id?: string;
+  merchant?: string;
+  name?: string;
+  tag?: string;
+  type?: TransactionType;
+} = {}): Transaction {
+  return {
+    accountId,
+    amount,
+    category,
+    datetime,
+    filteredBy,
+    id,
+    merchant,
+    name,
+    tag,
+    type,
+  };
+}
+
+const buildCoreTransaction = ({
   accountId = 'accountId',
   amount = 100,
   datetime = '2020-01-01',
@@ -24,4 +65,4 @@ const buildTransaction = ({
   name,
 });
 
-export default buildTransaction;
+export default buildCoreTransaction;

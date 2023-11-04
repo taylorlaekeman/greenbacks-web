@@ -1,10 +1,11 @@
-import { useParams as useRouteParams } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 import useNow from 'hooks/useNow';
 import datetime from 'utils/datetime';
 import getMonth from 'utils/getMonth';
 
 const useMonth = (): {
+  daysInMonth: number;
   endDate: string;
   iso: string;
   nextMonth: string;
@@ -16,6 +17,7 @@ const useMonth = (): {
   const { now } = useNow();
   const month = routeMonth || now;
   const {
+    daysInMonth,
     firstDay,
     iso: currentMonth,
     lastDay,
@@ -26,6 +28,7 @@ const useMonth = (): {
   const { iso: nextMonth } = getMonth({ datetime: month, offset: 1 });
   const { iso: previousMonth } = getMonth({ datetime: month, offset: -1 });
   return {
+    daysInMonth,
     endDate: lastDay,
     iso: currentMonth,
     nextMonth,
@@ -36,7 +39,8 @@ const useMonth = (): {
 };
 
 const useRouteMonth = (): { routeMonth?: datetime } => {
-  const { month } = useRouteParams();
+  const { search } = useLocation();
+  const month = new URLSearchParams(search).get('month');
   if (!month) return {};
   return { routeMonth: datetime.fromISO(month) };
 };

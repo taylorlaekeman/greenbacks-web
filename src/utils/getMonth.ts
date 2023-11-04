@@ -8,6 +8,7 @@ const getMonth = ({
   offset?: number;
 }): {
   datetime: IDatetime;
+  daysInMonth: number;
   firstDay: string;
   iso: string;
   lastDay: string;
@@ -16,6 +17,7 @@ const getMonth = ({
   const offsetDatetime = datetime.plus({ months: offset });
   return {
     datetime: offsetDatetime,
+    daysInMonth: offsetDatetime.endOf('month').day,
     firstDay: offsetDatetime.startOf('month').toISODate(),
     iso: offsetDatetime.toFormat('yyyy-LL'),
     lastDay: offsetDatetime.endOf('month').toISODate(),

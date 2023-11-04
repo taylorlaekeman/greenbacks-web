@@ -1,3 +1,5 @@
+import { useMemo } from 'react';
+
 import useFilters from 'hooks/useFilters';
 import useQuery, { ApolloError } from 'hooks/useQuery';
 import { Comparator, Filter, Matcher } from 'types/filter';
@@ -8,18 +10,24 @@ import Transaction, {
 } from 'types/transaction';
 import gql from 'utils/gql';
 
+interface BaseResult {
+  error?: ApolloError;
+  isLoading: boolean;
+}
+
+interface TransactionsByTypeResult extends BaseResult {
+  credits?: Transaction[];
+  debits?: Transaction[];
+}
+
 const useTransactions = ({
   endDate,
   startDate,
 }: {
   endDate: string;
+  isFlat?: boolean;
   startDate: string;
-}): {
-  credits?: Transaction[];
-  debits?: Transaction[];
-  error?: ApolloError;
-  isLoading: boolean;
-} => {
+}): TransactionsByTypeResult => {
   const {
     error: filtersError,
     isLoading: isLoadingFilters,
@@ -29,12 +37,17 @@ const useTransactions = ({
     { transactions: CoreTransaction[] },
     { endDate: string; startDate: string }
   >(GET_TRANSACTIONS_QUERY, {
+    pollInterval: 5 * 60 * 1000,
     variables: { endDate, startDate },
   });
-  const { credits, debits } = categorizeTransactions({
-    filters,
-    transactions: data?.transactions,
-  });
+  const categorizedTransactions = useMemo(
+    () => categorizeTransactions({ filters, transactions: data?.transactions }),
+    [filters, data]
+  );
+  const { credits, debits } = useMemo(
+    () => getTransactionsByType(categorizedTransactions),
+    [categorizedTransactions]
+  );
   return {
     credits,
     debits,
@@ -56,96 +69,76 @@ export const GET_TRANSACTIONS_QUERY = gql`
   }
 `;
 
-export const categorizeTransactions = ({
+export function categorizeTransactions({
   filters,
   transactions,
 }: {
   filters?: Filter[];
   transactions?: CoreTransaction[];
-} = {}): {
-  credits?: Transaction[];
-  debits?: Transaction[];
-} => {
-  if (!transactions) return {};
-  const { credits, debits } = applyFilters({
-    filters,
-    transactions,
-  });
-  return { credits, debits };
-};
+} = {}): Transaction[] | undefined {
+  if (!transactions) return undefined;
+  const typedTransactions = transactions.map(addType);
+  const fullTransactions = typedTransactions.map((transaction) =>
+    applyFilters(transaction, filters)
+  );
+  return fullTransactions;
+}
 
-const applyFilters = ({
-  filters,
-  transactions,
-}: {
-  filters?: Filter[];
-  transactions: CoreTransaction[];
-}): { credits?: Transaction[]; debits?: Transaction[] } => {
-  if (!filters) return {};
-  const credits: Transaction[] = [];
-  const debits: Transaction[] = [];
-  transactions.forEach((coreTransaction) => {
-    const transaction = getFullTransaction({ transaction: coreTransaction });
-    const destinationList =
-      transaction.type === TransactionType.Debit ? debits : credits;
-    const matchingFilter = filters.find(({ matchers }) =>
-      isMatchersMatch({ matchers, transaction })
-    );
-    if (!matchingFilter) {
-      destinationList.push(transaction);
-      return;
-    }
-    const { categoryToAssign, id, tagToAssign } = matchingFilter;
-    destinationList.push({
-      ...transaction,
-      category: categoryToAssign,
-      filteredBy: id,
-      tag: tagToAssign,
-    });
-  });
-  return { credits, debits };
-};
-
-const getFullTransaction = ({
-  transaction,
-}: {
-  transaction: CoreTransaction;
-}): Transaction => {
-  const { amount } = transaction;
-  if (amount >= 0)
-    return {
-      ...transaction,
-      category: Category.Spending,
-      type: TransactionType.Debit,
-    };
+function addType(transaction: CoreTransaction): TypedTransaction {
+  const type =
+    transaction.amount >= 0 ? TransactionType.Debit : TransactionType.Credit;
   return {
     ...transaction,
-    amount: -amount,
-    category: Category.Earning,
-    type: TransactionType.Credit,
+    amount: Math.abs(transaction.amount),
+    type,
   };
-};
+}
 
-const isMatchersMatch = ({
+interface TypedTransaction extends CoreTransaction {
+  type: TransactionType;
+}
+
+function applyFilters(
+  transaction: TypedTransaction,
+  filters: Filter[] | undefined
+): Transaction {
+  const matchingFilter = filters?.find(({ matchers }) =>
+    isMatchersMatch({ matchers, transaction })
+  );
+  const defaultCategory =
+    transaction.type === TransactionType.Debit
+      ? Category.Spending
+      : Category.Earning;
+  const { categoryToAssign = defaultCategory, id, tagToAssign } =
+    matchingFilter || {};
+  return {
+    ...transaction,
+    category: categoryToAssign,
+    filteredBy: id,
+    tag: tagToAssign,
+  };
+}
+
+function isMatchersMatch({
   matchers,
   transaction,
 }: {
   matchers: Matcher[];
   transaction: CoreTransaction;
-}): boolean => {
+}): boolean {
   if (matchers.length === 0) return false;
   return matchers.every((matcher: Matcher) =>
     isMatcherMatch({ matcher, transaction })
   );
-};
+}
 
-const isMatcherMatch = ({
+function isMatcherMatch({
   matcher: { comparator = Comparator.Equals, expectedValue, property },
   transaction,
 }: {
   matcher: Matcher;
   transaction: CoreTransaction;
-}): boolean => {
+}): boolean {
   if (!(property in transaction)) return false;
   const actualValue = transaction[property as keyof CoreTransaction];
   switch (comparator) {
@@ -158,6 +151,19 @@ const isMatcherMatch = ({
     default:
       return false;
   }
-};
+}
+
+function getTransactionsByType(
+  transactions: Transaction[] | undefined
+): { credits?: Transaction[]; debits?: Transaction[] } {
+  if (!transactions) return {};
+  const credits = transactions.filter(
+    ({ type }) => type === TransactionType.Credit
+  );
+  const debits = transactions.filter(
+    ({ type }) => type === TransactionType.Debit
+  );
+  return { credits, debits };
+}
 
 export default useTransactions;

@@ -1,32 +1,39 @@
-import React, { FC, Fragment } from 'react';
+import React, { FC } from 'react';
 
 import Button from 'components/Button';
+import Checkbox from 'components/Checkbox';
 import noop from 'utils/noop';
 
 const Checkboxes: FC<{
   label?: string;
   name?: string;
   onChange?: (input: string[]) => void;
+  onDeselectAll?: () => void;
+  onSelectAll?: () => void;
   options?: (Option | string)[];
   selectedOptions?: string[];
 }> = ({
   label,
   name = 'checkbox',
   onChange = noop,
+  onDeselectAll = noop,
+  onSelectAll = noop,
   options = [],
   selectedOptions = [],
 }) => (
   <fieldset>
     {label && <legend>{label}</legend>}
     {options.map((option) => {
-      const { label: optionLabel, value: optionValue } = getOption(option);
+      const { colour, label: optionLabel, value: optionValue } = getOption(
+        option
+      );
       const isChecked = selectedOptions.includes(optionValue);
       return (
-        <Fragment key={optionValue}>
-          <input
-            checked={isChecked}
-            data-checked={isChecked}
-            id={optionValue}
+        <div key={optionValue}>
+          <Checkbox
+            colour={colour}
+            isChecked={isChecked}
+            label={optionLabel}
             name={name}
             onChange={() => {
               onChange(
@@ -36,15 +43,14 @@ const Checkboxes: FC<{
                 })
               );
             }}
-            type="checkbox"
             value={optionValue}
           />
-          <label htmlFor={optionValue}>{optionLabel}</label>
-        </Fragment>
+        </div>
       );
     })}
     <Button
       onClick={() => {
+        onSelectAll();
         onChange(
           options.map((option) => {
             if (typeof option === 'string') return option;
@@ -55,11 +61,19 @@ const Checkboxes: FC<{
     >
       Select all
     </Button>
-    <Button onClick={() => onChange([])}>Deselect all</Button>
+    <Button
+      onClick={() => {
+        onDeselectAll();
+        onChange([]);
+      }}
+    >
+      Deselect all
+    </Button>
   </fieldset>
 );
 
 interface Option {
+  colour?: string;
   label: string;
   value: string;
 }

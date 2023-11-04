@@ -1,4 +1,5 @@
 import useAveragingPeriod from 'hooks/useAveragingPeriod';
+import useMonth from 'hooks/useMonth';
 import useTransactionsByCategory from 'hooks/useTransactionsByCategory';
 import Transaction from 'types/transaction';
 import datetime from 'utils/datetime';
@@ -9,7 +10,8 @@ const useTotalsByMonth = (): {
   isLoading: boolean;
   totalsByMonth?: MonthTotals[];
 } => {
-  const { endIso: endDate, startIso: startDate } = useAveragingPeriod();
+  const { startIso: startDate } = useAveragingPeriod();
+  const { endDate } = useMonth();
   const { earning, isLoading, saving, spending } = useTransactionsByCategory({
     endDate,
     startDate,

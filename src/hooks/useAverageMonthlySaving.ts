@@ -2,12 +2,14 @@ import useAveragingPeriod from 'hooks/useAveragingPeriod';
 import useTransactionsByCategory from 'hooks/useTransactionsByCategory';
 import type { ApolloError } from 'hooks/useQuery';
 
-const useAverageMonthlyExpenses = (): {
+const useAverageMonthlyExpenses = ({ months }: { months?: number } = {}): {
   averageMonthlySaving?: number;
   error?: ApolloError;
   isLoading: boolean;
 } => {
-  const { count, endIso: endDate, startIso: startDate } = useAveragingPeriod();
+  const { count, endIso: endDate, startIso: startDate } = useAveragingPeriod({
+    months,
+  });
   const { error, isLoading, saving } = useTransactionsByCategory({
     endDate,
     startDate,

@@ -1,8 +1,7 @@
-import React, { FC } from 'react';
-import { DateTime } from 'luxon';
-import { useParams } from 'react-router-dom';
+import React, { FC, useState } from 'react';
 import {
   CartesianGrid,
+  LabelList,
   Line,
   LineChart,
   ResponsiveContainer,
@@ -10,14 +9,25 @@ import {
   YAxis,
 } from 'recharts';
 
-import Link from 'components/Link';
 import LoadingIndicator from 'components/LoadingIndicator';
+import MonthSelector from 'components/MonthSelector';
+import RadioButtons from 'components/RadioButtons';
+import useMonth from 'hooks/useMonth';
 import useNow from 'hooks/useNow';
 import useSpendingTimeline, { DailyTotal } from 'hooks/useSpendingTimeline';
 
 const PreviousMonthSpending: FC = () => {
-  const month = useMonth();
-  const { isLoading, timeline } = useSpendingTimeline({ month });
+  const { daysInMonth, iso: month } = useMonth();
+  const { now } = useNow();
+  const [selectedAverage, setSelectedAverage] = useState<string>('3');
+  const monthsToAverage = parseInt(selectedAverage, 10);
+  const { isLoading, timeline } = useSpendingTimeline({
+    month,
+    monthsToAverage,
+  });
+
+  const isCurrentMonth = month === now.toFormat('yyyy-LL');
+  const currentDay = now.day;
 
   if (isLoading) return <LoadingIndicator />;
 
@@ -27,38 +37,89 @@ const PreviousMonthSpending: FC = () => {
 
   return (
     <>
-      <h2>{month}</h2>
-      <Link href={`/spending-timeline/${getPreviousMonth(month)}`}>
-        previous
-      </Link>
-      <Link href={`/spending-timeline/${getNextMonth(month)}`}>next</Link>
+      <h2>Spending Timeline</h2>
+      <MonthSelector />
       <div data-testid="spending-timeline-graph" {...dataTags} />
-      <ResponsiveContainer aspect={1.5} minWidth={300} width="100%">
+      <ResponsiveContainer
+        aspect={1.5}
+        height="max-content"
+        minWidth={300}
+        width="100%"
+      >
         <LineChart data={timeline}>
           <CartesianGrid vertical={false} />
-          <Line dataKey="average" dot={false} stroke="orange" />
-          <Line dataKey="predicted" dot={false} strokeDasharray="4 4" />
-          <Line dataKey="actual" dot={false} />
-          <XAxis dataKey="day" tick={false} tickLine={false} />
+          <Line dataKey="average" dot={false} stroke="orange">
+            <LabelList
+              formatter={formatThousands}
+              valueAccessor={(entry: {
+                payload: { day: number };
+                value: number;
+              }) => {
+                const {
+                  payload: { day },
+                } = entry;
+                if (isCurrentMonth && day === currentDay) return entry.value;
+                if (day === daysInMonth) return entry.value;
+                return null;
+              }}
+            />
+          </Line>
+          <Line dataKey="predicted" dot={false} strokeDasharray="4 4">
+            <LabelList
+              formatter={formatThousands}
+              valueAccessor={(entry: {
+                payload: { day: number };
+                value: number;
+              }) => {
+                const {
+                  payload: { day },
+                } = entry;
+                if (day === daysInMonth) return entry.value;
+                return null;
+              }}
+            />
+          </Line>
+          <Line dataKey="actual" dot={false}>
+            <LabelList
+              formatter={formatThousands}
+              valueAccessor={(entry: {
+                payload: { day: number };
+                value: number;
+              }) => {
+                const {
+                  payload: { day },
+                } = entry;
+                if (isCurrentMonth && day === currentDay) return entry.value;
+                if (!isCurrentMonth && day === daysInMonth) return entry.value;
+                return null;
+              }}
+            />
+          </Line>
+          <XAxis
+            dataKey="day"
+            padding={{ right: 20 }}
+            tick={false}
+            tickLine={false}
+          />
           <YAxis
             axisLine={false}
-            tickFormatter={(amount) => {
-              if (amount < 100000) return `${amount / 100}`;
-              return `${amount / 100000}k`;
-            }}
+            tickFormatter={formatThousands}
             tickLine={false}
+            width={30}
           />
         </LineChart>
       </ResponsiveContainer>
+      <RadioButtons
+        onChange={(value) => setSelectedAverage(value)}
+        options={[
+          { label: '3 month average', value: '3' },
+          { label: '6 month average', value: '6' },
+          { label: '12 month average', value: '12' },
+        ]}
+        value={selectedAverage}
+      />
     </>
   );
-};
-
-const useMonth = (): string => {
-  const { month } = useParams();
-  const { now } = useNow();
-  if (month) return DateTime.fromISO(month).toFormat('yyyy-LL');
-  return now.toFormat('yyyy-LL');
 };
 
 const getDataTags = ({
@@ -79,10 +140,11 @@ const getDataTags = ({
   }, {});
 };
 
-const getPreviousMonth = (month: string): string =>
-  DateTime.fromISO(month).minus({ months: 1 }).toFormat('yyyy-LL');
-
-const getNextMonth = (month: string): string =>
-  DateTime.fromISO(month).plus({ months: 1 }).toFormat('yyyy-LL');
+function formatThousands(cents: number): string {
+  const dollars = cents / 100;
+  if (dollars < 1000) return Math.round(dollars).toString();
+  const hundreds = Math.round(dollars / 100);
+  return `${hundreds / 10}k`;
+}
 
 export default PreviousMonthSpending;

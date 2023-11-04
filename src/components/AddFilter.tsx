@@ -1,20 +1,20 @@
 import React, { FC, useState, useEffect } from 'react';
 
 import Button from 'components/Button';
-import Input from 'components/Input';
 import Label from 'components/Label';
 import RadioButtons from 'components/RadioButtons';
+import Typeahead from 'components/Typeahead';
 import useAddFilter from 'hooks/useAddFilter';
 import useTags from 'hooks/useTags';
 import { Comparator } from 'types/filter';
 import Transaction, { Category } from 'types/transaction';
 
 const AddFilter: FC<{ transaction: Transaction }> = ({ transaction }) => {
-  const { category: defaultCategory, merchant, name } = transaction;
+  const [category, setCategory] = useState<string>(transaction.category);
+  const { merchant, name } = transaction;
   const { addFilter, hasBeenCalled, isSaving } = useAddFilter();
-  const { isLoading: isLoadingTags, tags } = useTags();
+  const { tags } = useTags();
   const [property, setProperty] = useState<string>('name');
-  const [category, setCategory] = useState<string>(defaultCategory);
   const [tag, setTag] = useState<string>();
   const [hasAdded, setHasAdded] = useState<boolean>(false);
 
@@ -45,23 +45,8 @@ const AddFilter: FC<{ transaction: Transaction }> = ({ transaction }) => {
           onChange={(newCategory) => setCategory(newCategory)}
           value={category}
         />
-        {!isLoadingTags && (
-          <RadioButtons
-            label="Tag"
-            name="tag"
-            options={tags}
-            onChange={(newTag) => setTag(newTag)}
-            value={tag}
-          />
-        )}
-        <Label forId="tag">Tag</Label>
-        <Input
-          id="tag"
-          onChange={(newTag) => {
-            setTag(newTag);
-          }}
-          value={tag}
-        />
+        <Label forId="tags">Tag</Label>
+        <Typeahead id="tags" onChange={setTag} options={tags} value={tag} />
         <Button
           onClick={() => {
             if (!property) return;

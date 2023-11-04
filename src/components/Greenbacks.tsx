@@ -1,9 +1,9 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useContext, useState } from 'react';
 import { Route, Routes, useNavigate } from 'react-router-dom';
 
 import AccountConnectionBarrier from 'components/AccountConnectionBarrier';
 import Accounts from 'components/Accounts';
-import AverageCashFlow from 'components/AverageCashFlow';
+import CashFlow from 'components/CashFlow';
 import AverageSpendingByTag from 'components/AverageSpendingByTag';
 import Button from 'components/Button';
 import Home from 'components/Home';
@@ -13,15 +13,25 @@ import MonthlySpendingByTag from 'components/MonthlySpendingByTag';
 import SpendingTimeline from 'components/SpendingTimeline';
 import Select from 'components/Select';
 import Spending from 'components/Spending';
+import TagModal from 'components/TagModal';
 import TopSpendingCategories from 'components/TopSpendingCategories';
 import TotalsByMonth from 'components/TotalsByMonth';
+import TransactionsPage from 'components/TransactionsPage';
 import UntaggedTransactions from 'components/UntaggedTransactions';
+import TagModalContext, { TagModalProvider } from 'context/TagModal';
 import useIsApiReady from 'hooks/useIsApiReady';
 import useIsAuthenticated from 'hooks/useIsAuthenticated';
 import useLogin from 'hooks/useLogin';
 import useLogout from 'hooks/useLogout';
 
-const Greenbacks: FC = () => {
+const Greenbacks: FC = () => (
+  <TagModalProvider>
+    <GreenbacksInContext />
+  </TagModalProvider>
+);
+
+const GreenbacksInContext: FC = () => {
+  const { transactionToTag } = useContext(TagModalContext);
   const { isReady: isApiReady } = useIsApiReady();
   const { isAuthenticated } = useIsAuthenticated();
   const { login } = useLogin();
@@ -43,6 +53,40 @@ const Greenbacks: FC = () => {
     <AccountConnectionBarrier>
       <Spending />
     </AccountConnectionBarrier>
+  );
+
+  const options = [
+    { label: 'Cashflow', value: 'cashflow' },
+    {
+      label: 'Average Spending by Tag',
+      value: 'average-spending-by-tag',
+    },
+    {
+      label: 'Untagged Transactions',
+      value: 'untagged-transactions',
+    },
+    {
+      label: 'Totals by Month',
+      value: 'totals-by-month',
+    },
+    {
+      label: 'Transactions',
+      value: 'transactions',
+    },
+    {
+      label: 'Spending Timeline',
+      value: 'spending-timeline',
+    },
+    {
+      label: 'Monthly Spending by Tag',
+      value: 'monthly-spending-by-tag',
+    },
+    {
+      label: 'Top Spending Categories',
+      value: 'top-spending-categories',
+    },
+  ].sort(({ label: firstLabel }, { label: secondLabel }) =>
+    firstLabel > secondLabel ? 1 : -1
   );
 
   return (
@@ -67,41 +111,16 @@ const Greenbacks: FC = () => {
           setPage(newPage);
           navigate(`/${newPage}`);
         }}
-        options={[
-          { label: 'Average Cashflow', value: 'average-cashflow' },
-          {
-            label: 'Average Spending by Tag',
-            value: 'average-spending-by-tag',
-          },
-          {
-            label: 'Untagged Transactions',
-            value: 'untagged-transactions',
-          },
-          {
-            label: 'Totals by Month',
-            value: 'totals-by-month',
-          },
-          {
-            label: 'Spending Timeline',
-            value: 'spending-timeline',
-          },
-          {
-            label: 'Monthly Spending by Tag',
-            value: 'monthly-spending-by-tag',
-          },
-          {
-            label: 'Top Spending Categories',
-            value: 'top-spending-categories',
-          },
-        ]}
+        options={options}
         value={page}
       />
+      {transactionToTag !== undefined && <TagModal />}
       <Routes>
         <Route path="/" element={home} />
         <Route path="/months/:month/" element={home} />
         <Route path="/accounts" element={<Accounts />} />
         <Route path="/spending" element={spending} />
-        <Route path="/average-cashflow" element={<AverageCashFlow />} />
+        <Route path="/cashflow" element={<CashFlow />} />
         <Route
           path="/average-spending-by-tag"
           element={<AverageSpendingByTag />}
@@ -111,10 +130,6 @@ const Greenbacks: FC = () => {
           element={<UntaggedTransactions />}
         />
         <Route path="/totals-by-month" element={<TotalsByMonth />} />
-        <Route
-          path="/spending-timeline/:month"
-          element={<SpendingTimeline />}
-        />
         <Route path="/spending-timeline" element={<SpendingTimeline />} />
         <Route
           path="/monthly-spending-by-tag/:month"
@@ -132,6 +147,7 @@ const Greenbacks: FC = () => {
           path="/top-spending-categories"
           element={<TopSpendingCategories />}
         />
+        <Route path="/transactions" element={<TransactionsPage />} />
       </Routes>
     </>
   );
