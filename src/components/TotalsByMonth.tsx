@@ -1,7 +1,5 @@
 import React, { FC, Fragment } from 'react';
 import {
-  Bar,
-  BarChart,
   CartesianGrid,
   Line,
   LineChart,
@@ -10,13 +8,27 @@ import {
   YAxis,
 } from 'recharts';
 
+import Checkboxes from 'components/Checkboxes';
 import LoadingIndicator from 'components/LoadingIndicator';
 import SectionContainer from 'components/SectionContainer';
-import useCurrencyFormatter from 'hooks/useCurrencyFormatter';
+import useMultiselect from 'hooks/useMultiselect';
 import useTotalsByMonth, { MonthTotals } from 'hooks/useTotalsByMonth';
 
 const TotalsByMonth: FC = () => {
-  const { format } = useCurrencyFormatter();
+  const categories = [
+    'Earning',
+    'Earning Minus Saving',
+    'Saving',
+    'Spending',
+    'Saving & Spending',
+  ];
+  const {
+    onChange: onChangeVisibleCategories,
+    selectedOptions: visibleCategories,
+  } = useMultiselect({
+    defaultValue: ['Earning Minus Saving', 'Spending'],
+    options: categories,
+  });
   const { isLoading, totalsByMonth } = useTotalsByMonth();
 
   if (isLoading)
@@ -28,41 +40,43 @@ const TotalsByMonth: FC = () => {
 
   return (
     <SectionContainer id="totals-by-month" title="Totals by Month">
-      <Graph totalsByMonth={totalsByMonth} />
-      <table>
-        <thead>
-          <tr>
-            <td />
-            <th>Earning</th>
-            <th>Saving</th>
-            <th>Spending</th>
-          </tr>
-        </thead>
-        <tbody>
-          {totalsByMonth?.map(({ earning, month, saving, spending }) => {
-            const monthId = month.replace(' ', '-').toLowerCase();
-            return (
-              <tr key={monthId}>
-                <th>{month}</th>
-                <td aria-label={`${monthId}-earning`}>
-                  {format({ value: earning })}
-                </td>
-                <td aria-label={`${monthId}-saving`}>
-                  {format({ value: saving })}
-                </td>
-                <td aria-label={`${monthId}-spending`}>
-                  {format({ value: spending })}
-                </td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
+      <Graph
+        isEarningVisible={visibleCategories.includes('Earning')}
+        isEarningMinusSavingVisible={visibleCategories.includes(
+          'Earning Minus Saving'
+        )}
+        isSavingVisible={visibleCategories.includes('Saving')}
+        isSavingAndSpendingVisible={visibleCategories.includes(
+          'Saving & Spending'
+        )}
+        isSpendingVisible={visibleCategories.includes('Spending')}
+        totalsByMonth={totalsByMonth}
+      />
+      <Checkboxes
+        label="Categories"
+        onChange={onChangeVisibleCategories}
+        options={categories}
+        selectedOptions={visibleCategories}
+      />
     </SectionContainer>
   );
 };
 
-const Graph: FC<{ totalsByMonth?: MonthTotals[] }> = ({ totalsByMonth }) => (
+const Graph: FC<{
+  isEarningVisible?: boolean;
+  isEarningMinusSavingVisible?: boolean;
+  isSavingVisible?: boolean;
+  isSavingAndSpendingVisible?: boolean;
+  isSpendingVisible?: boolean;
+  totalsByMonth?: MonthTotals[];
+}> = ({
+  isEarningVisible = true,
+  isEarningMinusSavingVisible = true,
+  isSavingVisible = true,
+  isSavingAndSpendingVisible = true,
+  isSpendingVisible = true,
+  totalsByMonth,
+}) => (
   <>
     <div
       data-testid="totals-by-month-graph"
@@ -80,13 +94,24 @@ const Graph: FC<{ totalsByMonth?: MonthTotals[] }> = ({ totalsByMonth }) => (
     <ResponsiveContainer aspect={1.5} minWidth={300} width="100%">
       <LineChart data={formatData({ totalsByMonth })}>
         <CartesianGrid strokeDasharray="3 3" vertical={false} />
-        <Line dataKey="earning" dot={false} stroke="green" strokeWidth={2} />
-        <Line
-          dataKey="savingAndSpending"
-          dot={false}
-          stroke="purple"
-          strokeWidth={1}
-        />
+        {isEarningVisible && (
+          <Line dataKey="earning" dot={false} stroke="green" />
+        )}
+        {isEarningMinusSavingVisible && (
+          <Line dataKey="earningMinusSaving" dot={false} stroke="yellowgreen" />
+        )}
+        {isSavingVisible && <Line dataKey="saving" dot={false} stroke="blue" />}
+        {isSpendingVisible && (
+          <Line dataKey="spending" dot={false} stroke="orange" />
+        )}
+        {isSavingAndSpendingVisible && (
+          <Line
+            dataKey="savingAndSpending"
+            dot={false}
+            stroke="purple"
+            strokeWidth={1}
+          />
+        )}
         <XAxis dataKey="name" interval="preserveStartEnd" reversed />
         <YAxis
           axisLine={false}
@@ -95,14 +120,6 @@ const Graph: FC<{ totalsByMonth?: MonthTotals[] }> = ({ totalsByMonth }) => (
           width={30}
         />
       </LineChart>
-    </ResponsiveContainer>
-    <ResponsiveContainer aspect={1.5} minWidth={300} width="100%">
-      <BarChart barGap={0} data={formatData({ totalsByMonth })}>
-        <Bar dataKey="earning" fill="green" stackId="a" />
-        <Bar dataKey="spending" fill="orange" stackId="b" />
-        <Bar dataKey="saving" fill="blue" stackId="b" />
-        <XAxis dataKey="name" interval="preserveStartEnd" reversed />
-      </BarChart>
     </ResponsiveContainer>
   </>
 );
@@ -115,6 +132,7 @@ const formatData = ({
   if (!totalsByMonth) return [];
   const result = totalsByMonth.map(({ earning, month, saving, spending }) => ({
     earning: earning || 0,
+    earningMinusSaving: difference(earning, saving),
     name: shortenMonth(month),
     saving: saving || 0,
     savingAndSpending: sum(saving, spending),
@@ -127,6 +145,13 @@ function sum(a: number | undefined, b: number | undefined): number {
   let total = 0;
   if (a) total += a;
   if (b) total += b;
+  return total;
+}
+
+function difference(a: number | undefined, b: number | undefined): number {
+  let total = 0;
+  if (a) total += a;
+  if (b) total -= b;
   return total;
 }
 

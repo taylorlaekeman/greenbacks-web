@@ -1,8 +1,12 @@
 import { useEffect, useMemo, useState } from 'react';
 
 function useMultiselect({
+  defaultValue,
   options = [],
-}: { options?: (string | Option)[] } = {}): {
+}: {
+  defaultValue?: (string | Option)[];
+  options?: (string | Option)[];
+} = {}): {
   onChange: (value: (string | Option)[]) => void;
   onDeselectAll: () => void;
   onSelectAll: () => void;
@@ -12,14 +16,14 @@ function useMultiselect({
 } {
   const [hasLoadedOptions, setHasLoadedOptions] = useState<boolean>(false);
   const [selectedOptions, setSelectedOptions] = useState<(string | Option)[]>(
-    []
+    defaultValue || options
   );
   useEffect(() => {
     if (options?.length > 0 && !hasLoadedOptions) {
       setHasLoadedOptions(true);
-      setSelectedOptions(options);
+      setSelectedOptions(defaultValue || options);
     }
-  }, [hasLoadedOptions, options, setHasLoadedOptions]);
+  }, [defaultValue, hasLoadedOptions, options, setHasLoadedOptions]);
   const memoizedSelectedOptions = useMemo(
     () =>
       selectedOptions.map((option) =>
