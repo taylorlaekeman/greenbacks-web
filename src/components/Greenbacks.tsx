@@ -56,38 +56,23 @@ const GreenbacksInContext: FC = () => {
   );
 
   const options = [
-    { label: 'Cashflow', value: 'cashflow' },
-    {
-      label: 'Average Spending by Tag',
-      value: 'average-spending-by-tag',
-    },
-    {
-      label: 'Untagged Transactions',
-      value: 'untagged-transactions',
-    },
     {
       label: 'Totals by Month',
       value: 'totals-by-month',
-    },
-    {
-      label: 'Transactions',
-      value: 'transactions',
     },
     {
       label: 'Spending Timeline',
       value: 'spending-timeline',
     },
     {
+      label: 'Transactions',
+      value: 'transactions',
+    },
+    {
       label: 'Monthly Spending by Tag',
       value: 'monthly-spending-by-tag',
     },
-    {
-      label: 'Top Spending Categories',
-      value: 'top-spending-categories',
-    },
-  ].sort(({ label: firstLabel }, { label: secondLabel }) =>
-    firstLabel > secondLabel ? 1 : -1
-  );
+  ];
 
   return (
     <>
