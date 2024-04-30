@@ -1,5 +1,6 @@
 import React, { FC } from 'react';
 
+import List, { Item } from 'components/List';
 import Transaction from 'components/Transaction';
 import useCurrencyFormatter from 'hooks/useCurrencyFormatter';
 import TransactionType from 'types/transaction';
@@ -62,29 +63,6 @@ const GroupHeadings = styled.div`
   p {
     margin: 0;
   }
-`;
-
-const List = styled.ul`
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
-
-  li:first-child {
-    border-top-left-radius: 8px;
-    border-top-right-radius: 8px;
-  }
-
-  li:last-child {
-    border-bottom: solid black 1px;
-    border-bottom-left-radius: 8px;
-    border-bottom-right-radius: 8px;
-  }
-`;
-
-const Item = styled.li`
-  border: solid black 1px;
-  border-bottom: none;
-  padding: 8px;
 `;
 
 export default Transactions;

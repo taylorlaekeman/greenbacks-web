@@ -6,6 +6,7 @@ import Accounts from 'components/Accounts';
 import CashFlow from 'components/CashFlow';
 import AverageSpendingByTag from 'components/AverageSpendingByTag';
 import Button from 'components/Button';
+import Filters from 'components/Filters';
 import Home from 'components/Home';
 import Link from 'components/Link';
 import LoadingIndicator from 'components/LoadingIndicator';
@@ -72,6 +73,7 @@ const GreenbacksInContext: FC = () => {
       label: 'Monthly Spending by Tag',
       value: 'monthly-spending-by-tag',
     },
+    { label: 'Filters', value: 'filters' },
   ];
 
   return (
@@ -133,6 +135,7 @@ const GreenbacksInContext: FC = () => {
           element={<TopSpendingCategories />}
         />
         <Route path="/transactions" element={<TransactionsPage />} />
+        <Route path="/filters" element={<Filters />} />
       </Routes>
     </>
   );
