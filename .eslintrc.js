@@ -6,9 +6,11 @@ module.exports = {
   extends: [
     'plugin:react/recommended',
     'airbnb',
-    'prettier',
     'plugin:@typescript-eslint/eslint-recommended',
     'plugin:@typescript-eslint/recommended',
+    'plugin:storybook/recommended',
+    'prettier',
+    'prettier/react',
   ],
   globals: {
     Atomics: 'readonly',
@@ -33,6 +35,11 @@ module.exports = {
         ts: 'never',
         tsx: 'never',
       },
+    ],
+    'import/prefer-default-export': 'off',
+    'import/no-extraneous-dependencies': [
+      'error',
+      { devDependencies: ['**/*.stories.*'] },
     ],
     'jest/no-disabled-tests': 'warn',
     'jest/no-focused-tests': 'error',
