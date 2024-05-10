@@ -1,21 +1,22 @@
 import React from 'react';
+import styled from 'styled-components';
 
 import useCurrencyFormatter from 'hooks/useCurrencyFormatter';
 import type Transaction from 'types/transaction';
 import datetime from 'utils/datetime';
 
 export function SpendingSummaryList({
+  areAllTagsVisible = false,
   endDate,
   isCurrentMonth = false,
-  isYearVisible = false,
   month,
   startDate,
   transactions = [],
   visibleTagCount = 5,
 }: {
+  areAllTagsVisible?: boolean;
   endDate?: datetime;
   isCurrentMonth?: boolean;
-  isYearVisible?: boolean;
   month?: datetime;
   startDate?: datetime;
   transactions?: Transaction[];
@@ -27,35 +28,38 @@ export function SpendingSummaryList({
   const tagsByTotalAmount = Object.entries(totalSpendingByTag).sort((a, b) =>
     a[1] > b[1] ? -1 : 1
   );
-  const visibleTagAmounts = tagsByTotalAmount.slice(0, visibleTagCount);
-  const remainingTagAmounts = tagsByTotalAmount.slice(visibleTagCount);
+  const tagCutoffIndex = areAllTagsVisible
+    ? tagsByTotalAmount.length
+    : visibleTagCount;
+  const visibleTagAmounts = tagsByTotalAmount.slice(0, tagCutoffIndex);
+  const remainingTagAmounts = tagsByTotalAmount.slice(tagCutoffIndex);
   const remainingSpendingAmount = remainingTagAmounts.reduce(
     (totalSoFar, tagAmount) => totalSoFar + tagAmount[1],
     0
   );
-  const summaryText = getSummaryText({
-    endDate,
-    formattedAmount: format(totalSpending),
-    isCurrentMonth,
-    isYearVisible,
-    month,
-    startDate,
-  });
   return (
-    <>
-      <p>{summaryText}</p>
-      <p>Your top spending categories are:</p>
-      <ul>
+    <Wrapper>
+      <Header>
+        <DateRange>
+          {getSpendingPeriodText({ endDate, isCurrentMonth, month, startDate })}
+        </DateRange>
+        <Amount>{format(totalSpending)}</Amount>
+      </Header>
+      <TagList>
         {visibleTagAmounts.map(([tag, amount]) => (
-          <li key={tag}>
-            {tag}: {format(amount)}
-          </li>
+          <TagAmount key={tag}>
+            <p>{format(amount)}</p>
+            <p>{tag}</p>
+          </TagAmount>
         ))}
         {remainingSpendingAmount > 0 && (
-          <li>All other spending: {format(remainingSpendingAmount)}</li>
+          <TagAmount>
+            <p>{format(remainingSpendingAmount)}</p>
+            <p>All other spending</p>
+          </TagAmount>
         )}
-      </ul>
-    </>
+      </TagList>
+    </Wrapper>
   );
 }
 
@@ -77,75 +81,94 @@ function getTotalSpendingByTag({
 }): Record<string, number> {
   return transactions.reduce<Record<string, number>>(
     (totalsByTag, transaction) => {
-      if (transaction.tag === undefined) return totalsByTag;
-      const totalSoFar = totalsByTag[transaction.tag] ?? 0;
+      const tag = transaction.tag ?? 'Untagged';
+      const totalSoFar = totalsByTag[tag] ?? 0;
       return {
         ...totalsByTag,
-        [transaction.tag]: totalSoFar + transaction.amount,
+        [tag]: totalSoFar + transaction.amount,
       };
     },
     {}
   );
 }
 
-function getSummaryText({
+const Wrapper = styled.div`
+  border: solid lightgrey 1px;
+  border-radius: 4px;
+
+  & p {
+    margin: 0;
+  }
+`;
+
+const Header = styled.div`
+  border-bottom: solid lightgrey 1px;
+  margin-bottom: 0;
+  padding: 16px;
+`;
+
+const DateRange = styled.p`
+  font-size: 0.9rem;
+  padding-bottom: 8px;
+`;
+
+const Amount = styled.p`
+  font-size: 2rem;
+`;
+
+const TagList = styled.ul`
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+`;
+
+const TagAmount = styled.li`
+  border-bottom: solid lightgrey 1px;
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 16px;
+
+  &:last-child {
+    border-bottom: none;
+  }
+`;
+
+function getSpendingPeriodText({
   endDate,
-  formattedAmount,
   isCurrentMonth = false,
-  isYearVisible = false,
   month,
   startDate,
 }: {
   endDate?: datetime;
-  formattedAmount: string;
   isCurrentMonth?: boolean;
-  isYearVisible?: boolean;
   month?: datetime;
   startDate?: datetime;
-}): string {
-  if (isCurrentMonth) return `You've spent ${formattedAmount} this month`;
-  if (month)
-    return `You spent ${formattedAmount} in ${getReadableMonth({
-      isYearVisible,
-      month,
-    })}`;
-  if (startDate)
-    return `You've spent ${formattedAmount} ${getReadableDateRange({
-      isYearVisible,
-      startDate,
-    })}`;
-  if (startDate && endDate)
-    return `You spent ${formattedAmount} ${getReadableDateRange({
-      endDate,
-      isYearVisible,
-      startDate,
-    })}`;
-  return `You've spent ${formattedAmount}`;
+}): string | undefined {
+  if (isCurrentMonth) return "This month you've spent";
+  if (month) return `In ${month.toFormat('MMMM yyyy')} you spent`;
+  if (startDate && !endDate)
+    return `Since ${startDate.toLocaleString(datetime.DATE_FULL)} you've spent`;
+  if (startDate && endDate) return getDateRangeText({ endDate, startDate });
+  return undefined;
 }
 
-function getReadableMonth({
-  isYearVisible = false,
-  month,
-}: {
-  isYearVisible?: boolean;
-  month: datetime;
-}): string {
-  if (isYearVisible) return month.toFormat('MMMM yyyy');
-  return month.toFormat('MMMM');
-}
-
-function getReadableDateRange({
+function getDateRangeText({
   endDate,
-  isYearVisible = false,
   startDate,
 }: {
-  endDate?: datetime;
-  isYearVisible?: boolean;
+  endDate: datetime;
+  isCurrentYear?: boolean;
   startDate: datetime;
 }): string {
-  const dateFormat = isYearVisible ? 'DDD' : 'MMMM d';
-  if (!endDate) return `since ${startDate.toFormat(dateFormat)}`;
-  return `between ${startDate.toFormat(dateFormat)} and ${endDate.toFormat(
-    dateFormat
-  )}`;
+  if (startDate.year !== endDate.year)
+    return `Between ${startDate.toLocaleString(
+      datetime.DATE_FULL
+    )} and ${endDate.toLocaleString(datetime.DATE_FULL)} you spent`;
+  if (startDate.month !== endDate.month)
+    return `Between ${startDate.toFormat('MMMM d')} and ${endDate.toFormat(
+      'MMMM d'
+    )} you spent`;
+  return `Between ${startDate.toFormat('MMMM d')} and ${endDate.toFormat(
+    'd'
+  )} you spent`;
 }

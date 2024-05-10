@@ -13,9 +13,9 @@ type Args = React.ComponentProps<typeof SpendingSummaryList> & {
 
 const meta: Meta<Args> = {
   args: {
+    areAllTagsVisible: false,
     endDate: undefined,
     isCurrentMonth: false,
-    isYearVisible: false,
     month: undefined,
     startDate: undefined,
     transactions,
@@ -65,7 +65,6 @@ export const ThisMonth: Story = {
 
 export const SpecificMonth: Story = {
   args: {
-    isYearVisible: true,
     month: datetime.fromISO('2024-01'),
   },
 };
@@ -73,14 +72,12 @@ export const SpecificMonth: Story = {
 export const DateRange: Story = {
   args: {
     endDate: datetime.fromISO('2024-01-10'),
-    isYearVisible: true,
     startDate: datetime.fromISO('2024-01-01'),
   },
 };
 
 export const StartDate: Story = {
   args: {
-    isYearVisible: true,
     startDate: datetime.fromISO('2024-01-01'),
   },
 };
