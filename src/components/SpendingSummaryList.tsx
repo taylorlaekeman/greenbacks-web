@@ -145,30 +145,16 @@ function getSpendingPeriodText({
   startDate?: datetime;
 }): string | undefined {
   if (isCurrentMonth) return "This month you've spent";
-  if (month) return `In ${month.toFormat('MMMM yyyy')} you spent`;
+  if (month)
+    return `In ${month.toLocaleString({
+      month: 'long',
+      year: 'numeric',
+    })} you spent`;
   if (startDate && !endDate)
     return `Since ${startDate.toLocaleString(datetime.DATE_FULL)} you've spent`;
-  if (startDate && endDate) return getDateRangeText({ endDate, startDate });
-  return undefined;
-}
-
-function getDateRangeText({
-  endDate,
-  startDate,
-}: {
-  endDate: datetime;
-  isCurrentYear?: boolean;
-  startDate: datetime;
-}): string {
-  if (startDate.year !== endDate.year)
+  if (startDate && endDate)
     return `Between ${startDate.toLocaleString(
-      datetime.DATE_FULL
-    )} and ${endDate.toLocaleString(datetime.DATE_FULL)} you spent`;
-  if (startDate.month !== endDate.month)
-    return `Between ${startDate.toFormat('MMMM d')} and ${endDate.toFormat(
-      'MMMM d'
-    )} you spent`;
-  return `Between ${startDate.toFormat('MMMM d')} and ${endDate.toFormat(
-    'd'
-  )} you spent`;
+      datetime.DATE_MED
+    )} and ${endDate.toLocaleString(datetime.DATE_MED)} you spent`;
+  return undefined;
 }
