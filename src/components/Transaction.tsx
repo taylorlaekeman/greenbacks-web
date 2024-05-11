@@ -7,10 +7,16 @@ import useCurrencyFormatter from 'hooks/useCurrencyFormatter';
 import TransactionType, { Category } from 'types/transaction';
 
 const Transaction: FC<{
+  isBadgeVisible?: boolean;
   isDateVisible?: boolean;
   isFilteringEnabled?: boolean;
   transaction: TransactionType;
-}> = ({ isDateVisible = true, isFilteringEnabled = false, transaction }) => {
+}> = ({
+  isBadgeVisible = true,
+  isDateVisible = true,
+  isFilteringEnabled = false,
+  transaction,
+}) => {
   const { format } = useCurrencyFormatter();
   const { amount, category, datetime, name, tag } = transaction;
   const { openModal } = useContext(TagModalContext);
@@ -23,41 +29,44 @@ const Transaction: FC<{
         </Button>
       )}
       <p id="name">{name}</p>
-      <Badges>
-        <CategoryBadge $category={category} />
-        <p>{category}</p>
-        <p>{tag}</p>
-        {isDateVisible && <p>{datetime}</p>}
-      </Badges>
+      {isBadgeVisible && (
+        <Badges>
+          <CategoryBadge $category={category} />
+          <p>{category}</p>
+          <p>{tag}</p>
+        </Badges>
+      )}
+      {isDateVisible && <p id="date">{datetime}</p>}
     </Grid>
   );
 };
 
 const Grid = styled.div<{ $category: Category }>`
+  align-items: baseline;
   display: grid;
   grid-gap: 0 5px;
   grid-template-areas:
     'amount   filter'
     'name     name'
     'merchant merchant'
-    'badges   badges';
+    'badges   date';
   grid-template-columns: 1fr max-content;
 
   p {
-    margin: 0.25em;
+    margin: 0;
   }
 
   #amount {
     grid-area: amount;
     font-size: 1em;
     font-weight: 700;
-    margin-bottom: 12px;
-    margin-top: 6px;
+    padding: 8px 0;
   }
 
   #date {
     grid-area: date;
     font-size: 0.7em;
+    text-align: right;
   }
 
   #name {

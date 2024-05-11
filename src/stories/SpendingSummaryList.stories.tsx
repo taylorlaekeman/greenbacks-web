@@ -15,6 +15,7 @@ const meta: Meta<Args> = {
   args: {
     areAllTagsVisible: false,
     endDate: undefined,
+    expandedTag: undefined,
     isCurrentMonth: false,
     month: undefined,
     startDate: undefined,
@@ -79,6 +80,18 @@ export const DateRange: Story = {
 export const StartDate: Story = {
   args: {
     startDate: datetime.fromISO('2024-01-01'),
+  },
+};
+
+export const AllTagsVisible: Story = {
+  args: {
+    areAllTagsVisible: true,
+  },
+};
+
+export const Expanded: Story = {
+  args: {
+    expandedTag: 'Untagged',
   },
 };
 

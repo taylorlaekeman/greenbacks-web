@@ -1,6 +1,6 @@
 import type Transaction from 'types/transaction';
 
-function groupTransactions({
+export function groupTransactions({
   groupBy = GroupBy.Date,
   sortGroupsBy = SortGroupsBy.Key,
   sortGroupsDirection = SortDirection.Desc,
@@ -71,8 +71,8 @@ export enum SortDirection {
 }
 
 export enum SortGroupsBy {
-  Key,
-  Total,
+  Key = 'Key',
+  Total = 'Total',
 }
 
 export enum SortTransactionsBy {

@@ -11,14 +11,14 @@ export const List = styled.ul`
   }
 
   & > li:last-child {
-    border-bottom: solid black 1px;
+    border-bottom: solid lightgrey 1px;
     border-bottom-left-radius: 8px;
     border-bottom-right-radius: 8px;
   }
 `;
 
 export const Item = styled.li`
-  border: solid black 1px;
+  border: solid lightgrey 1px;
   border-bottom: none;
   padding: 8px;
 `;

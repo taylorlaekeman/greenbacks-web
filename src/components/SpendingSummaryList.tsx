@@ -1,13 +1,22 @@
 import React from 'react';
 import styled from 'styled-components';
 
+import List, { Item } from 'components/List';
+import Transaction from 'components/Transaction';
 import useCurrencyFormatter from 'hooks/useCurrencyFormatter';
-import type Transaction from 'types/transaction';
+import type TransactionType from 'types/transaction';
 import datetime from 'utils/datetime';
+import {
+  GroupBy,
+  groupTransactions,
+  SortGroupsBy,
+  SortTransactionsBy,
+} from 'utils/groupTransactions';
 
 export function SpendingSummaryList({
   areAllTagsVisible = false,
   endDate,
+  expandedTag,
   isCurrentMonth = false,
   month,
   startDate,
@@ -16,25 +25,29 @@ export function SpendingSummaryList({
 }: {
   areAllTagsVisible?: boolean;
   endDate?: datetime;
+  expandedTag?: string;
   isCurrentMonth?: boolean;
   month?: datetime;
   startDate?: datetime;
-  transactions?: Transaction[];
+  transactions?: TransactionType[];
   visibleTagCount?: number;
 }): React.ReactElement {
   const { format } = useCurrencyFormatter();
   const totalSpending = getTotalSpending({ transactions });
-  const totalSpendingByTag = getTotalSpendingByTag({ transactions });
-  const tagsByTotalAmount = Object.entries(totalSpendingByTag).sort((a, b) =>
-    a[1] > b[1] ? -1 : 1
-  );
+  const groupedTransactions =
+    groupTransactions({
+      groupBy: GroupBy.Tag,
+      sortGroupsBy: SortGroupsBy.Total,
+      sortTransactionsBy: SortTransactionsBy.Amount,
+      transactions,
+    }) ?? [];
   const tagCutoffIndex = areAllTagsVisible
-    ? tagsByTotalAmount.length
+    ? groupedTransactions.length
     : visibleTagCount;
-  const visibleTagAmounts = tagsByTotalAmount.slice(0, tagCutoffIndex);
-  const remainingTagAmounts = tagsByTotalAmount.slice(tagCutoffIndex);
+  const visibleTagAmounts = groupedTransactions.slice(0, tagCutoffIndex);
+  const remainingTagAmounts = groupedTransactions.slice(tagCutoffIndex);
   const remainingSpendingAmount = remainingTagAmounts.reduce(
-    (totalSoFar, tagAmount) => totalSoFar + tagAmount[1],
+    (totalSoFar, group) => totalSoFar + group.total,
     0
   );
   return (
@@ -46,12 +59,28 @@ export function SpendingSummaryList({
         <Amount>{format(totalSpending)}</Amount>
       </Header>
       <TagList>
-        {visibleTagAmounts.map(([tag, amount]) => (
-          <TagAmount key={tag}>
-            <p>{format(amount)}</p>
-            <p>{tag}</p>
-          </TagAmount>
-        ))}
+        {visibleTagAmounts.map(
+          ({ key, total, transactions: visibleTransactions }) => (
+            <TagAmount key={key}>
+              <p>{format(total)}</p>
+              <p>{key}</p>
+              {key === expandedTag && (
+                <List>
+                  {visibleTransactions.map((transaction) => (
+                    <Item key={transaction.id}>
+                      <Transaction
+                        isBadgeVisible={false}
+                        isDateVisible={false}
+                        isFilteringEnabled={false}
+                        transaction={transaction}
+                      />
+                    </Item>
+                  ))}
+                </List>
+              )}
+            </TagAmount>
+          )
+        )}
         {remainingSpendingAmount > 0 && (
           <TagAmount>
             <p>{format(remainingSpendingAmount)}</p>
@@ -66,7 +95,7 @@ export function SpendingSummaryList({
 function getTotalSpending({
   transactions,
 }: {
-  transactions: Transaction[];
+  transactions: TransactionType[];
 }): number {
   return transactions.reduce(
     (total, transaction) => total + transaction.amount,
@@ -74,27 +103,10 @@ function getTotalSpending({
   );
 }
 
-function getTotalSpendingByTag({
-  transactions,
-}: {
-  transactions: Transaction[];
-}): Record<string, number> {
-  return transactions.reduce<Record<string, number>>(
-    (totalsByTag, transaction) => {
-      const tag = transaction.tag ?? 'Untagged';
-      const totalSoFar = totalsByTag[tag] ?? 0;
-      return {
-        ...totalsByTag,
-        [tag]: totalSoFar + transaction.amount,
-      };
-    },
-    {}
-  );
-}
-
 const Wrapper = styled.div`
   border: solid lightgrey 1px;
   border-radius: 4px;
+  min-width: 250px;
 
   & p {
     margin: 0;
