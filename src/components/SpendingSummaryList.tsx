@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { Button, ButtonStyle } from 'components/Button';
+import { Icon, IconType } from 'components/Icon';
 import { JustifiedRow } from 'components/JustifiedRow';
 import List, { Item } from 'components/List';
 import { Panel, PanelHeader } from 'components/Panel';
@@ -23,6 +24,7 @@ export function SpendingSummaryList({
   expandedTag,
   isCurrentMonth = false,
   month,
+  onChangeVisibleTagCount = noop,
   onSelectTag = noop,
   startDate,
   transactions = [],
@@ -33,6 +35,7 @@ export function SpendingSummaryList({
   expandedTag?: string;
   isCurrentMonth?: boolean;
   month?: datetime;
+  onChangeVisibleTagCount?: (input: number) => void;
   onSelectTag?: (input: string | undefined) => void;
   startDate?: datetime;
   transactions?: TransactionType[];
@@ -59,6 +62,13 @@ export function SpendingSummaryList({
   const remainingTransactions = remainingTagAmounts
     .flatMap((group) => group.transactions)
     .sort((a, b) => (a.amount > b.amount ? -1 : 1));
+  const canIncreaseVisibleTagCount =
+    groupedTransactions.length > visibleTagCount;
+  const actualVisibleTagCount = Math.min(
+    visibleTagCount,
+    groupedTransactions.length
+  );
+  const canDecreaseVisibleTagCount = actualVisibleTagCount > 1;
   return (
     <Panel>
       <PanelHeader hasBottomBorder={visibleTagAmounts.length > 0} isColumnar>
@@ -96,7 +106,6 @@ export function SpendingSummaryList({
           {remainingSpendingAmount > 0 && (
             <TagAmount
               isExpanded={expandedTag === 'other'}
-              isLastTag
               onExpand={() => {
                 const tagToReport =
                   expandedTag === 'other' ? undefined : 'other';
@@ -107,6 +116,34 @@ export function SpendingSummaryList({
               transactions={remainingTransactions}
             />
           )}
+          <Item>
+            <JustifiedRow>
+              <Button
+                isDisabled={!canIncreaseVisibleTagCount}
+                onClick={() => {
+                  onChangeVisibleTagCount(visibleTagCount + 1);
+                }}
+                style={ButtonStyle.Unstyled}
+              >
+                <Icon icon={IconType.Plus} />
+              </Button>
+              <Text size={Size.Small}>Visible Tags</Text>
+              <Button
+                isDisabled={!canDecreaseVisibleTagCount}
+                onClick={() => {
+                  const currentTagCount = Math.min(
+                    visibleTagCount,
+                    visibleTagAmounts.length
+                  );
+                  const newTagCount = Math.max(currentTagCount - 1, 1);
+                  onChangeVisibleTagCount(newTagCount);
+                }}
+                style={ButtonStyle.Unstyled}
+              >
+                <Icon icon={IconType.Minus} />
+              </Button>
+            </JustifiedRow>
+          </Item>
         </List>
       )}
     </Panel>
@@ -155,12 +192,14 @@ function TagAmount({
     );
   return (
     <Panel hasBorder={false} hasTopBorder={!isFirstTag}>
-      <Button isFullWidth onClick={onExpand} style={ButtonStyle.Unstyled}>
-        <PanelHeader isShort>
-          <Text isBold>{format(total)}</Text>
-          <Text isBold>{tag}</Text>
-        </PanelHeader>
-      </Button>
+      <PanelHeader isShort>
+        <Button isFullWidth onClick={onExpand} style={ButtonStyle.Unstyled}>
+          <JustifiedRow>
+            <Text isBold>{format(total)}</Text>
+            <Text isBold>{tag}</Text>
+          </JustifiedRow>
+        </Button>
+      </PanelHeader>
       <List
         hasOutsideBorder={false}
         hasRoundedBottomCorners={isLastTag}

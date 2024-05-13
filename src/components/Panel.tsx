@@ -24,10 +24,8 @@ export const PanelHeader = styled.div<{
 }>`
   ${({ hasBottomBorder = true }) =>
     hasBottomBorder && 'border-bottom: solid lightgrey 1px;'}
-  display: flex;
   ${({ isColumnar = false }) =>
-    isColumnar && 'flex-direction: column; gap: 8px;'}
-  justify-content: space-between;
+    isColumnar && 'display: flex; flex-direction: column; gap: 8px;'}
   padding: ${({ isShort = false }) => (isShort ? '8px' : '16px')} 16px;
 `;
 

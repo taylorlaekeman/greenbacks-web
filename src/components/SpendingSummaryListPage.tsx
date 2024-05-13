@@ -11,12 +11,15 @@ export function SpendingSummaryListPage(): React.ReactElement {
     startDate: now.startOf('month').toISODate(),
   });
   const [expandedTag, setExpandedTag] = useState<string | undefined>(undefined);
+  const [visibleTagCount, setVisibleTagCount] = useState<number>(5);
   return (
     <SpendingSummaryList
       expandedTag={expandedTag}
       isCurrentMonth
+      onChangeVisibleTagCount={setVisibleTagCount}
       onSelectTag={(tag) => setExpandedTag(tag)}
       transactions={spending}
+      visibleTagCount={visibleTagCount}
     />
   );
 }

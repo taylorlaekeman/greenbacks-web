@@ -49,6 +49,7 @@ function StoryWrapper(props: Args): React.ReactElement {
   const [expandedTag, setExpandedTag] = useState<string | undefined>(
     initialExpandedTag
   );
+  const [visibleTagCount, setVisibleTagCount] = useState<number>(5);
   const { endDate, month, startDate } = props;
   const parsedEndDate: datetime | undefined =
     endDate && datetime.fromISO(endDate);
@@ -61,8 +62,10 @@ function StoryWrapper(props: Args): React.ReactElement {
       endDate={parsedEndDate}
       expandedTag={expandedTag}
       month={parsedMonth}
+      onChangeVisibleTagCount={setVisibleTagCount}
       onSelectTag={(tag) => setExpandedTag(tag)}
       startDate={parsedStartDate}
+      visibleTagCount={visibleTagCount}
     />
   );
 }
