@@ -119,33 +119,37 @@ export function SpendingSummaryList({
           <Item>
             <JustifiedRow>
               <Text size={Size.Small}>
+                {actualVisibleTagCount === groupedTransactions.length && 'All'}{' '}
                 {actualVisibleTagCount} tag{actualVisibleTagCount !== 1 && 's'}{' '}
                 visible
               </Text>
               <JustifiedRow space={Space.Small}>
-                <Button
-                  isDisabled={!canIncreaseVisibleTagCount}
-                  onClick={() => {
-                    onChangeVisibleTagCount(visibleTagCount + 1);
-                  }}
-                  style={ButtonStyle.Unstyled}
-                >
-                  <Icon icon={IconType.Plus} />
-                </Button>
-                <Button
-                  isDisabled={!canDecreaseVisibleTagCount}
-                  onClick={() => {
-                    const currentTagCount = Math.min(
-                      visibleTagCount,
-                      visibleTagAmounts.length
-                    );
-                    const newTagCount = Math.max(currentTagCount - 1, 1);
-                    onChangeVisibleTagCount(newTagCount);
-                  }}
-                  style={ButtonStyle.Unstyled}
-                >
-                  <Icon icon={IconType.Minus} />
-                </Button>
+                {canIncreaseVisibleTagCount && (
+                  <Button
+                    isDisabled={!canIncreaseVisibleTagCount}
+                    onClick={() => {
+                      onChangeVisibleTagCount(visibleTagCount + 1);
+                    }}
+                    style={ButtonStyle.Unstyled}
+                  >
+                    <Icon icon={IconType.Plus} />
+                  </Button>
+                )}
+                {canDecreaseVisibleTagCount && (
+                  <Button
+                    onClick={() => {
+                      const currentTagCount = Math.min(
+                        visibleTagCount,
+                        visibleTagAmounts.length
+                      );
+                      const newTagCount = Math.max(currentTagCount - 1, 1);
+                      onChangeVisibleTagCount(newTagCount);
+                    }}
+                    style={ButtonStyle.Unstyled}
+                  >
+                    <Icon icon={IconType.Minus} />
+                  </Button>
+                )}
               </JustifiedRow>
             </JustifiedRow>
           </Item>
