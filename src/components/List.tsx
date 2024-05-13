@@ -1,26 +1,55 @@
 import styled from 'utils/styled';
 
-export const List = styled.ul`
+export const List = styled.ul<{
+  hasOutsideBorder?: boolean;
+  hasRoundedBottomCorners?: boolean;
+  hasRoundedTopCorners?: boolean;
+  isIndented?: boolean;
+  isInset?: boolean;
+}>`
+  border-radius: 4px;
   list-style-type: none;
   margin: 0;
   padding: 0;
 
-  & > li:first-child {
-    border-top-left-radius: 8px;
-    border-top-right-radius: 8px;
+  ${({ isInset = false }) =>
+    isInset &&
+    `
+      background-color: #f9f9f9;
+      box-shadow: grey 0px 3px 4px -4px inset;
+  `}
+
+  ${({ hasOutsideBorder = true }) =>
+    hasOutsideBorder && 'border: solid lightgrey 1px;'}
+
+  ${({ hasRoundedTopCorners = true }) =>
+    !hasRoundedTopCorners &&
+    `
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+  `}
+
+  ${({ hasRoundedBottomCorners = true }) =>
+    !hasRoundedBottomCorners &&
+    `
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+  `}
+
+  & > li {
+    border-top: solid lightgrey 1px;
+    padding: 8px 16px;
+    ${({ isIndented }) => isIndented && 'padding-left: 24px;'}
   }
 
-  & > li:last-child {
-    border-bottom: solid lightgrey 1px;
-    border-bottom-left-radius: 8px;
-    border-bottom-right-radius: 8px;
+  & > li:first-child {
+    border-top: none;
   }
 `;
 
-export const Item = styled.li`
-  border: solid lightgrey 1px;
-  border-bottom: none;
-  padding: 8px;
+export const Item = styled.li<{ isJustifiedRow?: boolean }>`
+  ${({ isJustifiedRow = false }) =>
+    isJustifiedRow && 'display: flex; justify-content: space-between;'}
 `;
 
 export default List;

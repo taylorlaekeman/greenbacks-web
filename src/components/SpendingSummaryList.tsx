@@ -1,7 +1,10 @@
 import React from 'react';
-import styled from 'styled-components';
 
+import { Button, ButtonStyle } from 'components/Button';
+import { JustifiedRow } from 'components/JustifiedRow';
 import List, { Item } from 'components/List';
+import { Panel, PanelHeader } from 'components/Panel';
+import { Size, Text } from 'components/Text';
 import Transaction from 'components/Transaction';
 import useCurrencyFormatter from 'hooks/useCurrencyFormatter';
 import type TransactionType from 'types/transaction';
@@ -12,6 +15,7 @@ import {
   SortGroupsBy,
   SortTransactionsBy,
 } from 'utils/groupTransactions';
+import noop from 'utils/noop';
 
 export function SpendingSummaryList({
   areAllTagsVisible = false,
@@ -19,6 +23,7 @@ export function SpendingSummaryList({
   expandedTag,
   isCurrentMonth = false,
   month,
+  onSelectTag = noop,
   startDate,
   transactions = [],
   visibleTagCount = 5,
@@ -28,6 +33,7 @@ export function SpendingSummaryList({
   expandedTag?: string;
   isCurrentMonth?: boolean;
   month?: datetime;
+  onSelectTag?: (input: string | undefined) => void;
   startDate?: datetime;
   transactions?: TransactionType[];
   visibleTagCount?: number;
@@ -51,44 +57,48 @@ export function SpendingSummaryList({
     0
   );
   return (
-    <Wrapper>
-      <Header>
-        <DateRange>
+    <Panel>
+      <PanelHeader hasBottomBorder={visibleTagAmounts.length > 0} isColumnar>
+        <Text>
           {getSpendingPeriodText({ endDate, isCurrentMonth, month, startDate })}
-        </DateRange>
-        <Amount>{format(totalSpending)}</Amount>
-      </Header>
-      <TagList>
-        {visibleTagAmounts.map(
-          ({ key, total, transactions: visibleTransactions }) => (
-            <TagAmount key={key}>
-              <p>{format(total)}</p>
-              <p>{key}</p>
-              {key === expandedTag && (
-                <List>
-                  {visibleTransactions.map((transaction) => (
-                    <Item key={transaction.id}>
-                      <Transaction
-                        isBadgeVisible={false}
-                        isDateVisible={false}
-                        isFilteringEnabled={false}
-                        transaction={transaction}
-                      />
-                    </Item>
-                  ))}
-                </List>
-              )}
-            </TagAmount>
-          )
-        )}
-        {remainingSpendingAmount > 0 && (
-          <TagAmount>
-            <p>{format(remainingSpendingAmount)}</p>
-            <p>All other spending</p>
-          </TagAmount>
-        )}
-      </TagList>
-    </Wrapper>
+        </Text>
+        <Text size={Size.Large}>{format(totalSpending)}</Text>
+      </PanelHeader>
+      {visibleTagAmounts.length > 0 && (
+        <List
+          hasOutsideBorder={false}
+          hasRoundedBottomCorners
+          hasRoundedTopCorners={false}
+        >
+          {visibleTagAmounts.map(
+            ({ key: tag, total, transactions: visibleTransactions }, index) => {
+              const isExpanded = tag === expandedTag;
+              return (
+                <TagAmount
+                  isExpanded={isExpanded}
+                  isFirstTag={index === 0}
+                  isLastTag={index === groupedTransactions.length - 1}
+                  onClick={() => {
+                    const tagToReport = isExpanded ? undefined : tag;
+                    onSelectTag(tagToReport);
+                  }}
+                  key={tag}
+                  tag={tag}
+                  total={total}
+                  transactions={visibleTransactions}
+                />
+              );
+            }
+          )}
+          {remainingSpendingAmount > 0 && (
+            <TagAmount
+              tag="All other transactions"
+              total={remainingSpendingAmount}
+            />
+          )}
+        </List>
+      )}
+    </Panel>
   );
 }
 
@@ -103,47 +113,59 @@ function getTotalSpending({
   );
 }
 
-const Wrapper = styled.div`
-  border: solid lightgrey 1px;
-  border-radius: 4px;
-  min-width: 250px;
-
-  & p {
-    margin: 0;
-  }
-`;
-
-const Header = styled.div`
-  border-bottom: solid lightgrey 1px;
-  margin-bottom: 0;
-  padding: 16px;
-`;
-
-const DateRange = styled.p`
-  font-size: 0.9rem;
-  padding-bottom: 8px;
-`;
-
-const Amount = styled.p`
-  font-size: 2rem;
-`;
-
-const TagList = styled.ul`
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
-`;
-
-const TagAmount = styled.li`
-  border-bottom: solid lightgrey 1px;
-  display: flex;
-  justify-content: space-between;
-  padding: 8px 16px;
-
-  &:last-child {
-    border-bottom: none;
-  }
-`;
+function TagAmount({
+  isExpanded = false,
+  isFirstTag = false,
+  isLastTag = false,
+  onClick = noop,
+  tag,
+  total,
+  transactions = [],
+}: {
+  isExpanded?: boolean;
+  isFirstTag?: boolean;
+  isLastTag?: boolean;
+  onClick?: () => void;
+  tag: string;
+  total: number;
+  transactions?: TransactionType[];
+}): React.ReactElement {
+  const { format } = useCurrencyFormatter();
+  if (!isExpanded)
+    return (
+      <Item>
+        <Button onClick={onClick} style={ButtonStyle.Unstyled}>
+          <JustifiedRow>
+            <Text>{format(total)}</Text>
+            <Text>{tag}</Text>
+          </JustifiedRow>
+        </Button>
+      </Item>
+    );
+  return (
+    <Button onClick={onClick} style={ButtonStyle.Unstyled}>
+      <Panel hasBorder={false} hasTopBorder={!isFirstTag}>
+        <PanelHeader isShort>
+          <Text isBold>{format(total)}</Text>
+          <Text isBold>{tag}</Text>
+        </PanelHeader>
+        <List
+          hasOutsideBorder={false}
+          hasRoundedBottomCorners={isLastTag}
+          hasRoundedTopCorners={false}
+          isIndented
+          isInset
+        >
+          {transactions.map((transaction) => (
+            <Item key={transaction.id}>
+              <Transaction isCompact transaction={transaction} />
+            </Item>
+          ))}
+        </List>
+      </Panel>
+    </Button>
+  );
+}
 
 function getSpendingPeriodText({
   endDate,

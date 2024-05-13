@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
+import { fn } from '@storybook/test';
 
 import { SpendingSummaryList } from 'components/SpendingSummaryList';
 import { transactions } from 'stories/testTransactions';
@@ -18,6 +19,7 @@ const meta: Meta<Args> = {
     expandedTag: undefined,
     isCurrentMonth: false,
     month: undefined,
+    onSelectTag: fn(),
     startDate: undefined,
     transactions,
     visibleTagCount: 5,
@@ -37,24 +39,29 @@ const meta: Meta<Args> = {
   parameters: {
     layout: 'centered',
   },
-  render: (args) => {
-    const { endDate, month, startDate } = args;
-    const parsedEndDate: datetime | undefined =
-      endDate && datetime.fromISO(endDate);
-    const parsedStartDate: datetime | undefined =
-      startDate && datetime.fromISO(startDate);
-    const parsedMonth: datetime | undefined = month && datetime.fromISO(month);
-    return (
-      <SpendingSummaryList
-        {...args}
-        endDate={parsedEndDate}
-        month={parsedMonth}
-        startDate={parsedStartDate}
-      />
-    );
-  },
+  render: (args) => <StoryWrapper {...args} />,
   title: 'Molecules/SpendingSummaryList',
 };
+
+function StoryWrapper(props: Args): React.ReactElement {
+  const [expandedTag, setExpandedTag] = useState<string | undefined>(undefined);
+  const { endDate, month, startDate } = props;
+  const parsedEndDate: datetime | undefined =
+    endDate && datetime.fromISO(endDate);
+  const parsedStartDate: datetime | undefined =
+    startDate && datetime.fromISO(startDate);
+  const parsedMonth: datetime | undefined = month && datetime.fromISO(month);
+  return (
+    <SpendingSummaryList
+      {...props}
+      endDate={parsedEndDate}
+      expandedTag={expandedTag}
+      month={parsedMonth}
+      onSelectTag={(tag) => setExpandedTag(tag)}
+      startDate={parsedStartDate}
+    />
+  );
+}
 
 type Story = StoryObj<typeof SpendingSummaryList>;
 
@@ -86,12 +93,21 @@ export const StartDate: Story = {
 export const AllTagsVisible: Story = {
   args: {
     areAllTagsVisible: true,
+    isCurrentMonth: true,
   },
 };
 
 export const Expanded: Story = {
   args: {
     expandedTag: 'Untagged',
+    isCurrentMonth: true,
+  },
+};
+
+export const NoTransactions: Story = {
+  args: {
+    isCurrentMonth: true,
+    transactions: undefined,
   },
 };
 

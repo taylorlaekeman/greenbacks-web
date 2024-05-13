@@ -1,19 +1,19 @@
 import React, { FC } from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 import { ReactComponent as UnstyledCog } from 'assets/icons/cog.svg';
 import noop from 'utils/noop';
 
-const Button: FC<{
-  onClick?: () => void;
+export const Button: FC<{
   isDisabled?: boolean;
   isLoading?: boolean;
+  onClick?: () => void;
   style?: ButtonStyle;
 }> = ({
   children,
-  onClick = noop,
   isDisabled = false,
   isLoading = false,
+  onClick = noop,
   style = ButtonStyle.Primary,
 }) => (
   <StyledButton
@@ -41,18 +41,44 @@ const Cog = styled(UnstyledCog)`
 export enum ButtonStyle {
   Primary,
   Text,
+  Unstyled,
 }
 
 const StyledButton = styled.button<{ $style: ButtonStyle }>`
-  ${(props) =>
-    props.$style === ButtonStyle.Text &&
-    `
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 4px 8px;
-    text-decoration: underline;
-  `}
+  ${({ $style }) => getStyle({ style: $style })}
+`;
+
+function getStyle({ style }: { style: ButtonStyle }) {
+  switch (style) {
+    case ButtonStyle.Text:
+      return textStyle;
+    case ButtonStyle.Unstyled:
+      return unstyledStyle;
+    case ButtonStyle.Primary:
+    default:
+      return primaryStyle;
+  }
+}
+
+const primaryStyle = css``;
+
+const textStyle = css`
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px 8px;
+  text-decoration: underline;
+`;
+
+const unstyledStyle = css`
+  background: none;
+  border: none;
+  color: inherit;
+  font: inherit;
+  outline: inherit;
+  padding: 0;
+  text-align: inherit;
+  width: 100%;
 `;
 
 export default Button;

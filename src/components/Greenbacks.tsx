@@ -11,9 +11,10 @@ import Home from 'components/Home';
 import Link from 'components/Link';
 import LoadingIndicator from 'components/LoadingIndicator';
 import MonthlySpendingByTag from 'components/MonthlySpendingByTag';
-import SpendingTimeline from 'components/SpendingTimeline';
 import Select from 'components/Select';
 import Spending from 'components/Spending';
+import { SpendingSummaryListPage } from 'components/SpendingSummaryListPage';
+import SpendingTimeline from 'components/SpendingTimeline';
 import TagModal from 'components/TagModal';
 import TopSpendingCategories from 'components/TopSpendingCategories';
 import TotalsByMonth from 'components/TotalsByMonth';
@@ -57,6 +58,7 @@ const GreenbacksInContext: FC = () => {
   );
 
   const options = [
+    { label: 'Spending Summary List', value: 'spending-summary-list' },
     {
       label: 'Totals by Month',
       value: 'totals-by-month',
@@ -125,6 +127,10 @@ const GreenbacksInContext: FC = () => {
         <Route
           path="/monthly-spending-by-tag"
           element={<MonthlySpendingByTag />}
+        />
+        <Route
+          path="/spending-summary-list"
+          element={<SpendingSummaryListPage />}
         />
         <Route
           path="/top-spending-categories/:month"

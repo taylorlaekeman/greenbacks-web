@@ -3,23 +3,27 @@ import styled from 'utils/styled';
 
 import Button, { ButtonStyle } from 'components/Button';
 import TagModalContext from 'context/TagModal';
+import { Text } from 'components/Text';
 import useCurrencyFormatter from 'hooks/useCurrencyFormatter';
 import TransactionType, { Category } from 'types/transaction';
 
 const Transaction: FC<{
   isBadgeVisible?: boolean;
+  isCompact?: boolean;
   isDateVisible?: boolean;
   isFilteringEnabled?: boolean;
   transaction: TransactionType;
 }> = ({
   isBadgeVisible = true,
+  isCompact = false,
   isDateVisible = true,
   isFilteringEnabled = false,
   transaction,
 }) => {
   const { format } = useCurrencyFormatter();
-  const { amount, category, datetime, name, tag } = transaction;
   const { openModal } = useContext(TagModalContext);
+  if (isCompact) return <CompactTransaction transaction={transaction} />;
+  const { amount, category, datetime, name, tag } = transaction;
   return (
     <Grid $category={category}>
       <p id="amount">{format({ value: amount })}</p>
@@ -109,5 +113,26 @@ function getCategoryColour(category: Category): string {
   if (category === Category.Saving) return 'blue';
   return 'grey';
 }
+
+function CompactTransaction({
+  transaction,
+}: {
+  transaction: TransactionType;
+}): React.ReactElement {
+  const { format } = useCurrencyFormatter();
+  const { amount, name } = transaction;
+  return (
+    <CompactTransactionWrapper>
+      <Text>{format(amount)}</Text>
+      <Text>{name}</Text>
+    </CompactTransactionWrapper>
+  );
+}
+
+const CompactTransactionWrapper = styled.div`
+  display: flex;
+  gap: 32px;
+  justify-content: space-between;
+`;
 
 export default Transaction;
