@@ -10,6 +10,7 @@ export function JustifiedRow({
 }
 
 const Wrapper = styled.div`
+  align-items: baseline;
   display: flex;
   justify-content: space-between;
 `;

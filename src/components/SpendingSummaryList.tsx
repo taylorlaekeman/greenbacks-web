@@ -118,30 +118,35 @@ export function SpendingSummaryList({
           )}
           <Item>
             <JustifiedRow>
-              <Button
-                isDisabled={!canIncreaseVisibleTagCount}
-                onClick={() => {
-                  onChangeVisibleTagCount(visibleTagCount + 1);
-                }}
-                style={ButtonStyle.Unstyled}
-              >
-                <Icon icon={IconType.Plus} />
-              </Button>
-              <Text size={Size.Small}>Visible Tags</Text>
-              <Button
-                isDisabled={!canDecreaseVisibleTagCount}
-                onClick={() => {
-                  const currentTagCount = Math.min(
-                    visibleTagCount,
-                    visibleTagAmounts.length
-                  );
-                  const newTagCount = Math.max(currentTagCount - 1, 1);
-                  onChangeVisibleTagCount(newTagCount);
-                }}
-                style={ButtonStyle.Unstyled}
-              >
-                <Icon icon={IconType.Minus} />
-              </Button>
+              <Text size={Size.Small}>
+                {actualVisibleTagCount} tag{actualVisibleTagCount !== 1 && 's'}{' '}
+                visible
+              </Text>
+              <div>
+                <Button
+                  isDisabled={!canIncreaseVisibleTagCount}
+                  onClick={() => {
+                    onChangeVisibleTagCount(visibleTagCount + 1);
+                  }}
+                  style={ButtonStyle.Unstyled}
+                >
+                  <Icon icon={IconType.Plus} />
+                </Button>
+                <Button
+                  isDisabled={!canDecreaseVisibleTagCount}
+                  onClick={() => {
+                    const currentTagCount = Math.min(
+                      visibleTagCount,
+                      visibleTagAmounts.length
+                    );
+                    const newTagCount = Math.max(currentTagCount - 1, 1);
+                    onChangeVisibleTagCount(newTagCount);
+                  }}
+                  style={ButtonStyle.Unstyled}
+                >
+                  <Icon icon={IconType.Minus} />
+                </Button>
+              </div>
             </JustifiedRow>
           </Item>
         </List>
@@ -185,7 +190,9 @@ function TagAmount({
         <Button isFullWidth onClick={onExpand} style={ButtonStyle.Unstyled}>
           <JustifiedRow>
             <Text>{format(total)}</Text>
-            <Text>{tag}</Text>
+            <Text isUnderlined size={Size.Small}>
+              {tag}
+            </Text>
           </JustifiedRow>
         </Button>
       </Item>
@@ -196,7 +203,9 @@ function TagAmount({
         <Button isFullWidth onClick={onExpand} style={ButtonStyle.Unstyled}>
           <JustifiedRow>
             <Text isBold>{format(total)}</Text>
-            <Text isBold>{tag}</Text>
+            <Text isBold isUnderlined size={Size.Small}>
+              {tag}
+            </Text>
           </JustifiedRow>
         </Button>
       </PanelHeader>

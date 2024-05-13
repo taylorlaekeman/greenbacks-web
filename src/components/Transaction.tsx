@@ -4,7 +4,7 @@ import styled from 'utils/styled';
 import Button, { ButtonStyle } from 'components/Button';
 import { Icon, IconType } from 'components/Icon';
 import TagModalContext from 'context/TagModal';
-import { Text } from 'components/Text';
+import { Size, Text } from 'components/Text';
 import useCurrencyFormatter from 'hooks/useCurrencyFormatter';
 import TransactionType, { Category } from 'types/transaction';
 
@@ -30,7 +30,9 @@ const Transaction: FC<{
     return (
       <CompactGrid isFilterButtonVisible={isFilterButtonVisible}>
         <Text>{format({ value: amount })}</Text>
-        <Text isRightAligned>{name}</Text>
+        <Text isRightAligned size={Size.Small}>
+          {name}
+        </Text>
         {isFilterButtonVisible && (
           <Button
             onClick={() => openModal(transaction)}

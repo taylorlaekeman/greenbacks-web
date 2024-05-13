@@ -7,6 +7,7 @@ export function Text({
   isBold = false,
   isCenterAligned = false,
   isRightAligned = false,
+  isUnderlined = false,
   size = Size.Medium,
 }: {
   children: React.ReactNode;
@@ -14,6 +15,7 @@ export function Text({
   isBold?: boolean;
   isCenterAligned?: boolean;
   isRightAligned?: boolean;
+  isUnderlined?: boolean;
   size?: Size;
 }): React.ReactElement {
   const InnerText = getInnerText({ heirarchy });
@@ -22,6 +24,7 @@ export function Text({
       isBold={isBold}
       isCenterAligned={isCenterAligned}
       isRightAligned={isRightAligned}
+      isUnderlined={isUnderlined}
       size={size}
     >
       {children}
@@ -61,6 +64,7 @@ interface InnerTextProps {
   isBold: boolean;
   isCenterAligned: boolean;
   isRightAligned: boolean;
+  isUnderlined: boolean;
   size: Size;
 }
 
@@ -71,6 +75,7 @@ const sharedStyles = css<InnerTextProps>`
   margin: 0;
   ${({ isCenterAligned }) => isCenterAligned && 'text-align: center;'}
   ${({ isRightAligned }) => isRightAligned && 'text-align: right;'}
+  ${({ isUnderlined }) => isUnderlined && 'text-decoration: underline;'}
 `;
 
 const P = styled.p<InnerTextProps>`
