@@ -2,7 +2,7 @@ import React from 'react';
 
 import { Button, ButtonStyle } from 'components/Button';
 import { Icon, IconType } from 'components/Icon';
-import { JustifiedRow } from 'components/JustifiedRow';
+import { JustifiedRow, Space } from 'components/JustifiedRow';
 import List, { Item } from 'components/List';
 import { Panel, PanelHeader } from 'components/Panel';
 import { Size, Text } from 'components/Text';
@@ -122,7 +122,7 @@ export function SpendingSummaryList({
                 {actualVisibleTagCount} tag{actualVisibleTagCount !== 1 && 's'}{' '}
                 visible
               </Text>
-              <div>
+              <JustifiedRow space={Space.Small}>
                 <Button
                   isDisabled={!canIncreaseVisibleTagCount}
                   onClick={() => {
@@ -146,7 +146,7 @@ export function SpendingSummaryList({
                 >
                   <Icon icon={IconType.Minus} />
                 </Button>
-              </div>
+              </JustifiedRow>
             </JustifiedRow>
           </Item>
         </List>

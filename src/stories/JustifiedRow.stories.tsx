@@ -2,10 +2,18 @@ import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import styled from 'styled-components';
 
-import { JustifiedRow } from 'components/JustifiedRow';
+import { JustifiedRow, Space } from 'components/JustifiedRow';
 
 const meta: Meta<typeof JustifiedRow> = {
-  args: {},
+  args: {
+    space: undefined,
+  },
+  argTypes: {
+    space: {
+      options: Object.values(Space),
+      control: 'radio',
+    },
+  },
   component: JustifiedRow,
   parameters: {
     layout: 'centered',
@@ -16,9 +24,9 @@ const meta: Meta<typeof JustifiedRow> = {
 type Story = StoryObj<typeof JustifiedRow>;
 
 export const TwoItems: Story = {
-  render: () => (
+  render: ({ space }) => (
     <Wrapper>
-      <JustifiedRow>
+      <JustifiedRow space={space}>
         <p>first</p>
         <p>second</p>
       </JustifiedRow>
@@ -27,9 +35,9 @@ export const TwoItems: Story = {
 };
 
 export const ThreeItems: Story = {
-  render: () => (
+  render: ({ space }) => (
     <Wrapper>
-      <JustifiedRow>
+      <JustifiedRow space={space}>
         <p>first</p>
         <p>second</p>
         <p>third</p>
