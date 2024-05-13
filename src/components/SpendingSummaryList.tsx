@@ -97,7 +97,11 @@ export function SpendingSummaryList({
             <TagAmount
               isExpanded={expandedTag === 'other'}
               isLastTag
-              onExpand={() => onSelectTag('other')}
+              onExpand={() => {
+                const tagToReport =
+                  expandedTag === 'other' ? undefined : 'other';
+                onSelectTag(tagToReport);
+              }}
               tag="All other transactions"
               total={remainingSpendingAmount}
               transactions={remainingTransactions}
