@@ -1,13 +1,27 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
 import Transaction from 'components/Transaction';
-import { transactions } from 'stories/testTransactions';
+import GreenbacksTransaction, {
+  Category,
+  TransactionType,
+} from 'types/transaction';
+
+const transaction: GreenbacksTransaction = {
+  accountId: 'account-1',
+  amount: 3599,
+  category: Category.Spending,
+  datetime: '2020-01-01',
+  id: 'transaction-1',
+  merchant: 'Merchant 1',
+  name: 'Transaction 1',
+  type: TransactionType.Debit,
+};
 
 const meta: Meta<typeof Transaction> = {
   args: {
     isDateVisible: undefined,
     isFilteringEnabled: undefined,
-    transaction: transactions[0],
+    transaction,
   },
   component: Transaction,
   parameters: {
@@ -30,7 +44,7 @@ export const Filterable: Story = {
 
 export const Compact: Story = {
   args: {
-    isCompact: true
+    isCompact: true,
   },
 };
 

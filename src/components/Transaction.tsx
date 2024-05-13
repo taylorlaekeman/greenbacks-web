@@ -2,6 +2,7 @@ import React, { FC, useContext } from 'react';
 import styled from 'utils/styled';
 
 import Button, { ButtonStyle } from 'components/Button';
+import { Icon, IconType } from 'components/Icon';
 import TagModalContext from 'context/TagModal';
 import { Text } from 'components/Text';
 import useCurrencyFormatter from 'hooks/useCurrencyFormatter';
@@ -22,14 +23,33 @@ const Transaction: FC<{
 }) => {
   const { format } = useCurrencyFormatter();
   const { openModal } = useContext(TagModalContext);
-  if (isCompact) return <CompactTransaction transaction={transaction} />;
   const { amount, category, datetime, name, tag } = transaction;
+  const hasTag = tag !== undefined;
+  const isFilterButtonVisible = isFilteringEnabled && !hasTag;
+  if (isCompact)
+    return (
+      <CompactGrid isFilterButtonVisible={isFilterButtonVisible}>
+        <Text>{format({ value: amount })}</Text>
+        <Text isRightAligned>{name}</Text>
+        {isFilterButtonVisible && (
+          <Button
+            onClick={() => openModal(transaction)}
+            style={ButtonStyle.Unstyled}
+          >
+            <Icon icon={IconType.Tag} />
+          </Button>
+        )}
+      </CompactGrid>
+    );
   return (
     <Grid $category={category}>
       <p id="amount">{format({ value: amount })}</p>
-      {isFilteringEnabled && (
-        <Button onClick={() => openModal(transaction)} style={ButtonStyle.Text}>
-          Edit tag
+      {isFilterButtonVisible && (
+        <Button
+          onClick={() => openModal(transaction)}
+          style={ButtonStyle.Unstyled}
+        >
+          <Icon icon={IconType.Tag} />
         </Button>
       )}
       <p id="name">{name}</p>
@@ -46,7 +66,7 @@ const Transaction: FC<{
 };
 
 const Grid = styled.div<{ $category: Category }>`
-  align-items: baseline;
+  align-items: center;
   display: grid;
   grid-gap: 0 5px;
   grid-template-areas:
@@ -55,6 +75,7 @@ const Grid = styled.div<{ $category: Category }>`
     'merchant merchant'
     'badges   date';
   grid-template-columns: 1fr max-content;
+  min-width: 200px;
 
   p {
     margin: 0;
@@ -81,6 +102,7 @@ const Grid = styled.div<{ $category: Category }>`
 
   button {
     grid-area: filter;
+    justify-self: end;
   }
 `;
 
@@ -114,25 +136,13 @@ function getCategoryColour(category: Category): string {
   return 'grey';
 }
 
-function CompactTransaction({
-  transaction,
-}: {
-  transaction: TransactionType;
-}): React.ReactElement {
-  const { format } = useCurrencyFormatter();
-  const { amount, name } = transaction;
-  return (
-    <CompactTransactionWrapper>
-      <Text>{format(amount)}</Text>
-      <Text>{name}</Text>
-    </CompactTransactionWrapper>
-  );
-}
-
-const CompactTransactionWrapper = styled.div`
-  display: flex;
-  gap: 32px;
-  justify-content: space-between;
+const CompactGrid = styled.div<{ isFilterButtonVisible?: boolean }>`
+  align-items: baseline;
+  display: grid;
+  gap: 16px;
+  grid-template-columns: ${({ isFilterButtonVisible = false }) =>
+    isFilterButtonVisible ? 'max-content 1fr max-content' : 'max-content 1fr'};
+  min-width: 200px;
 `;
 
 export default Transaction;

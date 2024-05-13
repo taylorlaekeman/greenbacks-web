@@ -29,7 +29,7 @@ export const Default: Story = {
             <th>{heirarchy}</th>
             {Object.values(Size).map((size) => (
               <td>
-                <Text heirarchy={heirarchy} isHorizontallyCentered size={size}>
+                <Text heirarchy={heirarchy} isCenterAligned size={size}>
                   test
                 </Text>
               </td>

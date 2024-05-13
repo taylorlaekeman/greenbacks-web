@@ -46,11 +46,11 @@ export const Large: Story = {
   },
 };
 
-export const BodyMedium: Story = {
+export const Bold: Story = {
   args: {
     isBold: true,
-    size: Size.Medium,
   },
 };
+
 
 export default meta;

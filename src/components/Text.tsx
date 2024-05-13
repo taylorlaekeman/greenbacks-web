@@ -5,20 +5,23 @@ export function Text({
   children,
   heirarchy = Heirarchy.P,
   isBold = false,
-  isHorizontallyCentered = false,
+  isCenterAligned = false,
+  isRightAligned = false,
   size = Size.Medium,
 }: {
   children: React.ReactNode;
   heirarchy?: Heirarchy;
   isBold?: boolean;
-  isHorizontallyCentered?: boolean;
+  isCenterAligned?: boolean;
+  isRightAligned?: boolean;
   size?: Size;
 }): React.ReactElement {
   const InnerText = getInnerText({ heirarchy });
   return (
     <InnerText
       isBold={isBold}
-      isHorizontallyCentered={isHorizontallyCentered}
+      isCenterAligned={isCenterAligned}
+      isRightAligned={isRightAligned}
       size={size}
     >
       {children}
@@ -56,7 +59,8 @@ function getInnerText({
 
 interface InnerTextProps {
   isBold: boolean;
-  isHorizontallyCentered: boolean;
+  isCenterAligned: boolean;
+  isRightAligned: boolean;
   size: Size;
 }
 
@@ -65,8 +69,8 @@ const sharedStyles = css<InnerTextProps>`
   ${({ size }) => `font-size: ${getFontSize({ size })};`}
   ${({ isBold }) => isBold && 'font-weight: 700;'}
   margin: 0;
-  ${({ isHorizontallyCentered }) =>
-    isHorizontallyCentered && 'text-align: center;'}
+  ${({ isCenterAligned }) => isCenterAligned && 'text-align: center;'}
+  ${({ isRightAligned }) => isRightAligned && 'text-align: right;'}
 `;
 
 const P = styled.p<InnerTextProps>`

@@ -6,18 +6,21 @@ import noop from 'utils/noop';
 
 export const Button: FC<{
   isDisabled?: boolean;
+  isFullWidth?: boolean;
   isLoading?: boolean;
   onClick?: () => void;
   style?: ButtonStyle;
 }> = ({
   children,
   isDisabled = false,
+  isFullWidth = false,
   isLoading = false,
   onClick = noop,
   style = ButtonStyle.Primary,
 }) => (
   <StyledButton
     disabled={isDisabled || isLoading}
+    $isFullWidth={isFullWidth}
     onClick={onClick}
     $style={style}
     type="button"
@@ -44,7 +47,12 @@ export enum ButtonStyle {
   Unstyled,
 }
 
-const StyledButton = styled.button<{ $style: ButtonStyle }>`
+interface StyleProps {
+  $isFullWidth: boolean;
+  $style: ButtonStyle;
+}
+
+const StyledButton = styled.button<StyleProps>`
   ${({ $style }) => getStyle({ style: $style })}
 `;
 
@@ -60,9 +68,16 @@ function getStyle({ style }: { style: ButtonStyle }) {
   }
 }
 
-const primaryStyle = css``;
+const sharedStyles = css<StyleProps>`
+  ${({ $isFullWidth }) => $isFullWidth && 'width: 100%;'}
+`;
 
-const textStyle = css`
+const primaryStyle = css<StyleProps>`
+  ${sharedStyles}
+`;
+
+const textStyle = css<StyleProps>`
+  ${sharedStyles}
   background: none;
   border: none;
   cursor: pointer;
@@ -70,15 +85,16 @@ const textStyle = css`
   text-decoration: underline;
 `;
 
-const unstyledStyle = css`
+const unstyledStyle = css<StyleProps>`
+  ${sharedStyles}
   background: none;
   border: none;
+  cursor: pointer;
   color: inherit;
   font: inherit;
   outline: inherit;
   padding: 0;
   text-align: inherit;
-  width: 100%;
 `;
 
 export default Button;

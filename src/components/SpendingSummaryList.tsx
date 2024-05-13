@@ -134,7 +134,7 @@ function TagAmount({
   if (!isExpanded)
     return (
       <Item>
-        <Button onClick={onClick} style={ButtonStyle.Unstyled}>
+        <Button isFullWidth onClick={onClick} style={ButtonStyle.Unstyled}>
           <JustifiedRow>
             <Text>{format(total)}</Text>
             <Text>{tag}</Text>
@@ -143,27 +143,31 @@ function TagAmount({
       </Item>
     );
   return (
-    <Button onClick={onClick} style={ButtonStyle.Unstyled}>
-      <Panel hasBorder={false} hasTopBorder={!isFirstTag}>
+    <Panel hasBorder={false} hasTopBorder={!isFirstTag}>
+      <Button isFullWidth onClick={onClick} style={ButtonStyle.Unstyled}>
         <PanelHeader isShort>
           <Text isBold>{format(total)}</Text>
           <Text isBold>{tag}</Text>
         </PanelHeader>
-        <List
-          hasOutsideBorder={false}
-          hasRoundedBottomCorners={isLastTag}
-          hasRoundedTopCorners={false}
-          isIndented
-          isInset
-        >
-          {transactions.map((transaction) => (
-            <Item key={transaction.id}>
-              <Transaction isCompact transaction={transaction} />
-            </Item>
-          ))}
-        </List>
-      </Panel>
-    </Button>
+      </Button>
+      <List
+        hasOutsideBorder={false}
+        hasRoundedBottomCorners={isLastTag}
+        hasRoundedTopCorners={false}
+        isIndented
+        isInset
+      >
+        {transactions.map((transaction) => (
+          <Item key={transaction.id}>
+            <Transaction
+              isCompact
+              isFilteringEnabled
+              transaction={transaction}
+            />
+          </Item>
+        ))}
+      </List>
+    </Panel>
   );
 }
 

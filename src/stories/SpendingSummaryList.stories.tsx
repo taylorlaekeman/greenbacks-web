@@ -8,6 +8,7 @@ import datetime from 'utils/datetime';
 
 type Args = React.ComponentProps<typeof SpendingSummaryList> & {
   endDate: string;
+  expandedTag?: string;
   month: string;
   startDate: string;
 };
@@ -44,7 +45,10 @@ const meta: Meta<Args> = {
 };
 
 function StoryWrapper(props: Args): React.ReactElement {
-  const [expandedTag, setExpandedTag] = useState<string | undefined>(undefined);
+  const { expandedTag: initialExpandedTag } = props;
+  const [expandedTag, setExpandedTag] = useState<string | undefined>(
+    initialExpandedTag
+  );
   const { endDate, month, startDate } = props;
   const parsedEndDate: datetime | undefined =
     endDate && datetime.fromISO(endDate);
