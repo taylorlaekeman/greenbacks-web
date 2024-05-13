@@ -56,6 +56,9 @@ export function SpendingSummaryList({
     (totalSoFar, group) => totalSoFar + group.total,
     0
   );
+  const remainingTransactions = remainingTagAmounts
+    .flatMap((group) => group.transactions)
+    .sort((a, b) => (a.amount > b.amount ? -1 : 1));
   return (
     <Panel>
       <PanelHeader hasBottomBorder={visibleTagAmounts.length > 0} isColumnar>
@@ -78,7 +81,7 @@ export function SpendingSummaryList({
                   isExpanded={isExpanded}
                   isFirstTag={index === 0}
                   isLastTag={index === groupedTransactions.length - 1}
-                  onClick={() => {
+                  onExpand={() => {
                     const tagToReport = isExpanded ? undefined : tag;
                     onSelectTag(tagToReport);
                   }}
@@ -92,8 +95,12 @@ export function SpendingSummaryList({
           )}
           {remainingSpendingAmount > 0 && (
             <TagAmount
+              isExpanded={expandedTag === 'other'}
+              isLastTag
+              onExpand={() => onSelectTag('other')}
               tag="All other transactions"
               total={remainingSpendingAmount}
+              transactions={remainingTransactions}
             />
           )}
         </List>
@@ -117,7 +124,7 @@ function TagAmount({
   isExpanded = false,
   isFirstTag = false,
   isLastTag = false,
-  onClick = noop,
+  onExpand = noop,
   tag,
   total,
   transactions = [],
@@ -125,7 +132,7 @@ function TagAmount({
   isExpanded?: boolean;
   isFirstTag?: boolean;
   isLastTag?: boolean;
-  onClick?: () => void;
+  onExpand?: () => void;
   tag: string;
   total: number;
   transactions?: TransactionType[];
@@ -134,7 +141,7 @@ function TagAmount({
   if (!isExpanded)
     return (
       <Item>
-        <Button isFullWidth onClick={onClick} style={ButtonStyle.Unstyled}>
+        <Button isFullWidth onClick={onExpand} style={ButtonStyle.Unstyled}>
           <JustifiedRow>
             <Text>{format(total)}</Text>
             <Text>{tag}</Text>
@@ -144,7 +151,7 @@ function TagAmount({
     );
   return (
     <Panel hasBorder={false} hasTopBorder={!isFirstTag}>
-      <Button isFullWidth onClick={onClick} style={ButtonStyle.Unstyled}>
+      <Button isFullWidth onClick={onExpand} style={ButtonStyle.Unstyled}>
         <PanelHeader isShort>
           <Text isBold>{format(total)}</Text>
           <Text isBold>{tag}</Text>
