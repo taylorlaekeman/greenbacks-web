@@ -165,10 +165,7 @@ export function PureSpendingTimeline({
       minWidth={300}
       width="100%"
     >
-      <LineChart
-        data={timeline}
-        margin={{ bottom: 8, left: 8, right: 8, top: 8 }}
-      >
+      <LineChart data={timeline}>
         {hasXLines && <CartesianGrid vertical={false} />}
         {hasPredicted &&
           hasLastPredictedReferenceLine &&

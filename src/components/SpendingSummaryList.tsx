@@ -82,6 +82,7 @@ export function SpendingSummaryList({
       </PanelHeader>
       <PanelBody hasBottomBorder>
         <SpendingTimeline
+          comparisonLabel="average"
           comparisonSpendingByDate={comparisonSpendingByDate}
           endDate={endDate}
           startDate={startDate}
