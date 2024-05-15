@@ -1,6 +1,7 @@
 import { DateTime } from 'luxon';
 
 import useTransactionsByCategory from 'hooks/useTransactionsByCategory';
+import Transaction from 'types/transaction';
 
 const useSpendingByDayOfMonth = ({
   endDate,
@@ -8,7 +9,11 @@ const useSpendingByDayOfMonth = ({
 }: {
   endDate: string;
   startDate: string;
-}): { isLoading: boolean; spending?: Record<string, number> } => {
+}): {
+  isLoading: boolean;
+  rawTransactions?: Transaction[];
+  spending?: Record<string, number>;
+} => {
   const { isLoading, spending } = useTransactionsByCategory({
     endDate,
     startDate,
@@ -22,7 +27,11 @@ const useSpendingByDayOfMonth = ({
     },
     {}
   );
-  return { isLoading, spending: spendingByDayOfMonth };
+  return {
+    isLoading,
+    rawTransactions: spending,
+    spending: spendingByDayOfMonth,
+  };
 };
 
 const getDayOfMonth = (datetime: string): number => {

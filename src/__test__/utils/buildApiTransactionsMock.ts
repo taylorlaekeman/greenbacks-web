@@ -7,13 +7,16 @@ const buildApiTransactionsMock = ({
   errors,
   startDate = '2020-01-01',
   transactions = [],
-}: Input = {}): MockedApiResponse => ({
-  request: {
-    query: GET_TRANSACTIONS_QUERY,
-    variables: { endDate, startDate },
-  },
-  result: buildResult({ errors, transactions }),
-});
+}: Input = {}): MockedApiResponse => {
+  const result = buildResult({ errors, transactions });
+  return {
+    request: {
+      query: GET_TRANSACTIONS_QUERY,
+      variables: { endDate, startDate },
+    },
+    result,
+  };
+};
 
 const buildResult = ({
   errors,

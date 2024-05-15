@@ -3,6 +3,7 @@ import { DateTime } from 'luxon';
 import useAveragingPeriod from 'hooks/useAveragingPeriod';
 import useNow from 'hooks/useNow';
 import useSpendingByDayOfMonth from 'hooks/useSpendingByDayOfMonth';
+import Transaction from 'types/transaction';
 
 const useSpendingTimeline = ({
   month,
@@ -11,7 +12,9 @@ const useSpendingTimeline = ({
   month: string;
   monthsToAverage?: number;
 }): {
+  averageSpendingByDayOfMonth?: Record<string, number>;
   isLoading: boolean;
+  rawActualTransactions?: Transaction[];
   timeline?: DailyTotal[];
 } => {
   const { now } = useNow();
@@ -20,7 +23,12 @@ const useSpendingTimeline = ({
   const isCurrentMonth =
     endDate === now.endOf('month').toISODate() &&
     startDate === now.startOf('month').toISODate();
-  const { actualSpending, averageSpending, isLoading } = useDailySpending({
+  const {
+    actualSpending,
+    averageSpending,
+    isLoading,
+    rawActualTransactions,
+  } = useDailySpending({
     endDate,
     monthsToAverage,
     startDate,
@@ -34,7 +42,9 @@ const useSpendingTimeline = ({
     isCurrentMonth,
   });
   return {
+    averageSpendingByDayOfMonth: averageSpending,
     isLoading: false,
+    rawActualTransactions,
     timeline,
   };
 };
@@ -69,6 +79,7 @@ const useDailySpending = ({
   actualSpending?: Record<string, number>;
   averageSpending?: Record<string, number>;
   isLoading: boolean;
+  rawActualTransactions?: Transaction[];
 } => {
   const {
     count,
@@ -78,6 +89,7 @@ const useDailySpending = ({
   const {
     isLoading: isLoadingActualSpending,
     spending: actualSpending,
+    rawTransactions: rawActualTransactions,
   } = useSpendingByDayOfMonth({
     endDate,
     startDate,
@@ -95,7 +107,12 @@ const useDailySpending = ({
     (result, [day, amount]) => ({ ...result, [day]: amount / count }),
     {}
   );
-  return { actualSpending, averageSpending, isLoading: false };
+  return {
+    actualSpending,
+    averageSpending,
+    isLoading: false,
+    rawActualTransactions,
+  };
 };
 
 const buildTimeline = ({
