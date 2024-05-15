@@ -81,7 +81,8 @@ const textStyle = css<StyleProps>`
   background: none;
   border: none;
   cursor: pointer;
-  padding: 4px 8px;
+  font: inherit;
+  padding: 0;
   text-decoration: underline;
 `;
 
