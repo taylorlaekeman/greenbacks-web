@@ -1,5 +1,6 @@
 import React, { FC, useContext, useState } from 'react';
 import { Route, Routes, useNavigate } from 'react-router-dom';
+import styled from 'styled-components';
 
 import AccountConnectionBarrier from 'components/AccountConnectionBarrier';
 import Accounts from 'components/Accounts';
@@ -7,8 +8,8 @@ import CashFlow from 'components/CashFlow';
 import AverageSpendingByTag from 'components/AverageSpendingByTag';
 import Button from 'components/Button';
 import Filters from 'components/Filters';
+import { Header } from 'components/Header';
 import Home from 'components/Home';
-import Link from 'components/Link';
 import LoadingIndicator from 'components/LoadingIndicator';
 import MonthlySpendingByTag from 'components/MonthlySpendingByTag';
 import Select from 'components/Select';
@@ -80,71 +81,76 @@ const GreenbacksInContext: FC = () => {
 
   return (
     <>
-      <ul>
-        <li>
-          <Link href="/">Greenbacks</Link>
-        </li>
-        <li>
-          <Link href="/accounts">Accounts</Link>
-        </li>
-        <li>
-          <Link href="/spending">Spending</Link>
-        </li>
-        <li>
-          <Button onClick={logout}>Logout</Button>
-        </li>
-      </ul>
-      <Select
-        id="page-selector"
-        onChange={(newPage) => {
-          setPage(newPage);
-          navigate(`/${newPage}`);
-        }}
-        options={options}
-        value={page}
-      />
-      {transactionToTag !== undefined && <TagModal />}
-      <Routes>
-        <Route path="/" element={home} />
-        <Route path="/months/:month/" element={home} />
-        <Route path="/accounts" element={<Accounts />} />
-        <Route path="/spending" element={spending} />
-        <Route path="/cashflow" element={<CashFlow />} />
-        <Route
-          path="/average-spending-by-tag"
-          element={<AverageSpendingByTag />}
-        />
-        <Route
-          path="/untagged-transactions"
-          element={<UntaggedTransactions />}
-        />
-        <Route path="/totals-by-month" element={<TotalsByMonth />} />
-        <Route path="/spending-timeline" element={<SpendingTimeline />} />
-        <Route
-          path="/monthly-spending-by-tag/:month"
-          element={<MonthlySpendingByTag />}
-        />
-        <Route
-          path="/monthly-spending-by-tag"
-          element={<MonthlySpendingByTag />}
-        />
-        <Route
-          path="/spending-summary-list"
-          element={<SpendingSummaryListPage />}
-        />
-        <Route
-          path="/top-spending-categories/:month"
-          element={<TopSpendingCategories />}
-        />
-        <Route
-          path="/top-spending-categories"
-          element={<TopSpendingCategories />}
-        />
-        <Route path="/transactions" element={<TransactionsPage />} />
-        <Route path="/filters" element={<Filters />} />
-      </Routes>
+      <PageWrapper>
+        <Header onLogout={logout} />
+        <PageBody>
+          <Select
+            id="page-selector"
+            onChange={(newPage) => {
+              setPage(newPage);
+              navigate(`/${newPage}`);
+            }}
+            options={options}
+            value={page}
+          />
+          {transactionToTag !== undefined && <TagModal />}
+          <Routes>
+            <Route path="/" element={home} />
+            <Route path="/months/:month/" element={home} />
+            <Route path="/accounts" element={<Accounts />} />
+            <Route path="/spending" element={spending} />
+            <Route path="/cashflow" element={<CashFlow />} />
+            <Route
+              path="/average-spending-by-tag"
+              element={<AverageSpendingByTag />}
+            />
+            <Route
+              path="/untagged-transactions"
+              element={<UntaggedTransactions />}
+            />
+            <Route path="/totals-by-month" element={<TotalsByMonth />} />
+            <Route path="/spending-timeline" element={<SpendingTimeline />} />
+            <Route
+              path="/monthly-spending-by-tag/:month"
+              element={<MonthlySpendingByTag />}
+            />
+            <Route
+              path="/monthly-spending-by-tag"
+              element={<MonthlySpendingByTag />}
+            />
+            <Route
+              path="/spending-summary-list"
+              element={<SpendingSummaryListPage />}
+            />
+            <Route
+              path="/top-spending-categories/:month"
+              element={<TopSpendingCategories />}
+            />
+            <Route
+              path="/top-spending-categories"
+              element={<TopSpendingCategories />}
+            />
+            <Route path="/transactions" element={<TransactionsPage />} />
+            <Route path="/filters" element={<Filters />} />
+          </Routes>
+        </PageBody>
+      </PageWrapper>
     </>
   );
 };
+
+const PageWrapper = styled.main`
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+`;
+
+const PageBody = styled.article`
+  max-width: 632px;
+  padding: 16px;
+  width: 100%;
+`;
 
 export default Greenbacks;

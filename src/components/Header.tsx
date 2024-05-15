@@ -37,26 +37,22 @@ const Wrapper = styled.header`
   background-color: palegreen;
   display: flex;
   justify-content: center;
-  padding: 16px;
   width: 100%;
-
-  @media (min-width: 632px) {
-    padding: 16px 0;
-  }
 `;
 
 const Nav = styled.nav`
-  align-items: baseline;
+  align-items: center;
   display: grid;
   grid-column-gap: 8px;
   grid-template-columns: max-content max-content max-content;
   grid-template-areas:
     'header header header'
     '. . .';
-  max-width: 600px;
+  max-width: 632px;
+  padding: 16px;
   width: 100%;
 
-  @media (min-width: 600px) {
+  @media (min-width: 470px) {
     grid-template-areas: 'header . . .';
     grid-template-columns: 1fr max-content max-content max-content;
   }
