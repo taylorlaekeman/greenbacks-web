@@ -4,7 +4,8 @@ import { Button, ButtonStyle } from 'components/Button';
 import { Icon, IconType } from 'components/Icon';
 import { JustifiedRow, Space } from 'components/JustifiedRow';
 import List, { Item } from 'components/List';
-import { Panel, PanelHeader } from 'components/Panel';
+import { Panel, PanelBody, PanelHeader } from 'components/Panel';
+import { PureSpendingTimeline as SpendingTimeline } from 'components/SpendingTimeline';
 import { Size, Text } from 'components/Text';
 import Transaction from 'components/Transaction';
 import useCurrencyFormatter from 'hooks/useCurrencyFormatter';
@@ -20,6 +21,7 @@ import noop from 'utils/noop';
 
 export function SpendingSummaryList({
   areAllTagsVisible = false,
+  comparisonSpendingByDate = {},
   endDate,
   expandedTag,
   isCurrentMonth = false,
@@ -31,6 +33,7 @@ export function SpendingSummaryList({
   visibleTagCount = 5,
 }: {
   areAllTagsVisible?: boolean;
+  comparisonSpendingByDate?: Record<string, number>;
   endDate?: datetime;
   expandedTag?: string;
   isCurrentMonth?: boolean;
@@ -77,6 +80,14 @@ export function SpendingSummaryList({
         </Text>
         <Text size={Size.Large}>{format(totalSpending)}</Text>
       </PanelHeader>
+      <PanelBody hasBottomBorder>
+        <SpendingTimeline
+          comparisonSpendingByDate={comparisonSpendingByDate}
+          endDate={endDate}
+          startDate={startDate}
+          transactions={transactions}
+        />
+      </PanelBody>
       {visibleTagAmounts.length > 0 && (
         <List
           hasOutsideBorder={false}
@@ -119,9 +130,8 @@ export function SpendingSummaryList({
           <Item>
             <JustifiedRow>
               <Text size={Size.Small}>
-                {actualVisibleTagCount === groupedTransactions.length && 'All'}{' '}
-                {actualVisibleTagCount} tag{actualVisibleTagCount !== 1 && 's'}{' '}
-                visible
+                {actualVisibleTagCount} of {groupedTransactions.length} tag
+                {groupedTransactions.length !== 1 && 's'} visible
               </Text>
               <JustifiedRow space={Space.Small}>
                 {canIncreaseVisibleTagCount && (

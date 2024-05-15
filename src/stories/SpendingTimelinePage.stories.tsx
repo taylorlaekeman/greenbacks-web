@@ -5,7 +5,6 @@ import SpendingTimeline from 'components/SpendingTimeline';
 import { TestGreenbacksProvider } from 'context/Greenbacks';
 import { transactions } from 'stories/testTransactions';
 import buildApiTransactionsMock from '__test__/utils/buildApiTransactionsMock';
-// import buildTransaction from '__test__/utils/buildTransaction';
 
 const meta: Meta<typeof SpendingTimeline> = {
   parameters: {

@@ -160,7 +160,7 @@ export function PureSpendingTimeline({
   const hasComparisonData = Object.keys(comparisonSpendingByDate).length > 0;
   return (
     <ResponsiveContainer
-      aspect={1.5}
+      aspect={2}
       height="max-content"
       minWidth={300}
       width="100%"

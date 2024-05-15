@@ -3,9 +3,8 @@ import type { Meta, StoryObj } from '@storybook/react';
 
 import { SpendingSummaryListPage } from 'components/SpendingSummaryListPage';
 import { TestGreenbacksProvider } from 'context/Greenbacks';
-// import { transactions } from 'stories/testTransactions';
+import { transactions } from 'stories/testTransactions';
 import buildApiTransactionsMock from '__test__/utils/buildApiTransactionsMock';
-import buildTransaction from '__test__/utils/buildTransaction';
 
 const meta: Meta<typeof SpendingSummaryListPage> = {
   parameters: {
@@ -15,28 +14,31 @@ const meta: Meta<typeof SpendingSummaryListPage> = {
     <TestGreenbacksProvider
       mocks={[
         buildApiTransactionsMock({
-          endDate: '2020-01-31',
-          startDate: '2020-01-01',
+          endDate: '2024-05-31',
+          startDate: '2024-05-01',
+          transactions,
+        }),
+        buildApiTransactionsMock({
+          endDate: '2024-04-30',
+          startDate: '2023-05-01',
           transactions: [
-            buildTransaction({
-              amount: 100,
-              datetime: '2020-01-01',
-              name: 'Transaction 1',
-            }),
-            buildTransaction({
-              amount: 200,
-              datetime: '2020-01-01',
-              name: 'Transaction 2',
-            }),
-            buildTransaction({
-              amount: 300,
-              datetime: '2020-01-01',
-              name: 'Transaction 3',
-            }),
+            ...transactions,
+            ...transactions,
+            ...transactions,
+            ...transactions,
+            ...transactions,
+            ...transactions,
+            ...transactions,
+            ...transactions,
+            ...transactions,
+            ...transactions,
+            ...transactions,
+            ...transactions,
+            ...transactions,
           ],
         }),
       ]}
-      now="2020-01-01"
+      now="2024-05-06"
     >
       <SpendingSummaryListPage />
     </TestGreenbacksProvider>

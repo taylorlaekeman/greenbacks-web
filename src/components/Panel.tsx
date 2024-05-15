@@ -29,6 +29,8 @@ export const PanelHeader = styled.div<{
   padding: ${({ isShort = false }) => (isShort ? '8px' : '16px')} 16px;
 `;
 
-export const PanelBody = styled.div`
+export const PanelBody = styled.div<{ hasBottomBorder?: boolean }>`
   padding: 16px;
+  ${({ hasBottomBorder = false }) =>
+    hasBottomBorder && 'border-bottom: solid lightgrey 1px;'}
 `;
