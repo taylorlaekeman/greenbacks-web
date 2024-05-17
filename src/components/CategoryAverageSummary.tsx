@@ -1,6 +1,8 @@
 import { DateTime } from 'luxon';
 import React from 'react';
 
+import { JustifiedRow as Row } from 'components/JustifiedRow';
+import List, { Item } from 'components/List';
 import { MonthlyAmountsGraph } from 'components/MonthlyAmountsGraph';
 import { Panel, PanelBody } from 'components/Panel';
 import { Size, Text } from 'components/Text';
@@ -29,18 +31,54 @@ export function CategoryAverageSummary({
   };
   const averageMonthlySpending =
     transactionsByMonth.reduce((result, group) => result + group.total, 0) / 12;
+  const transactionsByTag = groupTransactions({
+    groupBy: GroupBy.Tag,
+    transactions,
+  });
+  const transactionsByTagAndMonth = transactionsByTag?.reduce<
+    Record<string, { average: number }>
+  >((result, group) => {
+    const tagTransactionsByMonth = groupTransactions({
+      groupBy: GroupBy.Month,
+      transactions: group.transactions,
+    });
+    return {
+      ...result,
+      [group.key]: {
+        average: group.total / 12,
+        groupedTransactions: tagTransactionsByMonth,
+      },
+    };
+  }, {});
   return (
     <Panel>
       <PanelBody hasBottomBorder>
         <Text>On average each month you&apos;ve spent</Text>
         <Text size={Size.Large}>{format(averageMonthlySpending)}</Text>
       </PanelBody>
-      <PanelBody>
+      <PanelBody hasBottomBorder>
         <MonthlyAmountsGraph
           hasLegend={false}
           monthlyAmountsBySeriesName={graphData}
         />
       </PanelBody>
+      <List
+        hasOutsideBorder={false}
+        hasRoundedBottomCorners
+        hasRoundedTopCorners={false}
+      >
+        {transactionsByTagAndMonth &&
+          Object.entries(transactionsByTagAndMonth).map(([tag, group]) => (
+            <Item key={tag}>
+              <Row>
+                <Text>{format(group.average)}</Text>
+                <Text isUnderlined size={Size.Small}>
+                  {tag}
+                </Text>
+              </Row>
+            </Item>
+          ))}
+      </List>
     </Panel>
   );
 }

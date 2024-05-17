@@ -4,6 +4,8 @@ export const Panel = styled.div<{
   hasBorder?: boolean;
   hasTopBorder?: boolean;
 }>`
+  background-color: white;
+
   ${({ hasBorder = true }) =>
     hasBorder &&
     `
