@@ -18,7 +18,7 @@ const Wrapper = styled.div`
   flex-direction: column;
   gap: 16px;
 
-  @media (min-width: 700px) {
+  @media (min-width: 616px) {
     flex-direction: row;
   }
 `;

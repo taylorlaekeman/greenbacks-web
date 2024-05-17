@@ -53,7 +53,7 @@ export function CategoryAverageSummary({
   return (
     <Panel>
       <PanelBody hasBottomBorder>
-        <Text>On average each month you&apos;ve spent</Text>
+        <Text size={Size.Small}>On average each month you&apos;ve spent</Text>
         <Text size={Size.Large}>{format(averageMonthlySpending)}</Text>
       </PanelBody>
       <PanelBody hasBottomBorder>

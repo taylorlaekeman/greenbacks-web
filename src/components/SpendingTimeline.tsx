@@ -162,7 +162,7 @@ export function PureSpendingTimeline({
     <ResponsiveContainer
       aspect={2}
       height="max-content"
-      minWidth={300}
+      minWidth={250}
       width="100%"
     >
       <LineChart data={timeline}>

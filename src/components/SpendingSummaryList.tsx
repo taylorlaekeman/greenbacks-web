@@ -75,7 +75,7 @@ export function SpendingSummaryList({
   return (
     <Panel>
       <PanelHeader hasBottomBorder={visibleTagAmounts.length > 0} isColumnar>
-        <Text>
+        <Text size={Size.Small}>
           {getSpendingPeriodText({ endDate, isCurrentMonth, month, startDate })}
         </Text>
         <Text size={Size.Large}>{format(totalSpending)}</Text>
