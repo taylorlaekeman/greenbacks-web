@@ -38,7 +38,6 @@ export const List = styled.ul<{
 
   & > li {
     border-top: solid lightgrey 1px;
-    padding: 8px 16px;
     ${({ isIndented }) => isIndented && 'padding-left: 24px;'}
   }
 
@@ -47,7 +46,11 @@ export const List = styled.ul<{
   }
 `;
 
-export const Item = styled.li<{ isJustifiedRow?: boolean }>`
+export const Item = styled.li<{
+  hasPadding?: boolean;
+  isJustifiedRow?: boolean;
+}>`
+  padding: ${({ hasPadding = true }) => (hasPadding ? '8px 16px' : '0')};
   ${({ isJustifiedRow = false }) =>
     isJustifiedRow && 'display: flex; justify-content: space-between;'}
 `;

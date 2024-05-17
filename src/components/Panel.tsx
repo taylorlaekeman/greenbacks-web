@@ -32,8 +32,18 @@ export const PanelHeader = styled.div<{
   padding: ${({ isShort = false }) => (isShort ? '8px' : '16px')} 16px;
 `;
 
-export const PanelBody = styled.div<{ hasBottomBorder?: boolean }>`
-  padding: 16px;
+export const PanelBody = styled.div<{
+  hasBottomBorder?: boolean;
+  hasPadding?: boolean;
+  isInset?: boolean;
+}>`
+  padding: ${({ hasPadding = true }) => (hasPadding ? '8px 16px' : '0')};
   ${({ hasBottomBorder = false }) =>
     hasBottomBorder && 'border-bottom: solid lightgrey 1px;'}
+  ${({ isInset = false }) =>
+    isInset &&
+    `
+      background-color: #f9f9f9;
+      box-shadow: grey 0px 3px 4px -4px inset;
+  `}
 `;

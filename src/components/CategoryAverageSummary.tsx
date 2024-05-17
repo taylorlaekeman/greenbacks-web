@@ -13,6 +13,7 @@ import useNow from 'hooks/useNow';
 import useTransactionsByCategory from 'hooks/useTransactionsByCategory';
 import Transaction from 'types/transaction';
 import {
+  Group,
   GroupBy,
   groupTransactions,
   SortGroupsBy,
@@ -20,11 +21,15 @@ import {
 import noop from 'utils/noop';
 
 export function CategoryAverageSummary({
+  expandedTag,
   onChangeVisibleTagCount = noop,
+  onSelectTag = noop,
   transactions = [],
   visibleTagCount = 5,
 }: {
+  expandedTag?: string;
   onChangeVisibleTagCount?: (input: number) => void;
+  onSelectTag?: (input: string | undefined) => void;
   transactions?: Transaction[];
   visibleTagCount?: number;
 } = {}): React.ReactElement {
@@ -34,14 +39,10 @@ export function CategoryAverageSummary({
     transactions,
   });
   if (!transactionsByMonth) return <div>empty</div>;
-  const graphData = {
-    Spending: transactionsByMonth
-      .map((group) => ({
-        amount: group.total,
-        month: DateTime.fromISO(group.key),
-      }))
-      .sort((a, b) => (a.month > b.month ? 1 : -1)),
-  };
+  const graphData = formatGroupsForGraph({
+    groups: transactionsByMonth,
+    seriesName: 'Spending',
+  });
   const averageMonthlySpending =
     transactionsByMonth.reduce((result, group) => result + group.total, 0) / 12;
   const transactionsByTag = groupTransactions({
@@ -52,6 +53,7 @@ export function CategoryAverageSummary({
   const transactionsByTagAndMonth = transactionsByTag?.map<{
     average: number;
     tag: string;
+    transactionsByMonth: Group[];
   }>((group) => {
     const tagTransactionsByMonth = groupTransactions({
       groupBy: GroupBy.Month,
@@ -60,13 +62,13 @@ export function CategoryAverageSummary({
     return {
       average: group.total / 12,
       tag: group.key,
-      groupedTransactions: tagTransactionsByMonth,
+      transactionsByMonth: tagTransactionsByMonth ?? [],
     };
   });
   const allTags = Object.keys(transactionsByTag ?? {});
   const visibleTransactionGroups =
     transactionsByTagAndMonth?.slice(0, visibleTagCount) ?? [];
-  const remainingTagAmount = (
+  const remainingTagsAmount = (
     transactionsByTagAndMonth?.slice(visibleTagCount, allTags.length) ?? []
   ).reduce((sum, group) => sum + group.average, 0);
   return (
@@ -87,25 +89,24 @@ export function CategoryAverageSummary({
         hasRoundedTopCorners={false}
       >
         {visibleTransactionGroups &&
-          visibleTransactionGroups.map(({ average, tag }) => (
-            <Item key={tag}>
-              <Row>
-                <Text>{format(average)}</Text>
-                <Text isUnderlined size={Size.Small}>
-                  {tag}
-                </Text>
-              </Row>
-            </Item>
-          ))}
-        {remainingTagAmount > 0 && (
-          <Item>
-            <Row>
-              <Text>{format(remainingTagAmount)}</Text>
-              <Text isUnderlined size={Size.Small}>
-                All other transactions
-              </Text>
-            </Row>
-          </Item>
+          visibleTransactionGroups.map(
+            ({ average, tag, transactionsByMonth: transactionGroups }) => (
+              <ExpandableTagAmount
+                amount={average}
+                isExpanded={expandedTag === tag}
+                key={tag}
+                onCollapse={() => onSelectTag(undefined)}
+                onExpand={() => onSelectTag(tag)}
+                tag={tag}
+                transactionsByMonth={transactionGroups}
+              />
+            )
+          )}
+        {remainingTagsAmount > 0 && (
+          <ExpandableTagAmount
+            amount={remainingTagsAmount}
+            tag="All other transactions"
+          />
         )}
         <Item>
           <TagVisibilityController
@@ -116,6 +117,99 @@ export function CategoryAverageSummary({
         </Item>
       </List>
     </Panel>
+  );
+}
+
+function formatGroupsForGraph({
+  groups,
+  seriesName,
+}: {
+  groups: Group[];
+  seriesName: string;
+}) {
+  return {
+    [seriesName]: groups
+      .map((group) => ({
+        amount: group.total,
+        month: DateTime.fromISO(group.key),
+      }))
+      .sort((a, b) => (a.month > b.month ? 1 : -1)),
+  };
+}
+
+function ExpandableTagAmount({
+  amount,
+  isExpanded = false,
+  onCollapse = noop,
+  onExpand = noop,
+  tag,
+  transactionsByMonth = [],
+}: {
+  amount: number;
+  isExpanded?: boolean;
+  onCollapse?: () => void;
+  onExpand?: () => void;
+  tag: string;
+  transactionsByMonth?: Group[];
+}): React.ReactElement {
+  const formattedGroups = formatGroupsForGraph({
+    groups: transactionsByMonth,
+    seriesName: tag,
+  });
+  if (!isExpanded)
+    return (
+      <Item>
+        <ExpandableTagAmountHeader
+          amount={amount}
+          isExpanded={isExpanded}
+          onClick={onExpand}
+          tag={tag}
+        />
+      </Item>
+    );
+  return (
+    <Item hasPadding={false}>
+      <Panel hasBorder={false}>
+        <PanelBody hasBottomBorder>
+          <ExpandableTagAmountHeader
+            amount={amount}
+            isExpanded={isExpanded}
+            onClick={onCollapse}
+            tag={tag}
+          />
+        </PanelBody>
+        <PanelBody isInset>
+          <MonthlyAmountsGraph
+            hasLegend={false}
+            monthlyAmountsBySeriesName={formattedGroups}
+          />
+        </PanelBody>
+      </Panel>
+    </Item>
+  );
+}
+
+function ExpandableTagAmountHeader({
+  amount,
+  isExpanded = false,
+  onClick = noop,
+  tag,
+}: {
+  amount: number;
+  isExpanded?: boolean;
+  onClick?: () => void;
+  tag: string;
+}): React.ReactElement {
+  const { format } = useCurrencyFormatter();
+  return (
+    <Button isFullWidth onClick={onClick} style={ButtonStyle.Unstyled}>
+      <Row>
+        <Text isBold={isExpanded}>{format(amount)}</Text>
+        <Text isBold={isExpanded} isUnderlined size={Size.Small}>
+          {tag}
+        </Text>
+      </Row>
+    </Button>
   );
 }
 

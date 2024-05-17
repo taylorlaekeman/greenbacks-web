@@ -5,6 +5,7 @@ import { transactionsYearBeforeMay2024 } from 'stories/testTransactions';
 
 const meta: Meta<React.ComponentProps<typeof CategoryAverageSummary>> = {
   args: {
+    expandedTag: 'Groceries',
     transactions: transactionsYearBeforeMay2024,
     visibleTagCount: 5,
   },

@@ -83,7 +83,7 @@ export enum SortTransactionsBy {
   Date,
 }
 
-interface Group {
+export interface Group {
   key: string;
   total: number;
   transactions: Transaction[];
