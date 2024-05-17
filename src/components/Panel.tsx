@@ -16,6 +16,7 @@ export const Panel = styled.div<{
   ${({ hasTopBorder = false }) =>
     hasTopBorder && 'border-top: solid lightgrey 1px;'}
 
+  height: max-content;
   min-width: 250px;
 `;
 

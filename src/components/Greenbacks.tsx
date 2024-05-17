@@ -6,7 +6,6 @@ import AccountConnectionBarrier from 'components/AccountConnectionBarrier';
 import Accounts from 'components/Accounts';
 import CashFlow from 'components/CashFlow';
 import AverageSpendingByTag from 'components/AverageSpendingByTag';
-import { CategoryAverageSummaryContainer } from 'components/CategoryAverageSummary';
 import Button from 'components/Button';
 import Filters from 'components/Filters';
 import { Header } from 'components/Header';
@@ -15,7 +14,7 @@ import LoadingIndicator from 'components/LoadingIndicator';
 import MonthlySpendingByTag from 'components/MonthlySpendingByTag';
 import Select from 'components/Select';
 import Spending from 'components/Spending';
-import { SpendingSummaryListPage } from 'components/SpendingSummaryListPage';
+import { SpendingSummary } from 'components/SpendingSummaryPage';
 import SpendingTimeline from 'components/SpendingTimeline';
 import TagModal from 'components/TagModal';
 import TopSpendingCategories from 'components/TopSpendingCategories';
@@ -60,8 +59,7 @@ const GreenbacksInContext: FC = () => {
   );
 
   const options = [
-    { label: 'Spending Summary List', value: 'spending-summary-list' },
-    { label: 'Average Spending Summary', value: 'average-spending-summary' },
+    { label: 'Spending Summary', value: 'spending-summary' },
     {
       label: 'Totals by Month',
       value: 'totals-by-month',
@@ -120,14 +118,7 @@ const GreenbacksInContext: FC = () => {
               path="/monthly-spending-by-tag"
               element={<MonthlySpendingByTag />}
             />
-            <Route
-              path="/spending-summary-list"
-              element={<SpendingSummaryListPage />}
-            />
-            <Route
-              path="/average-spending-summary"
-              element={<CategoryAverageSummaryContainer />}
-            />
+            <Route path="/spending-summary" element={<SpendingSummary />} />
             <Route
               path="/top-spending-categories/:month"
               element={<TopSpendingCategories />}
