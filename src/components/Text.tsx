@@ -73,9 +73,12 @@ const sharedStyles = css<InnerTextProps>`
   ${({ size }) => `font-size: ${getFontSize({ size })};`}
   ${({ isBold }) => isBold && 'font-weight: 700;'}
   margin: 0;
+  overflow: hidden;
   ${({ isCenterAligned }) => isCenterAligned && 'text-align: center;'}
   ${({ isRightAligned }) => isRightAligned && 'text-align: right;'}
   ${({ isUnderlined }) => isUnderlined && 'text-decoration: underline;'}
+  text-overflow: ellipsis;
+  white-space: nowrap;
 `;
 
 const P = styled.p<InnerTextProps>`
