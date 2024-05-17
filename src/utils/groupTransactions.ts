@@ -1,3 +1,5 @@
+import { DateTime } from 'luxon';
+
 import type Transaction from 'types/transaction';
 
 export function groupTransactions({
@@ -62,6 +64,7 @@ export function groupTransactions({
 export enum GroupBy {
   Category = 'Category',
   Date = 'Date',
+  Month = 'Month',
   Tag = 'Tag',
 }
 
@@ -90,6 +93,8 @@ function getKey(transaction: Transaction, groupBy: GroupBy): string {
   switch (groupBy) {
     case GroupBy.Category:
       return transaction.category;
+    case GroupBy.Month:
+      return DateTime.fromISO(transaction.datetime).toFormat('yyyy-LL');
     case GroupBy.Tag:
       return transaction.tag || 'Untagged';
     case GroupBy.Date:

@@ -1,3 +1,6 @@
+import { DateTime } from 'luxon';
+import { v4 as getUuid } from 'uuid';
+
 import Transaction, { Category, TransactionType } from 'types/transaction';
 
 export const transactions: Transaction[] = [
@@ -226,3 +229,109 @@ export const transactions: Transaction[] = [
     tag: 'Groceries',
   },
 ];
+
+export const transactionsYearBeforeMay2024: Transaction[] = [
+  getRandomizedTransaction({ month: '2024-04', tag: 'Entertainment' }),
+  getRandomizedTransaction({ month: '2024-04', tag: 'Groceries' }),
+  getRandomizedTransaction({ month: '2024-04', tag: 'Restaurants' }),
+  getRandomizedTransaction({ month: '2024-04', tag: 'Transportation' }),
+  getRandomizedTransaction({ month: '2024-03', tag: 'Entertainment' }),
+  getRandomizedTransaction({ month: '2024-03', tag: 'Groceries' }),
+  getRandomizedTransaction({ month: '2024-03', tag: 'Restaurants' }),
+  getRandomizedTransaction({ month: '2024-03', tag: 'Transportation' }),
+  getRandomizedTransaction({ month: '2024-02', tag: 'Entertainment' }),
+  getRandomizedTransaction({ month: '2024-02', tag: 'Groceries' }),
+  getRandomizedTransaction({ month: '2024-02', tag: 'Restaurants' }),
+  getRandomizedTransaction({ month: '2024-02', tag: 'Transportation' }),
+  getRandomizedTransaction({ month: '2024-01', tag: 'Entertainment' }),
+  getRandomizedTransaction({ month: '2024-01', tag: 'Groceries' }),
+  getRandomizedTransaction({ month: '2024-01', tag: 'Restaurants' }),
+  getRandomizedTransaction({ month: '2024-01', tag: 'Transportation' }),
+  getRandomizedTransaction({ month: '2023-12', tag: 'Entertainment' }),
+  getRandomizedTransaction({ month: '2023-12', tag: 'Groceries' }),
+  getRandomizedTransaction({ month: '2023-12', tag: 'Restaurants' }),
+  getRandomizedTransaction({ month: '2023-12', tag: 'Transportation' }),
+  getRandomizedTransaction({ month: '2023-11', tag: 'Entertainment' }),
+  getRandomizedTransaction({ month: '2023-11', tag: 'Groceries' }),
+  getRandomizedTransaction({ month: '2023-11', tag: 'Restaurants' }),
+  getRandomizedTransaction({ month: '2023-11', tag: 'Transportation' }),
+  getRandomizedTransaction({ month: '2023-10', tag: 'Entertainment' }),
+  getRandomizedTransaction({ month: '2023-10', tag: 'Groceries' }),
+  getRandomizedTransaction({ month: '2023-10', tag: 'Restaurants' }),
+  getRandomizedTransaction({ month: '2023-10', tag: 'Transportation' }),
+  getRandomizedTransaction({ month: '2023-09', tag: 'Entertainment' }),
+  getRandomizedTransaction({ month: '2023-09', tag: 'Groceries' }),
+  getRandomizedTransaction({ month: '2023-09', tag: 'Restaurants' }),
+  getRandomizedTransaction({ month: '2023-09', tag: 'Transportation' }),
+  getRandomizedTransaction({ month: '2023-08', tag: 'Entertainment' }),
+  getRandomizedTransaction({ month: '2023-08', tag: 'Groceries' }),
+  getRandomizedTransaction({ month: '2023-08', tag: 'Restaurants' }),
+  getRandomizedTransaction({ month: '2023-08', tag: 'Transportation' }),
+  getRandomizedTransaction({ month: '2023-07', tag: 'Entertainment' }),
+  getRandomizedTransaction({ month: '2023-07', tag: 'Groceries' }),
+  getRandomizedTransaction({ month: '2023-07', tag: 'Restaurants' }),
+  getRandomizedTransaction({ month: '2023-07', tag: 'Transportation' }),
+  getRandomizedTransaction({ month: '2023-06', tag: 'Entertainment' }),
+  getRandomizedTransaction({ month: '2023-06', tag: 'Groceries' }),
+  getRandomizedTransaction({ month: '2023-06', tag: 'Restaurants' }),
+  getRandomizedTransaction({ month: '2023-06', tag: 'Transportation' }),
+  getRandomizedTransaction({ month: '2023-05', tag: 'Entertainment' }),
+  getRandomizedTransaction({ month: '2023-05', tag: 'Groceries' }),
+  getRandomizedTransaction({ month: '2023-05', tag: 'Restaurants' }),
+  getRandomizedTransaction({ month: '2023-05', tag: 'Transportation' }),
+];
+
+function getRandomizedTransaction({
+  maxAmount = 100000,
+  minAmount = 50000,
+  month,
+  tag,
+}: {
+  maxAmount?: number;
+  minAmount?: number;
+  month: string;
+  tag: string;
+}): Transaction {
+  const parsedMonth = DateTime.fromISO(month);
+  const monthSeed = parsedMonth.toUnixInteger();
+  const tagSeed = toInt(tag);
+
+  return getTransaction({
+    amount: ((monthSeed * tagSeed) % (maxAmount - minAmount)) + minAmount,
+    day: ((monthSeed + tagSeed) % 27) + 1,
+    month,
+    name: tag,
+    tag,
+  });
+}
+
+function getTransaction({
+  amount,
+  day,
+  month,
+  name,
+  tag,
+}: {
+  amount: number;
+  day: number;
+  month: string;
+  name: string;
+  tag: string;
+}): Transaction {
+  return {
+    accountId: 'account-1',
+    amount,
+    datetime: `${month}-${day.toString().padStart(2, '0')}`,
+    id: getUuid(),
+    merchant: name,
+    name,
+    type: TransactionType.Debit,
+    category: Category.Spending,
+    filteredBy: getUuid(),
+    tag,
+  };
+}
+
+function toInt(input: string): number {
+  return new DataView(new TextEncoder().encode(input).buffer).getUint32(0);
+}

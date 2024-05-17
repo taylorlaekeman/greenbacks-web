@@ -6,6 +6,7 @@ import AccountConnectionBarrier from 'components/AccountConnectionBarrier';
 import Accounts from 'components/Accounts';
 import CashFlow from 'components/CashFlow';
 import AverageSpendingByTag from 'components/AverageSpendingByTag';
+import { CategoryAverageSummaryContainer } from 'components/CategoryAverageSummary';
 import Button from 'components/Button';
 import Filters from 'components/Filters';
 import { Header } from 'components/Header';
@@ -60,6 +61,7 @@ const GreenbacksInContext: FC = () => {
 
   const options = [
     { label: 'Spending Summary List', value: 'spending-summary-list' },
+    { label: 'Average Spending Summary', value: 'average-spending-summary' },
     {
       label: 'Totals by Month',
       value: 'totals-by-month',
@@ -123,6 +125,10 @@ const GreenbacksInContext: FC = () => {
               element={<SpendingSummaryListPage />}
             />
             <Route
+              path="/average-spending-summary"
+              element={<CategoryAverageSummaryContainer />}
+            />
+            <Route
               path="/top-spending-categories/:month"
               element={<TopSpendingCategories />}
             />
@@ -149,6 +155,7 @@ const PageWrapper = styled.main`
 
 const PageBody = styled.article`
   max-width: 632px;
+  overflow: scroll;
   padding: 16px;
   width: 100%;
 `;
