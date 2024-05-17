@@ -68,16 +68,18 @@ export function CategoryAverageSummary({
         hasRoundedTopCorners={false}
       >
         {transactionsByTagAndMonth &&
-          Object.entries(transactionsByTagAndMonth).map(([tag, group]) => (
-            <Item key={tag}>
-              <Row>
-                <Text>{format(group.average)}</Text>
-                <Text isUnderlined size={Size.Small}>
-                  {tag}
-                </Text>
-              </Row>
-            </Item>
-          ))}
+          Object.entries(transactionsByTagAndMonth)
+            .sort((a, b) => (a[1].average > b[1].average ? -1 : 1))
+            .map(([tag, group]) => (
+              <Item key={tag}>
+                <Row>
+                  <Text>{format(group.average)}</Text>
+                  <Text isUnderlined size={Size.Small}>
+                    {tag}
+                  </Text>
+                </Row>
+              </Item>
+            ))}
       </List>
     </Panel>
   );
