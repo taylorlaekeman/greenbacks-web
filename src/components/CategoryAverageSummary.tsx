@@ -20,10 +20,12 @@ export function CategoryAverageSummary({
   });
   if (!transactionsByMonth) return <div>empty</div>;
   const graphData = {
-    Spending: transactionsByMonth.map((group) => ({
-      amount: group.total,
-      month: DateTime.fromISO(group.key),
-    })),
+    Spending: transactionsByMonth
+      .map((group) => ({
+        amount: group.total,
+        month: DateTime.fromISO(group.key),
+      }))
+      .sort((a, b) => (a.month > b.month ? 1 : -1)),
   };
   const averageMonthlySpending =
     transactionsByMonth.reduce((result, group) => result + group.total, 0) / 12;
