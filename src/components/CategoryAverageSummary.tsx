@@ -263,6 +263,7 @@ function TagVisibilityController({
 export function CategoryAverageSummaryContainer(): React.ReactElement {
   const { now } = useNow();
   const [visibleTagCount, onChangeVisibleTagCount] = useState<number>(5);
+  const [expandedTag, onSelectTag] = useState<string | undefined>();
   const endDate = now.minus({ months: 1 }).endOf('month').toISODate();
   const startDate = now.minus({ years: 1 }).startOf('month').toISODate();
   const { spending } = useTransactionsByCategory({
@@ -271,7 +272,9 @@ export function CategoryAverageSummaryContainer(): React.ReactElement {
   });
   return (
     <CategoryAverageSummary
+      expandedTag={expandedTag}
       onChangeVisibleTagCount={onChangeVisibleTagCount}
+      onSelectTag={onSelectTag}
       transactions={spending}
       visibleTagCount={visibleTagCount}
     />
