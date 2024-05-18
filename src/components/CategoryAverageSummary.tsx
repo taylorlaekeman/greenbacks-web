@@ -85,6 +85,7 @@ export function CategoryAverageSummary({
         <MonthlyAmountsGraph
           endDate={endDate}
           hasLegend={false}
+          hasMaxLine
           monthlyAmountsBySeriesName={graphData}
           startDate={startDate}
         />
@@ -225,6 +226,7 @@ function ExpandableTagAmount({
           <MonthlyAmountsGraph
             endDate={endDate}
             hasLegend={false}
+            hasMaxLine
             monthlyAmountsBySeriesName={formattedGroups}
             startDate={startDate}
           />

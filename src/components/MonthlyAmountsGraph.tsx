@@ -13,6 +13,7 @@ export function MonthlyAmountsGraph({
   endDate,
   hasAverageLines = true,
   hasLegend = true,
+  hasMaxLine = false,
   monthlyAmountsBySeriesName = {},
   seriesConfigurationByName = {},
   startDate,
@@ -20,6 +21,7 @@ export function MonthlyAmountsGraph({
   endDate?: DateTime;
   hasAverageLines?: boolean;
   hasLegend?: boolean;
+  hasMaxLine?: boolean;
   monthlyAmountsBySeriesName?: Record<string, MonthlyAmount[]>;
   seriesConfigurationByName?: Record<string, SeriesConfiguration>;
   startDate?: DateTime;
@@ -31,6 +33,7 @@ export function MonthlyAmountsGraph({
     )
   )
     return <></>;
+  const maxValue = getMaxValue(monthlyAmountsBySeriesName);
   const { earliestMonth, latestMonth, monthCount } = getMonthRange({
     endDate,
     monthlyAmountsBySeriesName,
@@ -85,6 +88,16 @@ export function MonthlyAmountsGraph({
       width="100%"
     >
       <LineChart data={graphableData}>
+        {hasMaxLine && (
+          <ReferenceLine
+            label={{
+              fontSize: '0.8rem',
+              value: formatThousands(maxValue),
+            }}
+            stroke="lightgrey"
+            y={maxValue}
+          />
+        )}
         {seriesNames.map((name) => {
           const { colour = 'orange' } = seriesConfigurationByName[name] ?? {};
           return (
@@ -178,4 +191,14 @@ function getMonthRange({
       endDateOrDefault.diff(startDateOrDefault, 'months').months
     ),
   };
+}
+
+function getMaxValue(amountsByName: Record<string, MonthlyAmount[]>): number {
+  let max = 0;
+  Object.values(amountsByName).forEach((amountsByMonth) => {
+    amountsByMonth.forEach(({ amount }) => {
+      if (amount > max) max = amount;
+    });
+  });
+  return max;
 }

@@ -94,4 +94,10 @@ export const WithHoles: Story = {
   },
 };
 
+export const WithMaxLine: Story = {
+  args: {
+    hasMaxLine: true,
+  },
+};
+
 export default meta;
