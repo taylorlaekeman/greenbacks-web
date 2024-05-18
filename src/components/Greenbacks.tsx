@@ -145,7 +145,7 @@ const PageWrapper = styled.main`
 `;
 
 const PageBody = styled.article`
-  max-width: 632px;
+  max-width: 832px;
   overflow: scroll;
   padding: 16px;
   width: 100%;

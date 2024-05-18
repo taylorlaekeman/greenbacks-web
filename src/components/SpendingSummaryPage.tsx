@@ -14,11 +14,16 @@ export function SpendingSummary(): React.ReactElement {
 }
 
 const Wrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
+  display: grid;
+  grid-gap: 32px;
+  grid-template-columns: 1fr;
 
-  @media (min-width: 616px) {
-    flex-direction: row;
+  @media (min-width: 632px) {
+    grid-gap: 16px;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  @media (min-width: 832px) {
+    width: 800px;
   }
 `;

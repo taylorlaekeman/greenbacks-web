@@ -48,7 +48,7 @@ const Nav = styled.nav`
   grid-template-areas:
     'header header header'
     '. . .';
-  max-width: 632px;
+  max-width: 832px;
   padding: 16px;
   width: 100%;
 
