@@ -21,15 +21,19 @@ import {
 import noop from 'utils/noop';
 
 export function CategoryAverageSummary({
+  endDate,
   expandedTag,
   onChangeVisibleTagCount = noop,
   onSelectTag = noop,
+  startDate,
   transactions = [],
   visibleTagCount = 5,
 }: {
+  endDate?: DateTime;
   expandedTag?: string;
   onChangeVisibleTagCount?: (input: number) => void;
   onSelectTag?: (input: string | undefined) => void;
+  startDate?: DateTime;
   transactions?: Transaction[];
   visibleTagCount?: number;
 } = {}): React.ReactElement {
@@ -79,8 +83,10 @@ export function CategoryAverageSummary({
       </PanelBody>
       <PanelBody hasBottomBorder>
         <MonthlyAmountsGraph
+          endDate={endDate}
           hasLegend={false}
           monthlyAmountsBySeriesName={graphData}
+          startDate={startDate}
         />
       </PanelBody>
       <List
@@ -93,10 +99,12 @@ export function CategoryAverageSummary({
             ({ average, tag, transactionsByMonth: transactionGroups }) => (
               <ExpandableTagAmount
                 amount={average}
+                endDate={endDate}
                 isExpanded={expandedTag === tag}
                 key={tag}
                 onCollapse={() => onSelectTag(undefined)}
                 onExpand={() => onSelectTag(tag)}
+                startDate={startDate}
                 tag={tag}
                 transactionsByMonth={transactionGroups}
               />
@@ -139,16 +147,20 @@ function formatGroupsForGraph({
 
 function ExpandableTagAmount({
   amount,
+  endDate,
   isExpanded = false,
   onCollapse = noop,
   onExpand = noop,
+  startDate,
   tag,
   transactionsByMonth = [],
 }: {
   amount: number;
+  endDate?: DateTime;
   isExpanded?: boolean;
   onCollapse?: () => void;
   onExpand?: () => void;
+  startDate?: DateTime;
   tag: string;
   transactionsByMonth?: Group[];
 }): React.ReactElement {
@@ -180,8 +192,10 @@ function ExpandableTagAmount({
         </PanelBody>
         <PanelBody isInset>
           <MonthlyAmountsGraph
+            endDate={endDate}
             hasLegend={false}
             monthlyAmountsBySeriesName={formattedGroups}
+            startDate={startDate}
           />
         </PanelBody>
       </Panel>
@@ -264,17 +278,19 @@ export function CategoryAverageSummaryContainer(): React.ReactElement {
   const { now } = useNow();
   const [visibleTagCount, onChangeVisibleTagCount] = useState<number>(5);
   const [expandedTag, onSelectTag] = useState<string | undefined>();
-  const endDate = now.minus({ months: 1 }).endOf('month').toISODate();
-  const startDate = now.minus({ years: 1 }).startOf('month').toISODate();
+  const endDate = now.minus({ months: 1 }).endOf('month');
+  const startDate = now.minus({ years: 1 }).startOf('month');
   const { spending } = useTransactionsByCategory({
-    endDate,
-    startDate,
+    endDate: endDate.toISODate(),
+    startDate: startDate.toISODate(),
   });
   return (
     <CategoryAverageSummary
+      endDate={endDate}
       expandedTag={expandedTag}
       onChangeVisibleTagCount={onChangeVisibleTagCount}
       onSelectTag={onSelectTag}
+      startDate={startDate}
       transactions={spending}
       visibleTagCount={visibleTagCount}
     />

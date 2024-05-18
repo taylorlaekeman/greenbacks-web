@@ -73,4 +73,25 @@ export const TwoLines: Story = {
   },
 };
 
+export const WithHoles: Story = {
+  args: {
+    monthlyAmountsBySeriesName: {
+      Spending: [
+        { amount: 10000, month: DateTime.fromISO('2020-01') },
+        { amount: 40000, month: DateTime.fromISO('2020-03') },
+        { amount: 30000, month: DateTime.fromISO('2020-05') },
+        { amount: 20000, month: DateTime.fromISO('2020-07') },
+        { amount: 10000, month: DateTime.fromISO('2020-09') },
+        { amount: 30000, month: DateTime.fromISO('2020-10') },
+        { amount: 10000, month: DateTime.fromISO('2020-12') },
+      ],
+    },
+    seriesConfigurationByName: {
+      Saving: {
+        colour: 'green',
+      },
+    },
+  },
+};
+
 export default meta;

@@ -10,15 +10,19 @@ import {
 } from 'recharts';
 
 export function MonthlyAmountsGraph({
+  endDate,
   hasAverageLines = true,
   hasLegend = true,
   monthlyAmountsBySeriesName = {},
   seriesConfigurationByName = {},
+  startDate,
 }: {
+  endDate?: DateTime;
   hasAverageLines?: boolean;
   hasLegend?: boolean;
   monthlyAmountsBySeriesName?: Record<string, MonthlyAmount[]>;
   seriesConfigurationByName?: Record<string, SeriesConfiguration>;
+  startDate?: DateTime;
 } = {}): React.ReactElement {
   if (Object.keys(monthlyAmountsBySeriesName).length === 0) return <></>;
   if (
@@ -27,8 +31,10 @@ export function MonthlyAmountsGraph({
     )
   )
     return <></>;
-  const { earliestMonth, latestMonth } = getObservedMonthRange({
+  const { earliestMonth, latestMonth, monthCount } = getMonthRange({
+    endDate,
     monthlyAmountsBySeriesName,
+    startDate,
   });
   const seriesNames = Object.keys(monthlyAmountsBySeriesName);
   const averagesBySeriesName = seriesNames.reduce<Record<string, number>>(
@@ -38,7 +44,7 @@ export function MonthlyAmountsGraph({
         (total, { amount }) => total + amount,
         0
       );
-      const average = sum / monthlyAmounts.length;
+      const average = sum / monthCount;
       return {
         ...result,
         [name]: average,
@@ -46,21 +52,25 @@ export function MonthlyAmountsGraph({
     },
     {}
   );
-  const amountsByMonth = seriesNames.reduce<
-    Record<string, Record<string, number>>
-  >((result, seriesName) => {
-    const newResult: Record<string, Record<string, number>> = {};
-    const seriesData = monthlyAmountsBySeriesName[seriesName];
-    seriesData.forEach((monthAmount) => {
+  const emptyAmounts = seriesNames.reduce(
+    (result, name) => ({ ...result, [name]: 0 }),
+    {}
+  );
+  const amountsByMonth: Record<string, Record<string, number>> = {};
+  for (
+    let month = earliestMonth;
+    month <= latestMonth;
+    month = month.plus({ months: 1 })
+  ) {
+    amountsByMonth[month.toFormat('yyyy-LL')] = { ...emptyAmounts };
+  }
+  seriesNames.forEach((name) => {
+    const data = monthlyAmountsBySeriesName[name];
+    data.forEach((monthAmount) => {
       const serializedMonth = monthAmount.month.toFormat('yyyy-LL');
-      const existingMonthAmounts = result[serializedMonth] ?? {};
-      newResult[serializedMonth] = {
-        ...existingMonthAmounts,
-        [seriesName]: monthAmount.amount,
-      };
+      amountsByMonth[serializedMonth][name] = monthAmount.amount;
     });
-    return newResult;
-  }, {});
+  });
   const graphableData = Object.entries(amountsByMonth).map(
     ([serializedMonth, amountsBySeriesName]) => ({
       ...amountsBySeriesName,
@@ -140,11 +150,15 @@ function formatThousands(cents: number): string {
   return `${hundreds / 10}k`;
 }
 
-function getObservedMonthRange({
+function getMonthRange({
+  endDate,
   monthlyAmountsBySeriesName,
+  startDate,
 }: {
+  endDate?: DateTime;
   monthlyAmountsBySeriesName: Record<string, MonthlyAmount[]>;
-}): { earliestMonth: DateTime; latestMonth: DateTime } {
+  startDate?: DateTime;
+}): { earliestMonth: DateTime; latestMonth: DateTime; monthCount: number } {
   const series = Object.values(monthlyAmountsBySeriesName);
   let earliestMonth = series[0][0].month;
   let latestMonth = earliestMonth;
@@ -155,8 +169,13 @@ function getObservedMonthRange({
       if (monthlyAmount.month > latestMonth) latestMonth = monthlyAmount.month;
     });
   });
+  const startDateOrDefault = startDate ?? earliestMonth;
+  const endDateOrDefault = endDate ?? latestMonth;
   return {
-    earliestMonth,
-    latestMonth,
+    earliestMonth: startDateOrDefault,
+    latestMonth: endDateOrDefault,
+    monthCount: Math.round(
+      endDateOrDefault.diff(startDateOrDefault, 'months').months
+    ),
   };
 }
