@@ -72,9 +72,9 @@ export function CategoryAverageSummary({
   const allTags = Object.keys(transactionsByTag ?? {});
   const visibleTransactionGroups =
     transactionsByTagAndMonth?.slice(0, visibleTagCount) ?? [];
-  const remainingTagsAmount = (
+  const remainingTagsGroup = combineRemainingTags(
     transactionsByTagAndMonth?.slice(visibleTagCount, allTags.length) ?? []
-  ).reduce((sum, group) => sum + group.average, 0);
+  );
   return (
     <Panel>
       <PanelBody hasBottomBorder>
@@ -110,10 +110,16 @@ export function CategoryAverageSummary({
               />
             )
           )}
-        {remainingTagsAmount > 0 && (
+        {remainingTagsGroup.average > 0 && (
           <ExpandableTagAmount
-            amount={remainingTagsAmount}
+            amount={remainingTagsGroup.average}
+            endDate={endDate}
+            isExpanded={expandedTag === 'all-other-transactions'}
+            onCollapse={() => onSelectTag(undefined)}
+            onExpand={() => onSelectTag('all-other-transactions')}
+            startDate={startDate}
             tag="All other transactions"
+            transactionsByMonth={remainingTagsGroup.transactionsByMonth}
           />
         )}
         <Item>
@@ -142,6 +148,31 @@ function formatGroupsForGraph({
         month: DateTime.fromISO(group.key),
       }))
       .sort((a, b) => (a.month > b.month ? 1 : -1)),
+  };
+}
+
+function combineRemainingTags(
+  remainingGroups: Array<{
+    average: number;
+    tag: string;
+    transactionsByMonth: Group[];
+  }>
+): { average: number; tag: string; transactionsByMonth: Group[] } {
+  const totalAmount = remainingGroups.reduce(
+    (sum, group) => sum + group.average,
+    0
+  );
+  const allTransactions = remainingGroups.flatMap((group) =>
+    group.transactionsByMonth.flatMap((monthGroup) => monthGroup.transactions)
+  );
+  const regroupedTransactions = groupTransactions({
+    groupBy: GroupBy.Month,
+    transactions: allTransactions,
+  });
+  return {
+    average: totalAmount,
+    tag: 'All other transactions',
+    transactionsByMonth: regroupedTransactions || [],
   };
 }
 
