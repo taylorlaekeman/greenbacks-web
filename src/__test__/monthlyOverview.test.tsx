@@ -39,7 +39,7 @@ test('shows total earning', async () => {
     }),
   ];
   render(
-    <TestGreenbacksProvider mocks={apiMocks} route="/months/2020-01/">
+    <TestGreenbacksProvider mocks={apiMocks} route="/widgets/months/2020-01/">
       <Greenbacks />
     </TestGreenbacksProvider>
   );
@@ -79,7 +79,7 @@ test('shows total spending', async () => {
     }),
   ];
   render(
-    <TestGreenbacksProvider mocks={apiMocks} route="/months/2020-01/">
+    <TestGreenbacksProvider mocks={apiMocks} route="/widgets/months/2020-01/">
       <Greenbacks />
     </TestGreenbacksProvider>
   );
@@ -127,7 +127,7 @@ test('shows total saving', async () => {
     }),
   ];
   render(
-    <TestGreenbacksProvider mocks={apiMocks} route="/months/2020-01/">
+    <TestGreenbacksProvider mocks={apiMocks} route="/widgets/months/2020-01/">
       <Greenbacks />
     </TestGreenbacksProvider>
   );
@@ -178,7 +178,7 @@ test('shows savings rate', async () => {
     }),
   ];
   render(
-    <TestGreenbacksProvider mocks={apiMocks} route="/months/2020-01/">
+    <TestGreenbacksProvider mocks={apiMocks} route="/widgets/months/2020-01/">
       <Greenbacks />
     </TestGreenbacksProvider>
   );
@@ -190,7 +190,7 @@ test('shows savings rate', async () => {
 
 test('shows loading indicator while transactions are loading', async () => {
   render(
-    <TestGreenbacksProvider route="/months/2020-01/">
+    <TestGreenbacksProvider route="/widgets/months/2020-01/">
       <Greenbacks />
     </TestGreenbacksProvider>
   );
@@ -253,7 +253,7 @@ test('shows cash flow graph', async () => {
     }),
   ];
   render(
-    <TestGreenbacksProvider mocks={apiMocks} route="/months/2020-01/">
+    <TestGreenbacksProvider mocks={apiMocks} route="/widgets/months/2020-01/">
       <Greenbacks />
     </TestGreenbacksProvider>
   );

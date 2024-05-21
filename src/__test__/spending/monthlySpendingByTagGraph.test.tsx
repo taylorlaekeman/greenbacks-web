@@ -165,7 +165,11 @@ test('shows totals by month', async () => {
     }),
   ];
   render(
-    <TestGreenbacksProvider mocks={apiMocks} route="/spending" now="2021-01-01">
+    <TestGreenbacksProvider
+      mocks={apiMocks}
+      route="/widgets/spending"
+      now="2021-01-01"
+    >
       <Greenbacks />
     </TestGreenbacksProvider>
   );
@@ -354,7 +358,11 @@ test('only shows selected tags', async () => {
     }),
   ];
   render(
-    <TestGreenbacksProvider mocks={apiMocks} route="/spending" now="2021-01-01">
+    <TestGreenbacksProvider
+      mocks={apiMocks}
+      route="/widgets/spending"
+      now="2021-01-01"
+    >
       <Greenbacks />
     </TestGreenbacksProvider>
   );
@@ -393,7 +401,7 @@ test('only shows selected tags', async () => {
 
 test('shows loading indicator while transactions are loading', async () => {
   render(
-    <TestGreenbacksProvider route="/spending">
+    <TestGreenbacksProvider route="/widgets/spending">
       <Greenbacks />
     </TestGreenbacksProvider>
   );

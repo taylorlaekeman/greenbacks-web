@@ -2,6 +2,7 @@ import React, { FC, useState } from 'react';
 import { DateTime } from 'luxon';
 import {
   CartesianGrid,
+  LabelList,
   Legend,
   Line,
   LineChart,
@@ -152,6 +153,7 @@ export function PureSpendingTimeline({
     startDate: startDateOrDefault,
     transactions,
   });
+  const serializedLatestDate = endDateOrDefault.toISODate();
   const serializedLatestActualDate = latestActualDateOrDefault.toISODate();
   const lastDay = timeline[timeline.length - 1];
   const lastActualDay = timeline.find(
@@ -200,14 +202,44 @@ export function PureSpendingTimeline({
             stroke="orange"
           />
         )}
-        <Line dataKey="actual" dot={false} isAnimationActive={false} />
+        <Line dataKey="actual" dot={false} isAnimationActive={false}>
+          <LabelList
+            formatter={formatThousands}
+            style={{
+              fontSize: '0.8rem',
+            }}
+            valueAccessor={(entry: {
+              payload: { date: string };
+              value: number;
+            }) => {
+              if (entry.payload.date === serializedLatestActualDate)
+                return entry.value;
+              return null;
+            }}
+          />
+        </Line>
         {hasPredicted && hasComparisonData && (
           <Line
             dataKey="predicted"
             dot={false}
             isAnimationActive={false}
             strokeDasharray="4 4"
-          />
+          >
+            <LabelList
+              formatter={formatThousands}
+              style={{
+                fontSize: '0.8rem',
+              }}
+              valueAccessor={(entry: {
+                payload: { date: string };
+                value: number;
+              }) => {
+                if (entry.payload.date === serializedLatestDate)
+                  return entry.value;
+                return null;
+              }}
+            />
+          </Line>
         )}
         {hasXAxis && (
           <XAxis

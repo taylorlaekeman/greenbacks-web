@@ -15,7 +15,11 @@ test('shows reauthentication required error when transactions endpoint returns r
     }),
   ];
   render(
-    <TestGreenbacksProvider mocks={mocks} route="/spending" now="2021-01-01">
+    <TestGreenbacksProvider
+      mocks={mocks}
+      route="/widgets/spending"
+      now="2021-01-01"
+    >
       <Greenbacks />
     </TestGreenbacksProvider>
   );
@@ -38,7 +42,11 @@ test('reauthentication required error link redirects to acounts page', async () 
     }),
   ];
   render(
-    <TestGreenbacksProvider mocks={mocks} route="/spending" now="2021-01-01">
+    <TestGreenbacksProvider
+      mocks={mocks}
+      route="/widgets/spending"
+      now="2021-01-01"
+    >
       <Greenbacks />
     </TestGreenbacksProvider>
   );

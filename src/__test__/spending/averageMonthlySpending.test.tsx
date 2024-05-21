@@ -12,7 +12,11 @@ import { Category, CoreTransaction } from 'types/transaction';
 test('shows loading indicator while transactions are loading', () => {
   const mocks = [buildApiTransactionsMock()];
   render(
-    <TestGreenbacksProvider mocks={mocks} route="/spending" now="2021-01-01">
+    <TestGreenbacksProvider
+      mocks={mocks}
+      route="/widgets/spending"
+      now="2021-01-01"
+    >
       <Greenbacks />
     </TestGreenbacksProvider>
   );
@@ -25,7 +29,11 @@ test('shows loading indicator while transactions are loading', () => {
 test('shows zero without any expenses', async () => {
   const mocks = [buildApiTransactionsMock()];
   render(
-    <TestGreenbacksProvider mocks={mocks} route="/spending" now="2021-01-01">
+    <TestGreenbacksProvider
+      mocks={mocks}
+      route="/widgets/spending"
+      now="2021-01-01"
+    >
       <Greenbacks />
     </TestGreenbacksProvider>
   );
@@ -70,7 +78,11 @@ test('correctly averages transactions', async () => {
     }),
   ];
   render(
-    <TestGreenbacksProvider mocks={mocks} route="/spending" now="2021-01-01">
+    <TestGreenbacksProvider
+      mocks={mocks}
+      route="/widgets/spending"
+      now="2021-01-01"
+    >
       <Greenbacks />
     </TestGreenbacksProvider>
   );
@@ -92,7 +104,11 @@ test('handles months without expenses', async () => {
     }),
   ];
   render(
-    <TestGreenbacksProvider mocks={mocks} route="/spending" now="2021-01-01">
+    <TestGreenbacksProvider
+      mocks={mocks}
+      route="/widgets/spending"
+      now="2021-01-01"
+    >
       <Greenbacks />
     </TestGreenbacksProvider>
   );
@@ -142,7 +158,11 @@ test('excludes savings', async () => {
     }),
   ];
   render(
-    <TestGreenbacksProvider mocks={mocks} route="/spending" now="2021-01-01">
+    <TestGreenbacksProvider
+      mocks={mocks}
+      route="/widgets/spending"
+      now="2021-01-01"
+    >
       <Greenbacks />
     </TestGreenbacksProvider>
   );
@@ -181,7 +201,11 @@ test('does not show spending rate when average earnings are 0', async () => {
     }),
   ];
   render(
-    <TestGreenbacksProvider mocks={mocks} route="/spending" now="2021-01-01">
+    <TestGreenbacksProvider
+      mocks={mocks}
+      route="/widgets/spending"
+      now="2021-01-01"
+    >
       <Greenbacks />
     </TestGreenbacksProvider>
   );

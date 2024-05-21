@@ -20,7 +20,7 @@ test('tags are selected by default', async () => {
   });
   render(
     <TestGreenbacksProvider
-      route="/spending"
+      route="/widgets/spending"
       mocks={[filterMock]}
       now="2021-01-01"
     >
@@ -47,7 +47,7 @@ test('clicking checkbox for selected tag deselects and reselects it', async () =
   });
   render(
     <TestGreenbacksProvider
-      route="/spending"
+      route="/widgets/spending"
       mocks={[filtersMock]}
       now="2021-01-01"
     >
@@ -74,7 +74,7 @@ test('clicking deselect all deselects all', async () => {
   });
   render(
     <TestGreenbacksProvider
-      route="/spending"
+      route="/widgets/spending"
       mocks={[filtersMock]}
       now="2021-01-01"
     >
@@ -103,7 +103,7 @@ test('clicking select all selects all', async () => {
   });
   render(
     <TestGreenbacksProvider
-      route="/spending"
+      route="/widgets/spending"
       mocks={[filtersMock]}
       now="2021-01-01"
     >

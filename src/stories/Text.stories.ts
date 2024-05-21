@@ -52,5 +52,4 @@ export const Bold: Story = {
   },
 };
 
-
 export default meta;

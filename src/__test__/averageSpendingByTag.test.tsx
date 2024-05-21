@@ -50,7 +50,7 @@ test('correctly averages spending', async () => {
     <TestGreenbacksProvider
       mocks={apiMocks}
       now="2021-01-01"
-      route="/average-spending-by-tag"
+      route="/widgets/average-spending-by-tag"
     >
       <Greenbacks />
     </TestGreenbacksProvider>
@@ -107,7 +107,7 @@ test('excludes savings', async () => {
     <TestGreenbacksProvider
       mocks={apiMocks}
       now="2021-01-01"
-      route="/average-spending-by-tag"
+      route="/widgets/average-spending-by-tag"
     >
       <Greenbacks />
     </TestGreenbacksProvider>
@@ -162,7 +162,7 @@ test('excludes earnings', async () => {
     <TestGreenbacksProvider
       mocks={apiMocks}
       now="2021-01-01"
-      route="/average-spending-by-tag"
+      route="/widgets/average-spending-by-tag"
     >
       <Greenbacks />
     </TestGreenbacksProvider>
@@ -217,7 +217,7 @@ test('excludes hidden transactions', async () => {
     <TestGreenbacksProvider
       mocks={apiMocks}
       now="2021-01-01"
-      route="/average-spending-by-tag"
+      route="/widgets/average-spending-by-tag"
     >
       <Greenbacks />
     </TestGreenbacksProvider>
@@ -255,7 +255,7 @@ test('groups untagged transactions', async () => {
     <TestGreenbacksProvider
       mocks={apiMocks}
       now="2021-01-01"
-      route="/average-spending-by-tag"
+      route="/widgets/average-spending-by-tag"
     >
       <Greenbacks />
     </TestGreenbacksProvider>
@@ -272,7 +272,7 @@ test('groups untagged transactions', async () => {
 
 test('shows loading indicator', async () => {
   render(
-    <TestGreenbacksProvider route="/average-spending-by-tag">
+    <TestGreenbacksProvider route="/widgets/average-spending-by-tag">
       <Greenbacks />
     </TestGreenbacksProvider>
   );

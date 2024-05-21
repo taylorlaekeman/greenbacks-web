@@ -84,6 +84,8 @@ export function SpendingSummaryList({
         <SpendingTimeline
           comparisonLabel="average"
           comparisonSpendingByDate={comparisonSpendingByDate}
+          hasLastActualReferenceLine={false}
+          hasLastPredictedReferenceLine={false}
           endDate={endDate}
           startDate={startDate}
           transactions={transactions}

@@ -1,6 +1,7 @@
 import { DateTime } from 'luxon';
 import React from 'react';
 import {
+  LabelList,
   Legend,
   Line,
   LineChart,
@@ -26,6 +27,7 @@ export function MonthlyAmountsGraph({
   seriesConfigurationByName?: Record<string, SeriesConfiguration>;
   startDate?: DateTime;
 } = {}): React.ReactElement {
+  if (false) console.log(seriesConfigurationByName);
   if (Object.keys(monthlyAmountsBySeriesName).length === 0) return <></>;
   if (
     Object.values(monthlyAmountsBySeriesName).every(
@@ -88,7 +90,7 @@ export function MonthlyAmountsGraph({
       width="100%"
     >
       <LineChart data={graphableData}>
-        {hasMaxLine && (
+        {false && hasMaxLine && (
           <ReferenceLine
             label={{
               fontSize: '0.8rem',
@@ -98,34 +100,35 @@ export function MonthlyAmountsGraph({
             y={maxValue}
           />
         )}
-        {seriesNames.map((name) => {
-          const { colour = 'orange' } = seriesConfigurationByName[name] ?? {};
-          return (
-            <Line
-              dataKey={name}
-              dot={false}
-              isAnimationActive={false}
-              key={name}
-              stroke={colour}
+        {seriesNames.map((name) => (
+          <Line dataKey={name} dot={false} isAnimationActive={false} key={name}>
+            <LabelList
+              formatter={formatThousands}
+              style={{
+                fontSize: '0.8rem',
+              }}
+              valueAccessor={(entry: {
+                payload: { day: number };
+                value: number;
+              }) => {
+                if (entry.value === maxValue) return entry.value;
+                return null;
+              }}
             />
-          );
-        })}
+          </Line>
+        ))}
         {hasAverageLines &&
-          seriesNames.map((name) => {
-            const { colour = 'orange' } = seriesConfigurationByName[name] ?? {};
-            return (
-              <ReferenceLine
-                key={name}
-                label={{
-                  fontSize: '0.8rem',
-                  value: formatThousands(averagesBySeriesName[name]),
-                }}
-                stroke={colour}
-                strokeDasharray="4 4"
-                y={averagesBySeriesName[name]}
-              />
-            );
-          })}
+          seriesNames.map((name) => (
+            <ReferenceLine
+              key={name}
+              label={{
+                fontSize: '0.8rem',
+                value: formatThousands(averagesBySeriesName[name]),
+              }}
+              stroke="lightgrey"
+              y={averagesBySeriesName[name]}
+            />
+          ))}
         <XAxis
           dataKey="month"
           interval="preserveStartEnd"

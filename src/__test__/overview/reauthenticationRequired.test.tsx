@@ -15,7 +15,7 @@ test('shows reauthentication required error when transactions endpoint returns r
     }),
   ];
   render(
-    <TestGreenbacksProvider mocks={mocks} now="2021-01-01">
+    <TestGreenbacksProvider mocks={mocks} now="2021-01-01" route="/widgets">
       <Greenbacks />
     </TestGreenbacksProvider>
   );
@@ -27,7 +27,7 @@ test('shows reauthentication required error when transactions endpoint returns r
   expect(link).toBeInTheDocument();
 });
 
-test('reauthentication required error link redirects to acounts page', async () => {
+test('reauthentication required error link redirects to accounts page', async () => {
   const mocks = [
     buildApiTransactionsMock({
       endDate: '2020-12-31',
@@ -36,7 +36,7 @@ test('reauthentication required error link redirects to acounts page', async () 
     }),
   ];
   render(
-    <TestGreenbacksProvider mocks={mocks} now="2021-01-01">
+    <TestGreenbacksProvider mocks={mocks} now="2021-01-01" route="/widgets">
       <Greenbacks />
     </TestGreenbacksProvider>
   );

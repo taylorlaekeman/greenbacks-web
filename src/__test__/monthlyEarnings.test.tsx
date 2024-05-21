@@ -50,7 +50,7 @@ test('shows earnings', async () => {
     <TestGreenbacksProvider
       mocks={apiMocks}
       filters={filters}
-      route="/months/2020-01/"
+      route="/widgets/months/2020-01/"
     >
       <Greenbacks />
     </TestGreenbacksProvider>
@@ -72,7 +72,7 @@ test('shows earnings', async () => {
 
 test('shows loading indicator while transactions are loading', () => {
   render(
-    <TestGreenbacksProvider>
+    <TestGreenbacksProvider route="/widgets">
       <Greenbacks />
     </TestGreenbacksProvider>
   );

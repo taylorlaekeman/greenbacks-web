@@ -19,8 +19,8 @@ export function Header({
             Greenbacks
           </Text>
         </Link>
-        <Link href="/spending">
-          <Text>Spending</Text>
+        <Link href="/widgets">
+          <Text>Widgets</Text>
         </Link>
         <Link href="/accounts">
           <Text>Accounts</Text>

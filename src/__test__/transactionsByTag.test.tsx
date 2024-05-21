@@ -12,7 +12,7 @@ import { Category, CoreTransaction } from 'types/transaction';
 test('shows loading indicator while transactions are loading', () => {
   const mocks = [buildApiTransactionsMock()];
   render(
-    <TestGreenbacksProvider mocks={mocks} now="2020-07-01">
+    <TestGreenbacksProvider mocks={mocks} now="2020-07-01" route="/widgets">
       <Greenbacks />
     </TestGreenbacksProvider>
   );
@@ -103,7 +103,7 @@ test('groups transactions by tag', async () => {
     }),
   ];
   render(
-    <TestGreenbacksProvider mocks={apiMocks} now="2020-01-01">
+    <TestGreenbacksProvider mocks={apiMocks} now="2020-01-01" route="/widgets">
       <Greenbacks />
     </TestGreenbacksProvider>
   );
@@ -164,7 +164,7 @@ test('groups untagged transactions', async () => {
     }),
   ];
   render(
-    <TestGreenbacksProvider mocks={apiMocks} now="2020-01-01">
+    <TestGreenbacksProvider mocks={apiMocks} now="2020-01-01" route="/widgets">
       <Greenbacks />
     </TestGreenbacksProvider>
   );
@@ -205,7 +205,7 @@ test('shows current month when no month is present in route', async () => {
     }),
   ];
   render(
-    <TestGreenbacksProvider mocks={apiMocks} now="2020-01-01">
+    <TestGreenbacksProvider mocks={apiMocks} now="2020-01-01" route="/widgets">
       <Greenbacks />
     </TestGreenbacksProvider>
   );
