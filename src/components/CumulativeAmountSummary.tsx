@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import { Button, ButtonStyle } from 'components/Button';
 import { Icon, IconType } from 'components/Icon';
@@ -9,6 +9,9 @@ import { PureSpendingTimeline as SpendingTimeline } from 'components/SpendingTim
 import { Size, Text } from 'components/Text';
 import Transaction from 'components/Transaction';
 import useCurrencyFormatter from 'hooks/useCurrencyFormatter';
+import useNow from 'hooks/useNow';
+import useSpendingByDayOfMonth from 'hooks/useSpendingByDayOfMonth';
+import useTransactionsByCategory from 'hooks/useTransactionsByCategory';
 import type TransactionType from 'types/transaction';
 import datetime from 'utils/datetime';
 import {
@@ -19,7 +22,7 @@ import {
 } from 'utils/groupTransactions';
 import noop from 'utils/noop';
 
-export function SpendingSummaryList({
+export function CumulativeAmountSummary({
   areAllTagsVisible = false,
   comparisonSpendingByDate = {},
   endDate,
@@ -271,4 +274,41 @@ function getSpendingPeriodText({
       datetime.DATE_MED
     )} and ${endDate.toLocaleString(datetime.DATE_MED)} you spent`;
   return undefined;
+}
+
+export function CumulativeAmountSummaryContainer(): React.ReactElement {
+  const { now } = useNow();
+  const { spending: currentMonthSpending } = useTransactionsByCategory({
+    endDate: now.endOf('month').toISODate(),
+    startDate: now.startOf('month').toISODate(),
+  });
+  const {
+    spending: previousYearSpendingByDayOfMonth,
+  } = useSpendingByDayOfMonth({
+    endDate: now.minus({ months: 1 }).endOf('month').toISODate(),
+    startDate: now.minus({ years: 1 }).startOf('month').toISODate(),
+  });
+  const [expandedTag, setExpandedTag] = useState<string | undefined>(undefined);
+  const [visibleTagCount, setVisibleTagCount] = useState<number>(5);
+
+  const comparisonSpendingByDate = Object.entries(
+    previousYearSpendingByDayOfMonth ?? {}
+  ).reduce((result, [day, spending]) => {
+    const date = now.set({ day: parseInt(day, 10) }).toISODate();
+    return { ...result, [date]: spending / 12 };
+  }, {});
+
+  return (
+    <CumulativeAmountSummary
+      comparisonSpendingByDate={comparisonSpendingByDate}
+      endDate={now.endOf('month')}
+      expandedTag={expandedTag}
+      isCurrentMonth
+      onChangeVisibleTagCount={setVisibleTagCount}
+      onSelectTag={(tag) => setExpandedTag(tag)}
+      startDate={now.startOf('month')}
+      transactions={currentMonthSpending}
+      visibleTagCount={visibleTagCount}
+    />
+  );
 }

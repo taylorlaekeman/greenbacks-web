@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { fn } from '@storybook/test';
 
-import { SpendingSummaryList } from 'components/SpendingSummaryList';
+import { CumulativeAmountSummary } from 'components/CumulativeAmountSummary';
 import { transactions } from 'stories/testTransactions';
 import datetime from 'utils/datetime';
 
-type Args = React.ComponentProps<typeof SpendingSummaryList> & {
+type Args = React.ComponentProps<typeof CumulativeAmountSummary> & {
   endDate: string;
   expandedTag?: string;
   month: string;
@@ -58,12 +58,12 @@ const meta: Meta<Args> = {
       control: 'text',
     },
   },
-  component: SpendingSummaryList,
+  component: CumulativeAmountSummary,
   parameters: {
     layout: 'centered',
   },
   render: (args) => <StoryWrapper {...args} />,
-  title: 'Molecules/SpendingSummaryList',
+  title: 'Molecules/CumulativeAmountSummary',
 };
 
 function StoryWrapper(props: Args): React.ReactElement {
@@ -79,7 +79,7 @@ function StoryWrapper(props: Args): React.ReactElement {
     startDate && datetime.fromISO(startDate);
   const parsedMonth: datetime | undefined = month && datetime.fromISO(month);
   return (
-    <SpendingSummaryList
+    <CumulativeAmountSummary
       {...props}
       endDate={parsedEndDate}
       expandedTag={expandedTag}
@@ -92,7 +92,7 @@ function StoryWrapper(props: Args): React.ReactElement {
   );
 }
 
-type Story = StoryObj<typeof SpendingSummaryList>;
+type Story = StoryObj<typeof CumulativeAmountSummary>;
 
 export const ThisMonth: Story = {
   args: {

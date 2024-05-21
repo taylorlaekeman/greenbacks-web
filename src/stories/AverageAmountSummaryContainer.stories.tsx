@@ -1,12 +1,12 @@
 import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 
-import { CategoryAverageSummaryContainer } from 'components/CategoryAverageSummary';
+import { AverageAmountSummaryContainer } from 'components/AverageAmountSummary';
 import { TestGreenbacksProvider } from 'context/Greenbacks';
 import { transactionsYearBeforeMay2024 } from 'stories/testTransactions';
 import buildApiTransactionsMock from '__test__/utils/buildApiTransactionsMock';
 
-const meta: Meta<typeof CategoryAverageSummaryContainer> = {
+const meta: Meta<typeof AverageAmountSummaryContainer> = {
   parameters: {
     layout: 'centered',
   },
@@ -21,13 +21,13 @@ const meta: Meta<typeof CategoryAverageSummaryContainer> = {
       ]}
       now="2024-05-01"
     >
-      <CategoryAverageSummaryContainer />
+      <AverageAmountSummaryContainer />
     </TestGreenbacksProvider>
   ),
-  title: 'Pages/CategoryAverageSummaryContainer',
+  title: 'Molecules/AverageAmountSummaryContainer',
 };
 
-type Story = StoryObj<typeof CategoryAverageSummaryContainer>;
+type Story = StoryObj<typeof AverageAmountSummaryContainer>;
 
 export const Default: Story = {};
 

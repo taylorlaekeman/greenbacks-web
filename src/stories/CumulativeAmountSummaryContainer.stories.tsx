@@ -1,12 +1,12 @@
 import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 
-import { SpendingSummaryListPage } from 'components/SpendingSummaryListPage';
+import { CumulativeAmountSummaryContainer } from 'components/CumulativeAmountSummary';
 import { TestGreenbacksProvider } from 'context/Greenbacks';
 import { transactions } from 'stories/testTransactions';
 import buildApiTransactionsMock from '__test__/utils/buildApiTransactionsMock';
 
-const meta: Meta<typeof SpendingSummaryListPage> = {
+const meta: Meta<typeof CumulativeAmountSummaryContainer> = {
   parameters: {
     layout: 'centered',
   },
@@ -40,13 +40,13 @@ const meta: Meta<typeof SpendingSummaryListPage> = {
       ]}
       now="2024-05-06"
     >
-      <SpendingSummaryListPage />
+      <CumulativeAmountSummaryContainer />
     </TestGreenbacksProvider>
   ),
-  title: 'Pages/SpendingSummaryList',
+  title: 'Molecules/SpendingSummaryList',
 };
 
-type Story = StoryObj<typeof SpendingSummaryListPage>;
+type Story = StoryObj<typeof CumulativeAmountSummaryContainer>;
 
 export const Default: Story = {};
 

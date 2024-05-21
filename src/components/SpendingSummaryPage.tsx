@@ -1,14 +1,14 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import { CategoryAverageSummaryContainer } from 'components/CategoryAverageSummary';
-import { SpendingSummaryListPage } from 'components/SpendingSummaryListPage';
+import { AverageAmountSummaryContainer } from 'components/AverageAmountSummary';
+import { CumulativeAmountSummaryContainer } from 'components/CumulativeAmountSummary';
 
 export function SpendingSummary(): React.ReactElement {
   return (
     <Wrapper>
-      <CategoryAverageSummaryContainer />
-      <SpendingSummaryListPage />
+      <AverageAmountSummaryContainer />
+      <CumulativeAmountSummaryContainer />
     </Wrapper>
   );
 }

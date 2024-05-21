@@ -27,7 +27,6 @@ export function MonthlyAmountsGraph({
   seriesConfigurationByName?: Record<string, SeriesConfiguration>;
   startDate?: DateTime;
 } = {}): React.ReactElement {
-  if (false) console.log(seriesConfigurationByName);
   if (Object.keys(monthlyAmountsBySeriesName).length === 0) return <></>;
   if (
     Object.values(monthlyAmountsBySeriesName).every(
@@ -100,35 +99,48 @@ export function MonthlyAmountsGraph({
             y={maxValue}
           />
         )}
-        {seriesNames.map((name) => (
-          <Line dataKey={name} dot={false} isAnimationActive={false} key={name}>
-            <LabelList
-              formatter={formatThousands}
-              style={{
-                fontSize: '0.8rem',
-              }}
-              valueAccessor={(entry: {
-                payload: { day: number };
-                value: number;
-              }) => {
-                if (entry.value === maxValue) return entry.value;
-                return null;
-              }}
-            />
-          </Line>
-        ))}
-        {hasAverageLines &&
-          seriesNames.map((name) => (
-            <ReferenceLine
+        {seriesNames.map((name) => {
+          const { colour } = seriesConfigurationByName[name] ?? {};
+          return (
+            <Line
+              dataKey={name}
+              dot={false}
+              isAnimationActive={false}
               key={name}
-              label={{
-                fontSize: '0.8rem',
-                value: formatThousands(averagesBySeriesName[name]),
-              }}
-              stroke="lightgrey"
-              y={averagesBySeriesName[name]}
-            />
-          ))}
+              stroke={colour}
+            >
+              <LabelList
+                formatter={formatThousands}
+                style={{
+                  fontSize: '0.8rem',
+                }}
+                valueAccessor={(entry: {
+                  payload: { day: number };
+                  value: number;
+                }) => {
+                  if (entry.value === maxValue) return entry.value;
+                  return null;
+                }}
+              />
+            </Line>
+          );
+        })}
+        {hasAverageLines &&
+          seriesNames.map((name) => {
+            const { colour = 'lightgrey' } =
+              seriesConfigurationByName[name] ?? {};
+            return (
+              <ReferenceLine
+                key={name}
+                label={{
+                  fontSize: '0.8rem',
+                  value: formatThousands(averagesBySeriesName[name]),
+                }}
+                stroke={colour}
+                y={averagesBySeriesName[name]}
+              />
+            );
+          })}
         <XAxis
           dataKey="month"
           interval="preserveStartEnd"

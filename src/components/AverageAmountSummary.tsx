@@ -20,7 +20,7 @@ import {
 } from 'utils/groupTransactions';
 import noop from 'utils/noop';
 
-export function CategoryAverageSummary({
+export function AverageAmountSummary({
   endDate,
   expandedTag,
   onChangeVisibleTagCount = noop,
@@ -307,7 +307,7 @@ function TagVisibilityController({
   );
 }
 
-export function CategoryAverageSummaryContainer(): React.ReactElement {
+export function AverageAmountSummaryContainer(): React.ReactElement {
   const { now } = useNow();
   const [visibleTagCount, onChangeVisibleTagCount] = useState<number>(5);
   const [expandedTag, onSelectTag] = useState<string | undefined>();
@@ -318,7 +318,7 @@ export function CategoryAverageSummaryContainer(): React.ReactElement {
     startDate: startDate.toISODate(),
   });
   return (
-    <CategoryAverageSummary
+    <AverageAmountSummary
       endDate={endDate}
       expandedTag={expandedTag}
       onChangeVisibleTagCount={onChangeVisibleTagCount}

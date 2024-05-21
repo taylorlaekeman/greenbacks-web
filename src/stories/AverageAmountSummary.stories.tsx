@@ -1,22 +1,22 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
-import { CategoryAverageSummary } from 'components/CategoryAverageSummary';
+import { AverageAmountSummary } from 'components/AverageAmountSummary';
 import { transactionsYearBeforeMay2024 } from 'stories/testTransactions';
 
-const meta: Meta<React.ComponentProps<typeof CategoryAverageSummary>> = {
+const meta: Meta<React.ComponentProps<typeof AverageAmountSummary>> = {
   args: {
     expandedTag: 'Groceries',
     transactions: transactionsYearBeforeMay2024,
     visibleTagCount: 5,
   },
-  component: CategoryAverageSummary,
+  component: AverageAmountSummary,
   parameters: {
     layout: 'centered',
   },
-  title: 'Molecules/CategoryAverageSummary',
+  title: 'Molecules/AverageAmountSummary',
 };
 
-type Story = StoryObj<typeof CategoryAverageSummary>;
+type Story = StoryObj<typeof AverageAmountSummary>;
 
 export const Default: Story = {};
 
