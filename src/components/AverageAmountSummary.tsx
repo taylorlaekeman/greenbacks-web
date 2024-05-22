@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 
 import { Button, ButtonStyle } from 'components/Button';
 import { Icon, IconType } from 'components/Icon';
-import { JustifiedRow as Row, Space } from 'components/JustifiedRow';
+import { Alignment, JustifiedRow as Row, Space } from 'components/JustifiedRow';
 import List, { Item } from 'components/List';
 import { MonthlyAmountsGraph } from 'components/MonthlyAmountsGraph';
 import { Panel, PanelItem } from 'components/Panel';
@@ -90,6 +90,19 @@ export function AverageAmountSummary({
           startDate={startDate}
         />
       </PanelItem>
+      {startDate && endDate && (
+        <PanelItem hasBottomBorder>
+          <Row alignment={Alignment.Center}>
+            <Text>{`${startDate?.toLocaleString({
+              month: 'short',
+              year: 'numeric',
+            })} – ${endDate?.toLocaleString({
+              month: 'short',
+              year: 'numeric',
+            })}`}</Text>
+          </Row>
+        </PanelItem>
+      )}
       <List
         hasOutsideBorder={false}
         hasRoundedBottomCorners

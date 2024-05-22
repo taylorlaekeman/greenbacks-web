@@ -2,21 +2,32 @@ import React from 'react';
 import styled from 'styled-components';
 
 export function JustifiedRow({
+  alignment = Alignment.SpaceBetween,
   children,
   space = Space.None,
 }: {
+  alignment?: Alignment;
   children?: React.ReactNode;
   space?: Space;
 }): React.ReactElement {
-  return <Wrapper space={space}>{children}</Wrapper>;
+  return (
+    <Wrapper alignment={alignment} space={space}>
+      {children}
+    </Wrapper>
+  );
 }
 
-const Wrapper = styled.div<{ space: Space }>`
+const Wrapper = styled.div<{ alignment: Alignment; space: Space }>`
   align-items: baseline;
   display: flex;
   gap: ${({ space }) => getWidth({ space })};
-  justify-content: space-between;
+  justify-content: ${({ alignment }) => alignment};
 `;
+
+export enum Alignment {
+  Center = 'center',
+  SpaceBetween = 'space-between',
+}
 
 export enum Space {
   None = 'none',
