@@ -53,7 +53,7 @@ export interface DailyTotal {
   actual?: number;
   average: number;
   day: number;
-  predicted?: number;
+  projected?: number;
 }
 
 const getDateRange = (
@@ -134,7 +134,7 @@ const buildTimeline = ({
     const actualIncrement = actualSpending?.[i + 1] || 0;
     const averageTotal = timeline[i - 1]?.average || 0;
     const actualTotal = timeline[i - 1]?.actual || 0;
-    const predictedTotal = timeline[i - 1]?.predicted;
+    const projectedTotal = timeline[i - 1]?.projected;
     timeline.push(
       getDailyTotal({
         actualIncrement,
@@ -144,7 +144,7 @@ const buildTimeline = ({
         currentDay,
         day: i + 1,
         isCurrentMonth,
-        predictedTotal,
+        projectedTotal,
       })
     );
   }
@@ -159,7 +159,7 @@ const getDailyTotal = ({
   currentDay,
   day,
   isCurrentMonth,
-  predictedTotal = 0,
+  projectedTotal = 0,
 }: {
   actualIncrement: number;
   actualTotal: number;
@@ -168,7 +168,7 @@ const getDailyTotal = ({
   currentDay: number;
   day: number;
   isCurrentMonth: boolean;
-  predictedTotal?: number;
+  projectedTotal?: number;
 }): DailyTotal => {
   const result = {
     average: averageTotal + averageIncrement,
@@ -183,11 +183,11 @@ const getDailyTotal = ({
     return {
       ...result,
       actual: actualTotal + actualIncrement,
-      predicted: actualTotal + actualIncrement,
+      projected: actualTotal + actualIncrement,
     };
   return {
     ...result,
-    predicted: (predictedTotal || actualTotal) + averageIncrement,
+    projected: (projectedTotal || actualTotal) + averageIncrement,
   };
 };
 

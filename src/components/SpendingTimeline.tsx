@@ -87,14 +87,14 @@ const getDataTags = ({
   timeline?: DailyTotal[];
 }): Record<string, string> => {
   if (!timeline) return {};
-  return timeline.reduce((tags, { actual, average, day, predicted }) => {
+  return timeline.reduce((tags, { actual, average, day, projected }) => {
     const paddedDay = String(day).padStart(2, '0');
     const result: Record<string, number> = {
       ...tags,
       [`data-${paddedDay}-average`]: average,
     };
     if (actual) result[`data-${paddedDay}-actual`] = actual;
-    if (predicted) result[`data-${paddedDay}-predicted`] = predicted;
+    if (projected) result[`data-${paddedDay}-projected`] = projected;
     return result;
   }, {});
 };
@@ -172,14 +172,14 @@ export function PureSpendingTimeline({
         {hasPredicted &&
           hasLastPredictedReferenceLine &&
           hasComparisonData &&
-          lastDay?.predicted !== undefined && (
+          lastDay?.projected !== undefined && (
             <ReferenceLine
               label={{
                 fontSize: '0.8rem',
-                value: formatThousands(lastDay.predicted),
+                value: formatThousands(lastDay.projected),
               }}
               stroke="lightgrey"
-              y={lastDay.predicted}
+              y={lastDay.projected}
             />
           )}
         {hasLastActualReferenceLine &&
@@ -220,7 +220,7 @@ export function PureSpendingTimeline({
         </Line>
         {hasPredicted && hasComparisonData && (
           <Line
-            dataKey="predicted"
+            dataKey="projected"
             dot={false}
             isAnimationActive={false}
             strokeDasharray="4 4"
@@ -328,7 +328,7 @@ function buildTimeline({
       previousComparison,
       currentComparison
     );
-    const previousPredicted = i === 0 ? 0 : previousRecord.predicted;
+    const previousPredicted = i === 0 ? 0 : previousRecord.projected;
     const currentPredicted = currentComparison;
     const newPredicted = getNewDailyTotal(previousPredicted, currentPredicted);
     cumulativeDailyTotals[i] = {
@@ -340,10 +340,10 @@ function buildTimeline({
     }
     if (currentRecord.date === serializedLatestActualDate) {
       cumulativeDailyTotals[i].actual = newActual;
-      cumulativeDailyTotals[i].predicted = newActual;
+      cumulativeDailyTotals[i].projected = newActual;
     }
     if (currentRecord.date > serializedLatestActualDate) {
-      cumulativeDailyTotals[i].predicted = newPredicted;
+      cumulativeDailyTotals[i].projected = newPredicted;
     }
   }
   return cumulativeDailyTotals;
@@ -353,7 +353,7 @@ interface DailyAmounts {
   actual?: number;
   comparison?: number;
   date: string;
-  predicted?: number;
+  projected?: number;
 }
 
 function findObservedDateRange({
