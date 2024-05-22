@@ -246,6 +246,12 @@ export function PureSpendingTimeline({
             dataKey="date"
             interval="preserveStartEnd"
             tick={{ fontSize: '0.8rem' }}
+            tickFormatter={(value) =>
+              DateTime.fromISO(value).toLocaleString({
+                day: 'numeric',
+                month: 'short',
+              })
+            }
             ticks={[
               startDateOrDefault.toISODate(),
               endDateOrDefault.toISODate(),

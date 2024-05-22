@@ -145,6 +145,12 @@ export function MonthlyAmountsGraph({
           dataKey="month"
           interval="preserveStartEnd"
           tick={{ fontSize: '0.8rem' }}
+          tickFormatter={(value) =>
+            DateTime.fromISO(value).toLocaleString({
+              month: 'short',
+              year: 'numeric',
+            })
+          }
           ticks={[
             earliestMonth.toFormat('yyyy-LL'),
             latestMonth.toFormat('yyyy-LL'),
