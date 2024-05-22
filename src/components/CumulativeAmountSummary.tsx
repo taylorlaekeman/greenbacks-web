@@ -327,7 +327,9 @@ export function CumulativeAmountSummaryContainer(): React.ReactElement {
       endDate={visibleMonth.endOf('month')}
       expandedTag={expandedTag}
       hasMonthSelector
-      isCurrentMonth
+      isCurrentMonth={
+        visibleMonth.toFormat('yyyy-LL') === now.toFormat('yyyy-LL')
+      }
       month={visibleMonth}
       onChangeMonth={(newMonth) =>
         setParams({ month: newMonth.toFormat('yyyy-LL') })
