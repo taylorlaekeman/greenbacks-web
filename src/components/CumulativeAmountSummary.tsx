@@ -5,7 +5,7 @@ import { Icon, IconType } from 'components/Icon';
 import { JustifiedRow, Space } from 'components/JustifiedRow';
 import List, { Item } from 'components/List';
 import { PureMonthSelector as MonthSelector } from 'components/MonthSelector';
-import { Panel, PanelBody, PanelHeader } from 'components/Panel';
+import { Panel, PanelItem } from 'components/Panel';
 import { PureSpendingTimeline as SpendingTimeline } from 'components/SpendingTimeline';
 import { Size, Text } from 'components/Text';
 import Transaction from 'components/Transaction';
@@ -83,13 +83,13 @@ export function CumulativeAmountSummary({
   const canDecreaseVisibleTagCount = actualVisibleTagCount > 1;
   return (
     <Panel>
-      <PanelHeader hasBottomBorder={visibleTagAmounts.length > 0} isColumnar>
+      <PanelItem hasBottomBorder={visibleTagAmounts.length > 0}>
         <Text size={Size.Small}>
           {getSpendingPeriodText({ endDate, isCurrentMonth, month, startDate })}
         </Text>
         <Text size={Size.Large}>{format(totalSpending)}</Text>
-      </PanelHeader>
-      <PanelBody hasBottomBorder>
+      </PanelItem>
+      <PanelItem hasBottomBorder>
         <SpendingTimeline
           comparisonLabel="average"
           comparisonSpendingByDate={comparisonSpendingByDate}
@@ -99,9 +99,9 @@ export function CumulativeAmountSummary({
           startDate={startDate}
           transactions={transactions}
         />
-      </PanelBody>
+      </PanelItem>
       {hasMonthSelector && month && (
-        <PanelBody hasBottomBorder>
+        <PanelItem hasBottomBorder>
           <MonthSelector
             month={month}
             onClickPrevious={() =>
@@ -111,7 +111,7 @@ export function CumulativeAmountSummary({
               onChangeMonth(month.plus({ months: 1 }).startOf('month'))
             }
           />
-        </PanelBody>
+        </PanelItem>
       )}
       {visibleTagAmounts.length > 0 && (
         <List
@@ -238,7 +238,7 @@ function TagAmount({
     );
   return (
     <Panel hasBorder={false} hasTopBorder={!isFirstTag}>
-      <PanelHeader isShort>
+      <PanelItem>
         <Button isFullWidth onClick={onExpand} style={ButtonStyle.Unstyled}>
           <JustifiedRow>
             <Text isBold>{format(total)}</Text>
@@ -247,7 +247,7 @@ function TagAmount({
             </Text>
           </JustifiedRow>
         </Button>
-      </PanelHeader>
+      </PanelItem>
       <List
         hasOutsideBorder={false}
         hasRoundedBottomCorners={isLastTag}

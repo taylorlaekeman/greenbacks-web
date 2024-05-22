@@ -6,7 +6,7 @@ import { Icon, IconType } from 'components/Icon';
 import { JustifiedRow as Row, Space } from 'components/JustifiedRow';
 import List, { Item } from 'components/List';
 import { MonthlyAmountsGraph } from 'components/MonthlyAmountsGraph';
-import { Panel, PanelBody } from 'components/Panel';
+import { Panel, PanelItem } from 'components/Panel';
 import { Size, Text } from 'components/Text';
 import useCurrencyFormatter from 'hooks/useCurrencyFormatter';
 import useNow from 'hooks/useNow';
@@ -77,11 +77,11 @@ export function AverageAmountSummary({
   );
   return (
     <Panel>
-      <PanelBody hasBottomBorder>
+      <PanelItem hasBottomBorder>
         <Text size={Size.Small}>On average each month you&apos;ve spent</Text>
         <Text size={Size.Large}>{format(averageMonthlySpending)}</Text>
-      </PanelBody>
-      <PanelBody hasBottomBorder>
+      </PanelItem>
+      <PanelItem hasBottomBorder>
         <MonthlyAmountsGraph
           endDate={endDate}
           hasLegend={false}
@@ -89,7 +89,7 @@ export function AverageAmountSummary({
           monthlyAmountsBySeriesName={graphData}
           startDate={startDate}
         />
-      </PanelBody>
+      </PanelItem>
       <List
         hasOutsideBorder={false}
         hasRoundedBottomCorners
@@ -214,15 +214,15 @@ function ExpandableTagAmount({
   return (
     <Item hasPadding={false}>
       <Panel hasBorder={false}>
-        <PanelBody hasBottomBorder>
+        <PanelItem hasBottomBorder>
           <ExpandableTagAmountHeader
             amount={amount}
             isExpanded={isExpanded}
             onClick={onCollapse}
             tag={tag}
           />
-        </PanelBody>
-        <PanelBody isInset>
+        </PanelItem>
+        <PanelItem isInset>
           <MonthlyAmountsGraph
             endDate={endDate}
             hasLegend={false}
@@ -230,7 +230,7 @@ function ExpandableTagAmount({
             monthlyAmountsBySeriesName={formattedGroups}
             startDate={startDate}
           />
-        </PanelBody>
+        </PanelItem>
       </Panel>
     </Item>
   );

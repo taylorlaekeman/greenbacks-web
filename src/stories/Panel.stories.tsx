@@ -2,7 +2,7 @@ import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 
 import { List, Item } from 'components/List';
-import { Panel, PanelBody, PanelHeader } from 'components/Panel';
+import { Panel, PanelItem } from 'components/Panel';
 
 const meta: Meta<typeof Panel> = {
   args: {},
@@ -18,13 +18,13 @@ type Story = StoryObj<typeof Panel>;
 export const Default: Story = {
   render: () => (
     <Panel>
-      <PanelHeader>
+      <PanelItem>
         <span>test</span>
         <span>test</span>
-      </PanelHeader>
-      <PanelBody>
+      </PanelItem>
+      <PanelItem>
         <span>test</span>
-      </PanelBody>
+      </PanelItem>
     </Panel>
   ),
 };
@@ -32,10 +32,10 @@ export const Default: Story = {
 export const ListInBody: Story = {
   render: () => (
     <Panel>
-      <PanelHeader>
+      <PanelItem>
         <span>test</span>
         <span>test</span>
-      </PanelHeader>
+      </PanelItem>
       <List hasOutsideBorder={false}>
         <Item>first</Item>
         <Item>second</Item>
@@ -48,13 +48,13 @@ export const ListInBody: Story = {
 export const NoBorder: Story = {
   render: () => (
     <Panel hasBorder={false}>
-      <PanelHeader>
+      <PanelItem>
         <span>test</span>
         <span>test</span>
-      </PanelHeader>
-      <PanelBody>
+      </PanelItem>
+      <PanelItem>
         <span>test</span>
-      </PanelBody>
+      </PanelItem>
     </Panel>
   ),
 };

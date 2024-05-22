@@ -20,19 +20,7 @@ export const Panel = styled.div<{
   min-width: 250px;
 `;
 
-export const PanelHeader = styled.div<{
-  hasBottomBorder?: boolean;
-  isColumnar?: boolean;
-  isShort?: boolean;
-}>`
-  ${({ hasBottomBorder = true }) =>
-    hasBottomBorder && 'border-bottom: solid lightgrey 1px;'}
-  ${({ isColumnar = false }) =>
-    isColumnar && 'display: flex; flex-direction: column; gap: 8px;'}
-  padding: ${({ isShort = false }) => (isShort ? '8px' : '16px')} 16px;
-`;
-
-export const PanelBody = styled.div<{
+export const PanelItem = styled.div<{
   hasBottomBorder?: boolean;
   hasPadding?: boolean;
   isInset?: boolean;
