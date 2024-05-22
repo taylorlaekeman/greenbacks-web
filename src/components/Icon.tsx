@@ -1,5 +1,7 @@
 import React, { FC } from 'react';
 
+import { ReactComponent as ChevronLeftIcon } from 'assets/icons/chevron-left.svg';
+import { ReactComponent as ChevronRightIcon } from 'assets/icons/chevron-right.svg';
 import { ReactComponent as CogIcon } from 'assets/icons/cog.svg';
 import { ReactComponent as FilterIcon } from 'assets/icons/filter.svg';
 import { ReactComponent as MinusIcon } from 'assets/icons/minus.svg';
@@ -14,6 +16,8 @@ export const Icon: FC<{ icon: IconType }> = ({ icon }) => (
 );
 
 export enum IconType {
+  ChevronLeft = 'chevron-left',
+  ChevronRight = 'chevron-right',
   Cog = 'cog',
   Filter = 'filter',
   Minus = 'minus',
@@ -34,6 +38,10 @@ const Wrapper = styled.div`
 
 function InnerIcon({ icon }: { icon: IconType }): React.ReactElement {
   switch (icon) {
+    case IconType.ChevronLeft:
+      return <ChevronLeftIcon />;
+    case IconType.ChevronRight:
+      return <ChevronRightIcon />;
     case IconType.Cog:
       return <CogIcon />;
     case IconType.Minus:

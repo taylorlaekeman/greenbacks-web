@@ -4,12 +4,14 @@ import { Button, ButtonStyle } from 'components/Button';
 import { Icon, IconType } from 'components/Icon';
 import { JustifiedRow, Space } from 'components/JustifiedRow';
 import List, { Item } from 'components/List';
+import { PureMonthSelector as MonthSelector } from 'components/MonthSelector';
 import { Panel, PanelBody, PanelHeader } from 'components/Panel';
 import { PureSpendingTimeline as SpendingTimeline } from 'components/SpendingTimeline';
 import { Size, Text } from 'components/Text';
 import Transaction from 'components/Transaction';
 import useCurrencyFormatter from 'hooks/useCurrencyFormatter';
 import useNow from 'hooks/useNow';
+import { useQueryParams } from 'hooks/useQueryParams';
 import useSpendingByDayOfMonth from 'hooks/useSpendingByDayOfMonth';
 import useTransactionsByCategory from 'hooks/useTransactionsByCategory';
 import type TransactionType from 'types/transaction';
@@ -27,8 +29,10 @@ export function CumulativeAmountSummary({
   comparisonSpendingByDate = {},
   endDate,
   expandedTag,
+  hasMonthSelector = false,
   isCurrentMonth = false,
   month,
+  onChangeMonth = noop,
   onChangeVisibleTagCount = noop,
   onSelectTag = noop,
   startDate,
@@ -39,8 +43,10 @@ export function CumulativeAmountSummary({
   comparisonSpendingByDate?: Record<string, number>;
   endDate?: datetime;
   expandedTag?: string;
+  hasMonthSelector?: boolean;
   isCurrentMonth?: boolean;
   month?: datetime;
+  onChangeMonth?: (input: datetime) => void;
   onChangeVisibleTagCount?: (input: number) => void;
   onSelectTag?: (input: string | undefined) => void;
   startDate?: datetime;
@@ -94,6 +100,19 @@ export function CumulativeAmountSummary({
           transactions={transactions}
         />
       </PanelBody>
+      {hasMonthSelector && month && (
+        <PanelBody hasBottomBorder>
+          <MonthSelector
+            month={month}
+            onClickPrevious={() =>
+              onChangeMonth(month.minus({ months: 1 }).startOf('month'))
+            }
+            onClickNext={() =>
+              onChangeMonth(month.plus({ months: 1 }).startOf('month'))
+            }
+          />
+        </PanelBody>
+      )}
       {visibleTagAmounts.length > 0 && (
         <List
           hasOutsideBorder={false}
@@ -278,9 +297,13 @@ function getSpendingPeriodText({
 
 export function CumulativeAmountSummaryContainer(): React.ReactElement {
   const { now } = useNow();
+  const { params, setParams } = useQueryParams();
+  const visibleMonth = params.month
+    ? datetime.fromISO(params.month)
+    : now.startOf('month');
   const { spending: currentMonthSpending } = useTransactionsByCategory({
-    endDate: now.endOf('month').toISODate(),
-    startDate: now.startOf('month').toISODate(),
+    endDate: visibleMonth.endOf('month').toISODate(),
+    startDate: visibleMonth.startOf('month').toISODate(),
   });
   const {
     spending: previousYearSpendingByDayOfMonth,
@@ -294,19 +317,24 @@ export function CumulativeAmountSummaryContainer(): React.ReactElement {
   const comparisonSpendingByDate = Object.entries(
     previousYearSpendingByDayOfMonth ?? {}
   ).reduce((result, [day, spending]) => {
-    const date = now.set({ day: parseInt(day, 10) }).toISODate();
+    const date = visibleMonth.set({ day: parseInt(day, 10) }).toISODate();
     return { ...result, [date]: spending / 12 };
   }, {});
 
   return (
     <CumulativeAmountSummary
       comparisonSpendingByDate={comparisonSpendingByDate}
-      endDate={now.endOf('month')}
+      endDate={visibleMonth.endOf('month')}
       expandedTag={expandedTag}
+      hasMonthSelector
       isCurrentMonth
+      month={visibleMonth}
+      onChangeMonth={(newMonth) =>
+        setParams({ month: newMonth.toFormat('yyyy-LL') })
+      }
       onChangeVisibleTagCount={setVisibleTagCount}
       onSelectTag={(tag) => setExpandedTag(tag)}
-      startDate={now.startOf('month')}
+      startDate={visibleMonth.startOf('month')}
       transactions={currentMonthSpending}
       visibleTagCount={visibleTagCount}
     />

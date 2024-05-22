@@ -2,8 +2,13 @@ import React, { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { fn } from '@storybook/test';
 
-import { CumulativeAmountSummary } from 'components/CumulativeAmountSummary';
+import {
+  CumulativeAmountSummary,
+  CumulativeAmountSummaryContainer,
+} from 'components/CumulativeAmountSummary';
+import { TestGreenbacksProvider } from 'context/Greenbacks';
 import { transactions } from 'stories/testTransactions';
+import buildApiTransactionsMock from '__test__/utils/buildApiTransactionsMock';
 import datetime from 'utils/datetime';
 
 type Args = React.ComponentProps<typeof CumulativeAmountSummary> & {
@@ -40,8 +45,10 @@ const meta: Meta<Args> = {
     },
     endDate: undefined,
     expandedTag: undefined,
+    hasMonthSelector: false,
     isCurrentMonth: false,
     month: undefined,
+    onChangeMonth: fn(),
     onSelectTag: fn(),
     startDate: undefined,
     transactions,
@@ -138,6 +145,50 @@ export const NoTransactions: Story = {
     isCurrentMonth: true,
     transactions: undefined,
   },
+};
+
+export const WithMonthSelector: Story = {
+  args: {
+    hasMonthSelector: true,
+    month: datetime.fromISO('2024-05'),
+    transactions: undefined,
+  },
+};
+
+export const InContainer: Story = {
+  render: () => (
+    <TestGreenbacksProvider
+      mocks={[
+        buildApiTransactionsMock({
+          endDate: '2024-05-31',
+          startDate: '2024-05-01',
+          transactions,
+        }),
+        buildApiTransactionsMock({
+          endDate: '2024-04-30',
+          startDate: '2023-05-01',
+          transactions: [
+            ...transactions,
+            ...transactions,
+            ...transactions,
+            ...transactions,
+            ...transactions,
+            ...transactions,
+            ...transactions,
+            ...transactions,
+            ...transactions,
+            ...transactions,
+            ...transactions,
+            ...transactions,
+            ...transactions,
+          ],
+        }),
+      ]}
+      now="2024-05-06"
+    >
+      <CumulativeAmountSummaryContainer />
+    </TestGreenbacksProvider>
+  ),
 };
 
 export default meta;
