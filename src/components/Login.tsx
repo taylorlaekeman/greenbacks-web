@@ -2,7 +2,7 @@ import React, { FunctionComponent, useEffect } from 'react';
 
 import { useAuth, useRedirectLocation } from 'auth';
 
-const Login: FunctionComponent = () => {
+export const Login: FunctionComponent = () => {
   const { loginWithRedirect } = useAuth();
   const { saveRedirectLocation } = useRedirectLocation();
 

@@ -69,18 +69,23 @@ function getStyle({ style }: { style: ButtonStyle }) {
 }
 
 const sharedStyles = css<StyleProps>`
+  color: #013220;
+  cursor: pointer;
   ${({ $isFullWidth }) => $isFullWidth && 'width: 100%;'}
 `;
 
 const primaryStyle = css<StyleProps>`
   ${sharedStyles}
+  background: none;
+  border: solid lightgrey 1px;
+  border-radius: 4px;
+  padding: 4px 32px;
 `;
 
 const textStyle = css<StyleProps>`
   ${sharedStyles}
   background: none;
   border: none;
-  cursor: pointer;
   font: inherit;
   padding: 0;
   text-decoration: underline;
@@ -90,7 +95,6 @@ const unstyledStyle = css<StyleProps>`
   ${sharedStyles}
   background: none;
   border: none;
-  cursor: pointer;
   color: inherit;
   font: inherit;
   outline: inherit;
