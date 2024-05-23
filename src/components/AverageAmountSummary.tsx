@@ -5,6 +5,7 @@ import { Button, ButtonStyle } from 'components/Button';
 import { Icon, IconType } from 'components/Icon';
 import { Alignment, JustifiedRow as Row, Space } from 'components/JustifiedRow';
 import List, { Item } from 'components/List';
+import LoadingIndicator from 'components/LoadingIndicator';
 import { MonthlyAmountsGraph } from 'components/MonthlyAmountsGraph';
 import { Panel, PanelItem } from 'components/Panel';
 import { Size, Text } from 'components/Text';
@@ -23,6 +24,7 @@ import noop from 'utils/noop';
 export function AverageAmountSummary({
   endDate,
   expandedTag,
+  isLoading = false,
   onChangeVisibleTagCount = noop,
   onSelectTag = noop,
   startDate,
@@ -31,6 +33,7 @@ export function AverageAmountSummary({
 }: {
   endDate?: DateTime;
   expandedTag?: string;
+  isLoading?: boolean;
   onChangeVisibleTagCount?: (input: number) => void;
   onSelectTag?: (input: string | undefined) => void;
   startDate?: DateTime;
@@ -75,6 +78,20 @@ export function AverageAmountSummary({
   const remainingTagsGroup = combineRemainingTags(
     transactionsByTagAndMonth?.slice(visibleTagCount, allTags.length) ?? []
   );
+  if (isLoading)
+    return (
+      <Panel>
+        <PanelItem hasBottomBorder>
+          <Text size={Size.Small}>On average each month you&apos;ve spent</Text>
+          <Text size={Size.Large}>--</Text>
+        </PanelItem>
+        <PanelItem>
+          <Row alignment={Alignment.Center}>
+            <LoadingIndicator />
+          </Row>
+        </PanelItem>
+      </Panel>
+    );
   return (
     <Panel>
       <PanelItem hasBottomBorder>
@@ -326,7 +343,7 @@ export function AverageAmountSummaryContainer(): React.ReactElement {
   const [expandedTag, onSelectTag] = useState<string | undefined>();
   const endDate = now.minus({ months: 1 }).endOf('month');
   const startDate = now.minus({ years: 1 }).startOf('month');
-  const { spending } = useTransactionsByCategory({
+  const { isLoading, spending } = useTransactionsByCategory({
     endDate: endDate.toISODate(),
     startDate: startDate.toISODate(),
   });
@@ -334,6 +351,7 @@ export function AverageAmountSummaryContainer(): React.ReactElement {
     <AverageAmountSummary
       endDate={endDate}
       expandedTag={expandedTag}
+      isLoading={isLoading}
       onChangeVisibleTagCount={onChangeVisibleTagCount}
       onSelectTag={onSelectTag}
       startDate={startDate}

@@ -18,6 +18,7 @@ interface Props {
 
 const Cog = styled(UnstyledCog)`
   animation: spin 2s linear infinite;
+  fill: #013220;
   width: 20px;
 
   @keyframes spin {

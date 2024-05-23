@@ -26,6 +26,7 @@ export enum IconType {
 }
 
 const Wrapper = styled.div`
+  color: #013220;
   height: 12px;
   width: 12px;
 

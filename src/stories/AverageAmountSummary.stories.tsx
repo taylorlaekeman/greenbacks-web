@@ -5,7 +5,8 @@ import { transactionsYearBeforeMay2024 } from 'stories/testTransactions';
 
 const meta: Meta<React.ComponentProps<typeof AverageAmountSummary>> = {
   args: {
-    expandedTag: 'Groceries',
+    expandedTag: undefined,
+    isLoading: false,
     transactions: transactionsYearBeforeMay2024,
     visibleTagCount: 5,
   },
@@ -18,6 +19,16 @@ const meta: Meta<React.ComponentProps<typeof AverageAmountSummary>> = {
 
 type Story = StoryObj<typeof AverageAmountSummary>;
 
-export const Default: Story = {};
+export const Default: Story = {
+  args: {
+    expandedTag: 'Groceries',
+  },
+};
+
+export const Loading: Story = {
+  args: {
+    isLoading: true,
+  },
+};
 
 export default meta;

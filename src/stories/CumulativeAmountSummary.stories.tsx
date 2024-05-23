@@ -47,6 +47,7 @@ const meta: Meta<Args> = {
     expandedTag: undefined,
     hasMonthSelector: false,
     isCurrentMonth: false,
+    isLoading: false,
     month: undefined,
     onChangeMonth: fn(),
     onSelectTag: fn(),
@@ -104,6 +105,13 @@ type Story = StoryObj<typeof CumulativeAmountSummary>;
 export const ThisMonth: Story = {
   args: {
     isCurrentMonth: true,
+  },
+};
+
+export const Loading: Story = {
+  args: {
+    isCurrentMonth: true,
+    isLoading: true,
   },
 };
 

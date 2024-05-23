@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 
 import { Button, ButtonStyle } from 'components/Button';
 import { Icon, IconType } from 'components/Icon';
-import { JustifiedRow, Space } from 'components/JustifiedRow';
+import { Alignment, JustifiedRow, Space } from 'components/JustifiedRow';
 import List, { Item } from 'components/List';
+import LoadingIndicator from 'components/LoadingIndicator';
 import { PureMonthSelector as MonthSelector } from 'components/MonthSelector';
 import { Panel, PanelItem } from 'components/Panel';
 import { PureSpendingTimeline as SpendingTimeline } from 'components/SpendingTimeline';
@@ -31,6 +32,7 @@ export function CumulativeAmountSummary({
   expandedTag,
   hasMonthSelector = false,
   isCurrentMonth = false,
+  isLoading = false,
   month,
   onChangeMonth = noop,
   onChangeVisibleTagCount = noop,
@@ -45,6 +47,7 @@ export function CumulativeAmountSummary({
   expandedTag?: string;
   hasMonthSelector?: boolean;
   isCurrentMonth?: boolean;
+  isLoading?: boolean;
   month?: datetime;
   onChangeMonth?: (input: datetime) => void;
   onChangeVisibleTagCount?: (input: number) => void;
@@ -81,6 +84,27 @@ export function CumulativeAmountSummary({
     groupedTransactions.length
   );
   const canDecreaseVisibleTagCount = actualVisibleTagCount > 1;
+  if (isLoading)
+    return (
+      <Panel>
+        <PanelItem hasBottomBorder={visibleTagAmounts.length > 0}>
+          <Text size={Size.Small}>
+            {getSpendingPeriodText({
+              endDate,
+              isCurrentMonth,
+              month,
+              startDate,
+            })}
+          </Text>
+          <Text size={Size.Large}>--</Text>
+        </PanelItem>
+        <PanelItem>
+          <JustifiedRow alignment={Alignment.Center}>
+            <LoadingIndicator />
+          </JustifiedRow>
+        </PanelItem>
+      </Panel>
+    );
   return (
     <Panel>
       <PanelItem hasBottomBorder={visibleTagAmounts.length > 0}>
@@ -301,11 +325,15 @@ export function CumulativeAmountSummaryContainer(): React.ReactElement {
   const visibleMonth = params.month
     ? datetime.fromISO(params.month)
     : now.startOf('month');
-  const { spending: currentMonthSpending } = useTransactionsByCategory({
+  const {
+    isLoading: isLoadingCumulativeTransactions,
+    spending: currentMonthSpending,
+  } = useTransactionsByCategory({
     endDate: visibleMonth.endOf('month').toISODate(),
     startDate: visibleMonth.startOf('month').toISODate(),
   });
   const {
+    isLoading: isLoadingComparisonPeriod,
     spending: previousYearSpendingByDayOfMonth,
   } = useSpendingByDayOfMonth({
     endDate: now.minus({ months: 1 }).endOf('month').toISODate(),
@@ -330,6 +358,7 @@ export function CumulativeAmountSummaryContainer(): React.ReactElement {
       isCurrentMonth={
         visibleMonth.toFormat('yyyy-LL') === now.toFormat('yyyy-LL')
       }
+      isLoading={isLoadingCumulativeTransactions || isLoadingComparisonPeriod}
       month={visibleMonth}
       onChangeMonth={(newMonth) =>
         setParams({ month: newMonth.toFormat('yyyy-LL') })
