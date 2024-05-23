@@ -34,7 +34,7 @@ export function Header({
 }
 
 const Wrapper = styled.header`
-  background-color: palegreen;
+  background-color: #d0f0c0;
   display: flex;
   justify-content: center;
   width: 100%;

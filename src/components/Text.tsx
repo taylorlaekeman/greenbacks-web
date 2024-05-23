@@ -69,6 +69,7 @@ interface InnerTextProps {
 }
 
 const sharedStyles = css<InnerTextProps>`
+  color: #013220;
   font-family: 'Lora', serif;
   ${({ size }) => `font-size: ${getFontSize({ size })};`}
   ${({ isBold }) => isBold && 'font-weight: 700;'}
