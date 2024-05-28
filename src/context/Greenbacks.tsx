@@ -10,6 +10,11 @@ import {
 } from 'context/GreenbacksApi';
 import { TestNowProvider } from 'context/Now';
 import { TestRouteProvider } from 'context/Route';
+import {
+  TestUserSettingsProvider,
+  AllOptionalUserSettingCallbacks,
+  AllOptionalUserSettings,
+} from 'context/UserSettings';
 import type { Filter } from 'types/filter';
 
 export const TestGreenbacksProvider: FC<Props> = ({
@@ -23,6 +28,8 @@ export const TestGreenbacksProvider: FC<Props> = ({
   now,
   onUpdateAccountConnection,
   route,
+  userSettingCallbacks,
+  userSettings,
 }) => (
   <TestAuthProvider isAuthenticated={isAuthenticated}>
     <TestGreenbacksApiProvider isReady={isApiReady} mocks={mocks}>
@@ -32,9 +39,14 @@ export const TestGreenbacksProvider: FC<Props> = ({
         <TestNowProvider now={now}>
           <TestCurrencyLocalesProvider locales={locales}>
             <TestRouteProvider route={route}>
-              <TestFiltersProvider idFilters={idFilters} filters={filters}>
-                {children}
-              </TestFiltersProvider>
+              <TestUserSettingsProvider
+                callbacks={userSettingCallbacks}
+                settings={userSettings}
+              >
+                <TestFiltersProvider idFilters={idFilters} filters={filters}>
+                  {children}
+                </TestFiltersProvider>
+              </TestUserSettingsProvider>
             </TestRouteProvider>
           </TestCurrencyLocalesProvider>
         </TestNowProvider>
@@ -53,6 +65,8 @@ interface Props {
   now?: string;
   onUpdateAccountConnection?: (input: { token: string }) => void;
   route?: string;
+  userSettingCallbacks?: AllOptionalUserSettingCallbacks;
+  userSettings?: AllOptionalUserSettings;
 }
 
 export default undefined;

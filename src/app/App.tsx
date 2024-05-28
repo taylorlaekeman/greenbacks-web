@@ -7,6 +7,7 @@ import AuthProvider from 'context/Auth';
 import { FiltersProvider } from 'context/Filters';
 import GreenbacksApiProvider from 'context/GreenbacksApi';
 import RouteProvider from 'context/Route';
+import { UserSettingsProvider } from 'context/UserSettings';
 import GlobalStyle from 'styles/GlobalStyle';
 
 const App: FunctionComponent = () => (
@@ -15,8 +16,10 @@ const App: FunctionComponent = () => (
       <AccountConnectionProvider>
         <FiltersProvider>
           <RouteProvider>
-            <GlobalStyle />
-            <Greenbacks />
+            <UserSettingsProvider>
+              <GlobalStyle />
+              <Greenbacks />
+            </UserSettingsProvider>
           </RouteProvider>
         </FiltersProvider>
       </AccountConnectionProvider>

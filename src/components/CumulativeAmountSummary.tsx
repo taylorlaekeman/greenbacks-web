@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 
-import { configuration } from 'app/configuration';
 import { Button, ButtonStyle } from 'components/Button';
 import { Icon, IconType } from 'components/Icon';
 import { Alignment, JustifiedRow, Space } from 'components/JustifiedRow';
@@ -11,6 +10,7 @@ import { Panel, PanelItem } from 'components/Panel';
 import { PureSpendingTimeline as SpendingTimeline } from 'components/SpendingTimeline';
 import { Size, Text } from 'components/Text';
 import Transaction from 'components/Transaction';
+import { UserSettingsContext } from 'context/UserSettings';
 import useCurrencyFormatter from 'hooks/useCurrencyFormatter';
 import useNow from 'hooks/useNow';
 import { useQueryParams } from 'hooks/useQueryParams';
@@ -321,6 +321,7 @@ function getSpendingPeriodText({
 }
 
 export function CumulativeAmountSummaryContainer(): React.ReactElement {
+  const { isTestData } = useContext(UserSettingsContext);
   const { now } = useNow();
   const { params, setParams } = useQueryParams();
   const visibleMonth = params.month
@@ -331,7 +332,7 @@ export function CumulativeAmountSummaryContainer(): React.ReactElement {
     spending: currentMonthSpending,
   } = useTransactionsByCategory({
     endDate: visibleMonth.endOf('month').toISODate(),
-    isTestData: configuration.isTestData,
+    isTestData,
     startDate: visibleMonth.startOf('month').toISODate(),
   });
   const {
@@ -339,7 +340,7 @@ export function CumulativeAmountSummaryContainer(): React.ReactElement {
     spending: previousYearSpendingByDayOfMonth,
   } = useSpendingByDayOfMonth({
     endDate: now.minus({ months: 1 }).endOf('month').toISODate(),
-    isTestData: configuration.isTestData,
+    isTestData,
     startDate: now.minus({ years: 1 }).startOf('month').toISODate(),
   });
   const [expandedTag, setExpandedTag] = useState<string | undefined>(undefined);

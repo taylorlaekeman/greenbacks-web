@@ -1,7 +1,6 @@
 import { DateTime } from 'luxon';
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 
-import { configuration } from 'app/configuration';
 import { Button, ButtonStyle } from 'components/Button';
 import { Icon, IconType } from 'components/Icon';
 import { Alignment, JustifiedRow as Row, Space } from 'components/JustifiedRow';
@@ -10,6 +9,7 @@ import LoadingIndicator from 'components/LoadingIndicator';
 import { MonthlyAmountsGraph } from 'components/MonthlyAmountsGraph';
 import { Panel, PanelItem } from 'components/Panel';
 import { Size, Text } from 'components/Text';
+import { UserSettingsContext } from 'context/UserSettings';
 import useCurrencyFormatter from 'hooks/useCurrencyFormatter';
 import useNow from 'hooks/useNow';
 import useTransactionsByCategory from 'hooks/useTransactionsByCategory';
@@ -339,6 +339,7 @@ function TagVisibilityController({
 }
 
 export function AverageAmountSummaryContainer(): React.ReactElement {
+  const { isTestData } = useContext(UserSettingsContext);
   const { now } = useNow();
   const [visibleTagCount, onChangeVisibleTagCount] = useState<number>(5);
   const [expandedTag, onSelectTag] = useState<string | undefined>();
@@ -346,7 +347,7 @@ export function AverageAmountSummaryContainer(): React.ReactElement {
   const startDate = now.minus({ years: 1 }).startOf('month');
   const { isLoading, spending } = useTransactionsByCategory({
     endDate: endDate.toISODate(),
-    isTestData: configuration.isTestData,
+    isTestData,
     startDate: startDate.toISODate(),
   });
   return (
