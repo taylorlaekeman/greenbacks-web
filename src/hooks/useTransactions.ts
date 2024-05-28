@@ -22,10 +22,12 @@ interface TransactionsByTypeResult extends BaseResult {
 
 const useTransactions = ({
   endDate,
+  isTestData,
   startDate,
 }: {
   endDate: string;
   isFlat?: boolean;
+  isTestData?: boolean;
   startDate: string;
 }): TransactionsByTypeResult => {
   const {
@@ -35,10 +37,10 @@ const useTransactions = ({
   } = useFilters();
   const { data, error, loading: isLoading } = useQuery<
     { transactions: CoreTransaction[] },
-    { endDate: string; startDate: string }
+    { endDate: string; isTestData?: boolean; startDate: string }
   >(GET_TRANSACTIONS_QUERY, {
     pollInterval: 5 * 60 * 1000,
-    variables: { endDate, startDate },
+    variables: { endDate, isTestData, startDate },
   });
   const categorizedTransactions = useMemo(
     () => categorizeTransactions({ filters, transactions: data?.transactions }),
@@ -57,8 +59,18 @@ const useTransactions = ({
 };
 
 export const GET_TRANSACTIONS_QUERY = gql`
-  query GetTransactions($startDate: String!, $endDate: String!) {
-    transactions(input: { startDate: $startDate, endDate: $endDate }) {
+  query GetTransactions(
+    $startDate: String!
+    $endDate: String!
+    $isTestData: Boolean
+  ) {
+    transactions(
+      input: {
+        startDate: $startDate
+        endDate: $endDate
+        isTestData: $isTestData
+      }
+    ) {
       accountId
       amount
       datetime

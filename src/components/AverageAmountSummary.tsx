@@ -1,6 +1,7 @@
 import { DateTime } from 'luxon';
 import React, { useState } from 'react';
 
+import { configuration } from 'app/configuration';
 import { Button, ButtonStyle } from 'components/Button';
 import { Icon, IconType } from 'components/Icon';
 import { Alignment, JustifiedRow as Row, Space } from 'components/JustifiedRow';
@@ -345,6 +346,7 @@ export function AverageAmountSummaryContainer(): React.ReactElement {
   const startDate = now.minus({ years: 1 }).startOf('month');
   const { isLoading, spending } = useTransactionsByCategory({
     endDate: endDate.toISODate(),
+    isTestData: configuration.isTestData,
     startDate: startDate.toISODate(),
   });
   return (

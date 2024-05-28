@@ -6,9 +6,11 @@ import Transaction, { Category } from 'types/transaction';
 
 const useTransactionsByCategory = ({
   endDate,
+  isTestData,
   startDate,
 }: {
   endDate: string;
+  isTestData?: boolean;
   startDate: string;
 }): {
   earning?: Transaction[];
@@ -19,6 +21,7 @@ const useTransactionsByCategory = ({
 } => {
   const { credits, debits, error, isLoading } = useTransactions({
     endDate,
+    isTestData,
     startDate,
   });
   const { earning, saving, spending } = useMemo(

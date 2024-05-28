@@ -5,9 +5,11 @@ import Transaction from 'types/transaction';
 
 const useSpendingByDayOfMonth = ({
   endDate,
+  isTestData,
   startDate,
 }: {
   endDate: string;
+  isTestData?: boolean;
   startDate: string;
 }): {
   isLoading: boolean;
@@ -16,6 +18,7 @@ const useSpendingByDayOfMonth = ({
 } => {
   const { isLoading, spending } = useTransactionsByCategory({
     endDate,
+    isTestData,
     startDate,
   });
   if (!spending) return { isLoading };

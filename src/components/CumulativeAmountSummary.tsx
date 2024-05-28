@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 
+import { configuration } from 'app/configuration';
 import { Button, ButtonStyle } from 'components/Button';
 import { Icon, IconType } from 'components/Icon';
 import { Alignment, JustifiedRow, Space } from 'components/JustifiedRow';
@@ -87,7 +88,7 @@ export function CumulativeAmountSummary({
   if (isLoading)
     return (
       <Panel>
-        <PanelItem hasBottomBorder={visibleTagAmounts.length > 0}>
+        <PanelItem hasBottomBorder>
           <Text size={Size.Small}>
             {getSpendingPeriodText({
               endDate,
@@ -330,6 +331,7 @@ export function CumulativeAmountSummaryContainer(): React.ReactElement {
     spending: currentMonthSpending,
   } = useTransactionsByCategory({
     endDate: visibleMonth.endOf('month').toISODate(),
+    isTestData: configuration.isTestData,
     startDate: visibleMonth.startOf('month').toISODate(),
   });
   const {
@@ -337,6 +339,7 @@ export function CumulativeAmountSummaryContainer(): React.ReactElement {
     spending: previousYearSpendingByDayOfMonth,
   } = useSpendingByDayOfMonth({
     endDate: now.minus({ months: 1 }).endOf('month').toISODate(),
+    isTestData: configuration.isTestData,
     startDate: now.minus({ years: 1 }).startOf('month').toISODate(),
   });
   const [expandedTag, setExpandedTag] = useState<string | undefined>(undefined);
