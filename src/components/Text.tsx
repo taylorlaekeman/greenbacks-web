@@ -2,7 +2,9 @@ import React from 'react';
 import styled, { css } from 'styled-components';
 
 export function Text({
+  area,
   children,
+  canOverflow = true,
   heirarchy = Heirarchy.P,
   isBold = false,
   isCenterAligned = false,
@@ -10,6 +12,8 @@ export function Text({
   isUnderlined = false,
   size = Size.Medium,
 }: {
+  area?: string;
+  canOverflow?: boolean;
   children: React.ReactNode;
   heirarchy?: Heirarchy;
   isBold?: boolean;
@@ -21,6 +25,8 @@ export function Text({
   const InnerText = getInnerText({ heirarchy });
   return (
     <InnerText
+      area={area}
+      canOverflow={canOverflow}
       isBold={isBold}
       isCenterAligned={isCenterAligned}
       isRightAligned={isRightAligned}
@@ -61,6 +67,8 @@ function getInnerText({
 }
 
 interface InnerTextProps {
+  area?: string;
+  canOverflow?: boolean;
   isBold: boolean;
   isCenterAligned: boolean;
   isRightAligned: boolean;
@@ -69,17 +77,22 @@ interface InnerTextProps {
 }
 
 const sharedStyles = css<InnerTextProps>`
+  ${({ area }) => area && `grid-area: ${area};`}
   color: #013220;
   font-family: 'Lora', serif;
   ${({ size }) => `font-size: ${getFontSize({ size })};`}
   ${({ isBold }) => isBold && 'font-weight: 700;'}
   margin: 0;
-  overflow: hidden;
   ${({ isCenterAligned }) => isCenterAligned && 'text-align: center;'}
   ${({ isRightAligned }) => isRightAligned && 'text-align: right;'}
   ${({ isUnderlined }) => isUnderlined && 'text-decoration: underline;'}
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  ${({ canOverflow }) =>
+    !canOverflow &&
+    `
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+  `}
 `;
 
 const P = styled.p<InnerTextProps>`

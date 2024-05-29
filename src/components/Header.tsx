@@ -42,6 +42,7 @@ const Wrapper = styled.header`
 
 const Nav = styled.nav`
   align-items: center;
+  box-sizing: border-box;
   display: grid;
   grid-column-gap: 8px;
   grid-template-columns: max-content max-content max-content;

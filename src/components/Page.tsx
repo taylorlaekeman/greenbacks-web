@@ -29,8 +29,9 @@ export const PageWrapper = styled.main<{ isVerticallyCentered?: boolean }>`
 `;
 
 export const PageBody = styled.article`
+  box-sizing: border-box;
   max-width: 832px;
-  overflow: scroll;
+  overflow-y: scroll;
   padding: 16px;
   width: 100%;
 `;

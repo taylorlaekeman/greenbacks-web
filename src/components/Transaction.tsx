@@ -30,7 +30,7 @@ const Transaction: FC<{
     return (
       <CompactGrid isFilterButtonVisible={isFilterButtonVisible}>
         <Text>{format({ value: amount })}</Text>
-        <Text isRightAligned size={Size.Small}>
+        <Text canOverflow={false} isRightAligned size={Size.Small}>
           {name}
         </Text>
         {isFilterButtonVisible && (

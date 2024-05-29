@@ -2,35 +2,47 @@ import React, { FC, useContext } from 'react';
 import { Route, Routes } from 'react-router-dom';
 
 import Accounts from 'components/Accounts';
-import Button from 'components/Button';
 import Filters from 'components/Filters';
 import LoadingIndicator from 'components/LoadingIndicator';
 import { Login } from 'components/LoginPage';
+import { NoAccountsContainer } from 'components/NoAccounts';
 import { Page } from 'components/Page';
 import { SpendingSummary } from 'components/SpendingSummaryPage';
 import TagModal from 'components/TagModal';
 import { Widgets } from 'components/Widgets';
 import TagModalContext, { TagModalProvider } from 'context/TagModal';
+import { UserSettingsContext } from 'context/UserSettings';
+import useAccounts from 'hooks/useAccounts';
 import useIsApiReady from 'hooks/useIsApiReady';
 import useIsAuthenticated from 'hooks/useIsAuthenticated';
-import useLogin from 'hooks/useLogin';
 
-const Greenbacks: FC = () => (
-  <TagModalProvider>
-    <GreenbacksInContext />
-  </TagModalProvider>
-);
+const Greenbacks: FC = () => {
+  const { isReady: isApiReady } = useIsApiReady();
+  const { isAuthenticated } = useIsAuthenticated();
+
+  if (!isAuthenticated) return <Login />;
+
+  if (!isApiReady)
+    return (
+      <Page>
+        <LoadingIndicator />
+      </Page>
+    );
+
+  return (
+    <TagModalProvider>
+      <GreenbacksInContext />
+    </TagModalProvider>
+  );
+};
 
 const GreenbacksInContext: FC = () => {
   const { transactionToTag } = useContext(TagModalContext);
-  const { isReady: isApiReady } = useIsApiReady();
-  const { isAuthenticated } = useIsAuthenticated();
-  const { login } = useLogin();
+  const { isTestData } = useContext(UserSettingsContext);
+  const { accounts, isLoadingAccounts } = useAccounts();
 
-  if (!isAuthenticated) return <Login />;
-  if (!isAuthenticated) return <Button onClick={login}>Login</Button>;
-
-  if (!isApiReady) return <LoadingIndicator />;
+  if (!isLoadingAccounts && accounts.length === 0 && !isTestData)
+    return <NoAccountsContainer />;
 
   return (
     <Page>

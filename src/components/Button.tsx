@@ -5,12 +5,14 @@ import { ReactComponent as UnstyledCog } from 'assets/icons/cog.svg';
 import noop from 'utils/noop';
 
 export const Button: FC<{
+  area?: string;
   isDisabled?: boolean;
   isFullWidth?: boolean;
   isLoading?: boolean;
   onClick?: () => void;
   style?: ButtonStyle;
 }> = ({
+  area,
   children,
   isDisabled = false,
   isFullWidth = false,
@@ -19,6 +21,7 @@ export const Button: FC<{
   style = ButtonStyle.Primary,
 }) => (
   <StyledButton
+    area={area}
     disabled={isDisabled || isLoading}
     $isFullWidth={isFullWidth}
     onClick={onClick}
@@ -48,6 +51,7 @@ export enum ButtonStyle {
 }
 
 interface StyleProps {
+  area?: string;
   $isFullWidth: boolean;
   $style: ButtonStyle;
 }
@@ -69,6 +73,7 @@ function getStyle({ style }: { style: ButtonStyle }) {
 }
 
 const sharedStyles = css<StyleProps>`
+  ${({ area }) => area && `grid-area: ${area};`}
   color: #013220;
   cursor: pointer;
   ${({ $isFullWidth }) => $isFullWidth && 'width: 100%;'}
