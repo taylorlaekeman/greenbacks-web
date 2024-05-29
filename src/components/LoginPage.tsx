@@ -5,15 +5,19 @@ import Button from 'components/Button';
 import { PageWrapper } from 'components/Page';
 import { Size, Text } from 'components/Text';
 import useLogin from 'hooks/useLogin';
+import noop from 'utils/noop';
 
-export function Login(): React.ReactElement {
-  const { login } = useLogin();
+export function Login({
+  onLogin = noop,
+}: {
+  onLogin?: () => void;
+}): React.ReactElement {
   return (
     <PageWrapper isVerticallyCentered>
       <Wrapper>
         <Text size={Size.Large}>Greenbacks</Text>
         <Text size={Size.Small}>Understand your finances</Text>
-        <Button isFullWidth onClick={login}>
+        <Button isFullWidth onClick={onLogin}>
           Login
         </Button>
       </Wrapper>
@@ -29,3 +33,8 @@ const Wrapper = styled.div`
     text-align: center;
   }
 `;
+
+export function LoginContainer(): React.ReactElement {
+  const { login } = useLogin();
+  return <Login onLogin={login} />;
+}
