@@ -4,7 +4,7 @@ import { Route, Routes } from 'react-router-dom';
 import Accounts from 'components/Accounts';
 import Filters from 'components/Filters';
 import LoadingIndicator from 'components/LoadingIndicator';
-import { Login } from 'components/LoginPage';
+import { LoginContainer } from 'components/LoginPage';
 import { NoAccountsContainer } from 'components/NoAccounts';
 import { Page } from 'components/Page';
 import { SpendingSummary } from 'components/SpendingSummaryPage';
@@ -20,7 +20,7 @@ const Greenbacks: FC = () => {
   const { isReady: isApiReady } = useIsApiReady();
   const { isAuthenticated } = useIsAuthenticated();
 
-  if (!isAuthenticated) return <Login />;
+  if (!isAuthenticated) return <LoginContainer />;
 
   if (!isApiReady)
     return (
