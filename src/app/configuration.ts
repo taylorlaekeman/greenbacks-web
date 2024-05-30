@@ -3,10 +3,7 @@ const defaultConfiguration: Configuration = {
   isTestData: false,
 };
 
-const configurationOverrides: AllOptionalConfiguration = {
-  apiHost: 'http://localhost:8000/dev',
-  // isTestData: true,
-};
+const configurationOverrides: AllOptionalConfiguration = {};
 
 export const configuration: Configuration = {
   ...defaultConfiguration,
