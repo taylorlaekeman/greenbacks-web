@@ -6,7 +6,7 @@ import Filters from 'components/Filters';
 import LoadingIndicator from 'components/LoadingIndicator';
 import { LoginContainer } from 'components/LoginPage';
 import { NoAccountsContainer } from 'components/NoAccounts';
-import { Page } from 'components/Page';
+import { PageContainer } from 'components/Page';
 import { SpendingSummary } from 'components/SpendingSummaryPage';
 import TagModal from 'components/TagModal';
 import { Widgets } from 'components/Widgets';
@@ -24,9 +24,9 @@ const Greenbacks: FC = () => {
 
   if (!isApiReady)
     return (
-      <Page>
+      <PageContainer>
         <LoadingIndicator />
-      </Page>
+      </PageContainer>
     );
 
   return (
@@ -45,7 +45,7 @@ const GreenbacksInContext: FC = () => {
     return <NoAccountsContainer />;
 
   return (
-    <Page>
+    <PageContainer>
       {transactionToTag !== undefined && <TagModal />}
       <Routes>
         <Route path="/" element={<SpendingSummary />} />
@@ -53,7 +53,7 @@ const GreenbacksInContext: FC = () => {
         <Route path="/accounts" element={<Accounts />} />
         <Route path="/filters" element={<Filters />} />
       </Routes>
-    </Page>
+    </PageContainer>
   );
 };
 

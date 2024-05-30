@@ -1,18 +1,23 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import styled from 'styled-components';
 
 import { Header } from 'components/Header';
+import { UserSettingsContext } from 'context/UserSettings';
 import useLogout from 'hooks/useLogout';
+import noop from 'utils/noop';
 
 export function Page({
+  areWidgetsVisible = false,
   children,
+  onLogout = noop,
 }: {
+  areWidgetsVisible?: boolean;
   children?: React.ReactNode;
+  onLogout?: () => void;
 }): React.ReactElement {
-  const { logout } = useLogout();
   return (
     <PageWrapper>
-      <Header onLogout={logout} />
+      <Header areWidgetsVisible={areWidgetsVisible} onLogout={onLogout} />
       <PageBody>{children}</PageBody>
     </PageWrapper>
   );
@@ -35,3 +40,17 @@ export const PageBody = styled.article`
   padding: 16px;
   width: 100%;
 `;
+
+export function PageContainer({
+  children,
+}: {
+  children?: React.ReactNode;
+}): React.ReactElement {
+  const { logout } = useLogout();
+  const { areWidgetsVisible } = useContext(UserSettingsContext);
+  return (
+    <Page areWidgetsVisible={areWidgetsVisible} onLogout={logout}>
+      {children}
+    </Page>
+  );
+}

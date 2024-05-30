@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 import { Button, ButtonStyle } from 'components/Button';
 import Link from 'components/Link';
-import { Page } from 'components/Page';
+import { PageContainer } from 'components/Page';
 import { Text } from 'components/Text';
 import { UserSettingsContext } from 'context/UserSettings';
 import noop from 'utils/noop';
@@ -14,7 +14,7 @@ export function NoAccounts({
   onEnableDemoMode?: () => void;
 }): React.ReactElement {
   return (
-    <Page>
+    <PageContainer>
       <Wrapper>
         <Text>You have not yet connected any accounts to Greenbacks</Text>
         <Text>
@@ -25,7 +25,7 @@ export function NoAccounts({
           .
         </Text>
       </Wrapper>
-    </Page>
+    </PageContainer>
   );
 }
 

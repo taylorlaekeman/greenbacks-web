@@ -7,8 +7,10 @@ import { Heirarchy, Size, Text } from 'components/Text';
 import noop from 'utils/noop';
 
 export function Header({
+  areWidgetsVisible = false,
   onLogout = noop,
 }: {
+  areWidgetsVisible?: boolean;
   onLogout?: () => void;
 }): React.ReactElement {
   return (
@@ -19,9 +21,11 @@ export function Header({
             Greenbacks
           </Text>
         </Link>
-        <Link href="/widgets">
-          <Text>Widgets</Text>
-        </Link>
+        {areWidgetsVisible && (
+          <Link href="/widgets">
+            <Text>Widgets</Text>
+          </Link>
+        )}
         <Link href="/accounts">
           <Text>Accounts</Text>
         </Link>
