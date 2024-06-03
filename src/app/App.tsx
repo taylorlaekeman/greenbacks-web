@@ -4,7 +4,7 @@ import { configuration } from 'app/configuration';
 import Greenbacks from 'components/Greenbacks';
 import AccountConnectionProvider from 'context/AccountConnection';
 import AuthProvider from 'context/Auth';
-import { FiltersProvider } from 'context/Filters';
+import { ApiFiltersProvider as FiltersProvider } from 'context/Filters';
 import GreenbacksApiProvider from 'context/GreenbacksApi';
 import RouteProvider from 'context/Route';
 import { UserSettingsProvider } from 'context/UserSettings';

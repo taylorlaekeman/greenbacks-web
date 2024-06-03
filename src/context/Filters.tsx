@@ -1,3 +1,4 @@
+import { gql, useMutation, useQuery } from '@apollo/client';
 import React, {
   createContext,
   FC,
@@ -11,17 +12,15 @@ import React, {
 import { Filter } from 'types/filter';
 import noop from 'utils/noop';
 
-export interface AllFilters {
-  idFilters?: Filter[];
-  filters?: Filter[];
-}
-
 const FiltersContext = createContext<{
   addFilter: (input: { filter: Filter }) => void;
+  error?: Error;
   filters?: Filter[];
-}>({ addFilter: noop });
+  isAdding: boolean;
+  isLoading: boolean;
+}>({ addFilter: noop, isAdding: false, isLoading: false });
 
-export const FiltersProvider: FC = ({ children }) => {
+export const LocalStorageFiltersProvider: FC = ({ children }) => {
   const {
     idFilters: initialIdFilters = [],
     filters: initialFilters = [],
@@ -43,6 +42,8 @@ export const FiltersProvider: FC = ({ children }) => {
       value={{
         addFilter,
         filters,
+        isAdding: false,
+        isLoading: false,
       }}
     >
       {children}
@@ -67,7 +68,7 @@ const getFiltersFromStorage = (): {
   };
 };
 
-export const TestFiltersProvider: FC<{
+export const MemoryFiltersProvider: FC<{
   idFilters?: Filter[];
   filters?: Filter[];
 }> = ({
@@ -84,6 +85,8 @@ export const TestFiltersProvider: FC<{
       value={{
         addFilter,
         filters,
+        isAdding: false,
+        isLoading: false,
       }}
     >
       {children}
@@ -173,5 +176,94 @@ const handleAddFilterAction = ({
     filters: newFilters,
   };
 };
+
+export function TestFiltersProvider({
+  children,
+  filters = [],
+  onAddFilter = noop,
+}: {
+  children: React.ReactNode;
+  filters?: Filter[];
+  onAddFilter?: (input: { filter: Filter }) => void;
+}): React.ReactElement {
+  return (
+    <FiltersContext.Provider
+      value={{
+        addFilter: onAddFilter,
+        filters,
+        isAdding: false,
+        isLoading: false,
+      }}
+    >
+      {children}
+    </FiltersContext.Provider>
+  );
+}
+
+export function ApiFiltersProvider({
+  children,
+}: {
+  children: React.ReactNode;
+}): React.ReactElement {
+  const response = useQuery(FILTERS_QUERY);
+  const { error, data, loading: isLoadingFilters } = response;
+  const [mutate, status] = useMutation(ADD_FILTER_MUTATION, {
+    refetchQueries: ['GetFilters'],
+  });
+  const { loading: isAdding } = status;
+  return (
+    <FiltersContext.Provider
+      value={{
+        addFilter: ({ filter }) => mutate({ variables: filter }),
+        error,
+        filters: data?.filters || [],
+        isAdding,
+        isLoading: isLoadingFilters,
+      }}
+    >
+      {children}
+    </FiltersContext.Provider>
+  );
+}
+
+export const FILTERS_QUERY = gql`
+  query GetFilters {
+    filters {
+      categoryToAssign
+      id
+      matchers {
+        comparator
+        expectedValue
+        property
+      }
+      tagToAssign
+    }
+  }
+`;
+
+export const ADD_FILTER_MUTATION = gql`
+  mutation AddFilter(
+    $categoryToAssign: Category!
+    $matchers: [MatcherInput]!
+    $tagToAssign: String
+  ) {
+    addFilter(
+      input: {
+        categoryToAssign: $categoryToAssign
+        matchers: $matchers
+        tagToAssign: $tagToAssign
+      }
+    ) {
+      categoryToAssign
+      id
+      matchers {
+        comparator
+        expectedValue
+        property
+      }
+      tagToAssign
+    }
+  }
+`;
 
 export default FiltersContext;

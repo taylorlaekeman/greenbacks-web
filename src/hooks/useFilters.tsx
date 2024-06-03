@@ -1,34 +1,19 @@
-import useQuery, { ApolloError } from 'hooks/useQuery';
+import { useContext } from 'react';
+
+import FiltersContext from 'context/Filters';
 import type { Filter } from 'types/filter';
-import gql from 'utils/gql';
 
 const useFilters = (): {
-  error?: ApolloError;
+  error?: Error;
   isLoading: boolean;
   filters?: Filter[];
 } => {
-  const response = useQuery(FILTERS_QUERY);
-  const { error, data, loading } = response;
+  const { error, filters, isLoading } = useContext(FiltersContext);
   return {
     error,
-    isLoading: loading,
-    filters: data?.filters,
+    isLoading,
+    filters,
   };
 };
-
-export const FILTERS_QUERY = gql`
-  query GetFilters {
-    filters {
-      categoryToAssign
-      id
-      matchers {
-        comparator
-        expectedValue
-        property
-      }
-      tagToAssign
-    }
-  }
-`;
 
 export default useFilters;

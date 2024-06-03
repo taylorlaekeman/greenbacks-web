@@ -1,9 +1,8 @@
 import useAverageMonthlyEarning from 'hooks/useAverageMonthlyEarning';
 import useAverageMonthlySpending from 'hooks/useAverageMonthlySpending';
-import type { ApolloError } from 'hooks/useQuery';
 
 const useSpendingRate = (): {
-  error?: ApolloError;
+  error?: Error;
   isLoading: boolean;
   spendingRate?: number;
 } => {

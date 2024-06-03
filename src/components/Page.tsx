@@ -7,17 +7,23 @@ import useLogout from 'hooks/useLogout';
 import noop from 'utils/noop';
 
 export function Page({
-  areWidgetsVisible = false,
   children,
+  hasLinks = true,
+  hasWidgetLink = false,
   onLogout = noop,
 }: {
-  areWidgetsVisible?: boolean;
   children?: React.ReactNode;
+  hasLinks?: boolean;
+  hasWidgetLink?: boolean;
   onLogout?: () => void;
 }): React.ReactElement {
   return (
     <PageWrapper>
-      <Header areWidgetsVisible={areWidgetsVisible} onLogout={onLogout} />
+      <Header
+        hasLinks={hasLinks}
+        hasWidgetLink={hasWidgetLink}
+        onLogout={onLogout}
+      />
       <PageBody>{children}</PageBody>
     </PageWrapper>
   );
@@ -49,7 +55,7 @@ export function PageContainer({
   const { logout } = useLogout();
   const { areWidgetsVisible } = useContext(UserSettingsContext);
   return (
-    <Page areWidgetsVisible={areWidgetsVisible} onLogout={logout}>
+    <Page hasWidgetLink={areWidgetsVisible} onLogout={logout}>
       {children}
     </Page>
   );

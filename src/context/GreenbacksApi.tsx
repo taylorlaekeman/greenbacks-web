@@ -14,6 +14,7 @@ import { MockedProvider, MockedResponse } from '@apollo/client/testing';
 
 import { useAuth } from 'auth';
 import LoadingIndicator from 'components/LoadingIndicator';
+import { Page } from 'components/Page';
 import useIsAuthenticated from 'hooks/useIsAuthenticated';
 import useLogout from 'hooks/useLogout';
 
@@ -48,9 +49,12 @@ const GreenbacksApiProvider: FC<Props> = ({ children, uri }) => {
     }
   }, [getAccessTokenSilently, isAuthenticated]);
 
-  if (!token) return <>{children}</>;
-
-  if (!client) return <LoadingIndicator />;
+  if (!client)
+    return (
+      <Page hasLinks={false}>
+        <LoadingIndicator />
+      </Page>
+    );
 
   return (
     <ApolloProvider client={client}>

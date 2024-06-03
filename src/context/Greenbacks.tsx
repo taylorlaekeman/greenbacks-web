@@ -20,12 +20,12 @@ import type { Filter } from 'types/filter';
 export const TestGreenbacksProvider: FC<Props> = ({
   children,
   filters,
-  idFilters,
   isApiReady,
   isAuthenticated,
   locales,
   mocks,
   now,
+  onAddFilter,
   onUpdateAccountConnection,
   route,
   userSettingCallbacks,
@@ -43,7 +43,10 @@ export const TestGreenbacksProvider: FC<Props> = ({
                 callbacks={userSettingCallbacks}
                 settings={userSettings}
               >
-                <TestFiltersProvider idFilters={idFilters} filters={filters}>
+                <TestFiltersProvider
+                  filters={filters}
+                  onAddFilter={onAddFilter}
+                >
                   {children}
                 </TestFiltersProvider>
               </TestUserSettingsProvider>
@@ -57,12 +60,12 @@ export const TestGreenbacksProvider: FC<Props> = ({
 
 interface Props {
   filters?: Filter[];
-  idFilters?: Filter[];
   isApiReady?: boolean;
   isAuthenticated?: boolean;
   locales?: string | string[];
   mocks?: MockedApiResponse[];
   now?: string;
+  onAddFilter?: (input: { filter: Filter }) => void;
   onUpdateAccountConnection?: (input: { token: string }) => void;
   route?: string;
   userSettingCallbacks?: AllOptionalUserSettingCallbacks;

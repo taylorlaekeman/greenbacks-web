@@ -1,5 +1,5 @@
 import { MockedApiResponse } from 'context/GreenbacksApi';
-import { FILTERS_QUERY } from 'hooks/useFilters';
+import { FILTERS_QUERY } from 'context/Filters';
 import type { Filter } from 'types/filter';
 
 const buildFiltersMock = ({

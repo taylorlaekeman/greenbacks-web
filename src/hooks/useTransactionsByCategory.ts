@@ -1,6 +1,5 @@
 import { useMemo } from 'react';
 
-import type { ApolloError } from 'hooks/useQuery';
 import useTransactions from 'hooks/useTransactions';
 import Transaction, { Category } from 'types/transaction';
 
@@ -14,7 +13,7 @@ const useTransactionsByCategory = ({
   startDate: string;
 }): {
   earning?: Transaction[];
-  error?: ApolloError;
+  error?: Error;
   isLoading: boolean;
   saving?: Transaction[];
   spending?: Transaction[];

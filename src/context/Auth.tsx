@@ -1,6 +1,8 @@
 import React, { createContext, FC, useState } from 'react';
 import { Auth0Provider, useAuth0 } from '@auth0/auth0-react';
 
+import { Login } from 'components/LoginPage';
+
 import noop from 'utils/noop';
 
 interface AuthContext {
@@ -28,6 +30,7 @@ const AuthProvider: FC = ({ children }) => (
 
 const InnerProvider: FC = ({ children }) => {
   const { isAuthenticated, loginWithRedirect, logout } = useAuth0();
+  if (!isAuthenticated) return <Login onLogin={loginWithRedirect} />;
   return (
     <AuthContext.Provider
       value={{ isAuthenticated, login: loginWithRedirect, logout }}

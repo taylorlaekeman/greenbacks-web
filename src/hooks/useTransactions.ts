@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 
 import useFilters from 'hooks/useFilters';
-import useQuery, { ApolloError } from 'hooks/useQuery';
+import useQuery from 'hooks/useQuery';
 import { Comparator, Filter, Matcher } from 'types/filter';
 import Transaction, {
   Category,
@@ -11,7 +11,7 @@ import Transaction, {
 import gql from 'utils/gql';
 
 interface BaseResult {
-  error?: ApolloError;
+  error?: Error;
   isLoading: boolean;
 }
 

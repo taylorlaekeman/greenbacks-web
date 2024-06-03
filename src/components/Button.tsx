@@ -76,6 +76,7 @@ const sharedStyles = css<StyleProps>`
   ${({ area }) => area && `grid-area: ${area};`}
   color: #013220;
   cursor: pointer;
+  font-family: 'Lora', serif;
   ${({ $isFullWidth }) => $isFullWidth && 'width: 100%;'}
 `;
 

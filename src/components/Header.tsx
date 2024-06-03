@@ -7,28 +7,34 @@ import { Heirarchy, Size, Text } from 'components/Text';
 import noop from 'utils/noop';
 
 export function Header({
-  areWidgetsVisible = false,
+  hasLinks = true,
+  hasWidgetLink = false,
   onLogout = noop,
 }: {
-  areWidgetsVisible?: boolean;
+  hasLinks?: boolean;
+  hasWidgetLink?: boolean;
   onLogout?: () => void;
 }): React.ReactElement {
   return (
     <Wrapper>
       <Nav>
-        <Link href="/" id="greenbacks" style={LinkStyle.Unstyled}>
-          <Text heirarchy={Heirarchy.H1} size={Size.Large}>
-            Greenbacks
-          </Text>
-        </Link>
-        {areWidgetsVisible && (
+        {hasLinks && (
+          <Link href="/" id="greenbacks" style={LinkStyle.Unstyled}>
+            <Text heirarchy={Heirarchy.H1} size={Size.Large}>
+              Greenbacks
+            </Text>
+          </Link>
+        )}
+        {hasLinks && hasWidgetLink && (
           <Link href="/widgets">
             <Text>Widgets</Text>
           </Link>
         )}
-        <Link href="/accounts">
-          <Text>Accounts</Text>
-        </Link>
+        {hasLinks && (
+          <Link href="/accounts">
+            <Text>Accounts</Text>
+          </Link>
+        )}
         <Button onClick={onLogout} style={ButtonStyle.Text}>
           Logout
         </Button>
