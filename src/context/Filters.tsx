@@ -8,12 +8,13 @@ import React, {
   useMemo,
   useReducer,
 } from 'react';
+import { v4 as generateUuid } from 'uuid';
 
-import { Filter } from 'types/filter';
+import { Filter, FilterInput } from 'types/filter';
 import noop from 'utils/noop';
 
-const FiltersContext = createContext<{
-  addFilter: (input: { filter: Filter }) => void;
+export const FiltersContext = createContext<{
+  addFilter: (input: { filter: FilterInput }) => void;
   error?: Error;
   filters?: Filter[];
   isAdding: boolean;
@@ -68,22 +69,19 @@ const getFiltersFromStorage = (): {
   };
 };
 
-export const MemoryFiltersProvider: FC<{
-  idFilters?: Filter[];
-  filters?: Filter[];
-}> = ({
+export function MemoryFiltersProvider({
   children,
-  idFilters: initialIdFilters = [],
-  filters: initialFilters = [],
-}) => {
-  const { addFilter, filters } = useFilters({
-    initialIdFilters,
-    initialFilters,
-  });
+}: {
+  children: React.ReactNode;
+}): React.ReactElement {
+  const [filters, setFilters] = React.useState<Filter[]>([]);
   return (
     <FiltersContext.Provider
       value={{
-        addFilter,
+        addFilter: ({ filter }) => {
+          const newFilters = [...filters, { ...filter, id: generateUuid() }];
+          setFilters(newFilters);
+        },
         filters,
         isAdding: false,
         isLoading: false,
@@ -92,7 +90,7 @@ export const MemoryFiltersProvider: FC<{
       {children}
     </FiltersContext.Provider>
   );
-};
+}
 
 const useFilters = ({
   initialIdFilters,
@@ -101,7 +99,7 @@ const useFilters = ({
   initialIdFilters: Filter[];
   initialFilters: Filter[];
 }): {
-  addFilter: (input: { filter: Filter }) => void;
+  addFilter: (input: { filter: FilterInput }) => void;
   filters: Filter[];
 } => {
   const [{ idFilters, filters }, dispatch] = useReducer<Reducer<State, Action>>(
@@ -147,7 +145,7 @@ interface AddFilterAction {
 }
 
 interface AddFilterPayload {
-  filter: Filter;
+  filter: FilterInput;
 }
 
 const reducer: Reducer<State, Action> = (state, { payload, type }) => {
@@ -168,8 +166,9 @@ const handleAddFilterAction = ({
 }): State => {
   const { idFilters, filters } = state;
   const isIdFilter = filter.matchers.some(({ property }) => property === 'id');
-  const newIdFilters = isIdFilter ? [...idFilters, filter] : idFilters;
-  const newFilters = !isIdFilter ? [...filters, filter] : filters;
+  const newFilter = { ...filter, id: generateUuid() };
+  const newIdFilters = isIdFilter ? [...idFilters, newFilter] : idFilters;
+  const newFilters = !isIdFilter ? [...filters, newFilter] : filters;
   return {
     ...state,
     idFilters: newIdFilters,
@@ -184,7 +183,7 @@ export function TestFiltersProvider({
 }: {
   children: React.ReactNode;
   filters?: Filter[];
-  onAddFilter?: (input: { filter: Filter }) => void;
+  onAddFilter?: (input: { filter: FilterInput }) => void;
 }): React.ReactElement {
   return (
     <FiltersContext.Provider

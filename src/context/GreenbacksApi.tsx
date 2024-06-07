@@ -8,15 +8,20 @@ import {
   NormalizedCacheObject,
   ServerError,
 } from '@apollo/client';
+import { SchemaLink } from '@apollo/client/link/schema';
 import { setContext } from '@apollo/client/link/context';
 import { onError } from '@apollo/client/link/error';
 import { MockedProvider, MockedResponse } from '@apollo/client/testing';
+import { makeExecutableSchema } from '@graphql-tools/schema';
+import { DateTime } from 'luxon';
 
 import { useAuth } from 'auth';
 import LoadingIndicator from 'components/LoadingIndicator';
 import { Page } from 'components/Page';
 import useIsAuthenticated from 'hooks/useIsAuthenticated';
 import useLogout from 'hooks/useLogout';
+import useNow from 'hooks/useNow';
+import { generateTransactions } from 'utils/generateTransactions';
 
 export { GraphQLError } from 'graphql';
 
@@ -28,7 +33,7 @@ export const GreenbacksApiContext = React.createContext<ApiContext>({
   isReady: false,
 });
 
-const GreenbacksApiProvider: FC<Props> = ({ children, uri }) => {
+export const HttpApiProvider: FC<Props> = ({ children, uri }) => {
   const { isAuthenticated } = useIsAuthenticated();
   const { logout } = useLogout();
   const { getAccessTokenSilently } = useAuth();
@@ -152,4 +157,117 @@ export interface Transaction {
 
 export type MockedApiResponse = MockedResponse;
 
-export default GreenbacksApiProvider;
+export function DemoApiProvider({
+  children,
+}: {
+  children: React.ReactNode;
+}): React.ReactElement {
+  const { now } = useNow();
+  const client = new ApolloClient({
+    cache: new InMemoryCache(),
+    link: new SchemaLink({
+      schema: makeExecutableSchema({
+        typeDefs: DEMO_TYPE_DEFS,
+        resolvers: {
+          Query: {
+            accounts: () => [
+              {
+                createdDate: '2020-01-01',
+                id: 'account-1',
+                institution: { name: 'RBC' },
+                isReauthenticationRequired: false,
+                modifiedDate: '2020-01-01',
+              },
+            ],
+            transactions: (
+              _,
+              {
+                input: {
+                  endDate = now.endOf('month').toISODate(),
+                  startDate = now.startOf('month').toISODate(),
+                },
+              }: {
+                input: {
+                  endDate?: string;
+                  startDate?: string;
+                };
+              }
+            ) => {
+              const generatedTransactions = generateTransactions({
+                endDate: DateTime.fromISO(endDate),
+                startDate: DateTime.fromISO(startDate),
+              });
+              return generatedTransactions;
+            },
+          },
+        },
+      }),
+    }),
+  });
+  return (
+    <ApolloProvider client={client}>
+      <InnerProvider>{children}</InnerProvider>
+    </ApolloProvider>
+  );
+}
+
+const DEMO_TYPE_DEFS = `#graphql
+  type Account {
+    createdDate: String!
+    id: ID!
+    institution: Institution!
+    isReauthenticationRequired: Boolean!
+    modifiedDate: String!
+  }
+
+  enum Category {
+    Earning
+    Hidden
+    Saving
+    Spending
+  }
+
+  enum Comparator {
+    Equals
+    GreaterThan
+    LessThan
+  }
+
+  type Filter {
+    categoryToAssign: Category!
+    id: ID!
+    matchers: [Matcher]!
+    tagToAssign: String
+  }
+
+  type Institution {
+    name: String!
+  }
+
+  type Matcher {
+    comparator: Comparator
+    expectedValue: String!
+    property: String!
+  }
+
+  type Transaction {
+    accountId: ID!
+    amount: Int!
+    id: ID!
+    datetime: String!
+    merchant: String
+    name: String!
+  }
+
+  input GetTransactionsInput {
+    endDate: String!
+    startDate: String!
+  }
+
+  type Query {
+    accounts: [Account]
+    transactions(input: GetTransactionsInput): [Transaction]
+  }
+`;
+
+export default HttpApiProvider;

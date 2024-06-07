@@ -1,5 +1,7 @@
-import { gql, useMutation } from '@apollo/client';
+import { gql } from '@apollo/client';
+import React from 'react';
 
+import { FiltersContext } from 'context/Filters';
 import type { Category } from 'types/transaction';
 import type { Matcher } from 'types/filter';
 
@@ -8,17 +10,15 @@ const useAddFilter = (): {
   hasBeenCalled: boolean;
   isSaving: boolean;
 } => {
-  const [mutate, status] = useMutation<AddFilterVariables>(
-    ADD_FILTER_MUTATION,
-    {
-      refetchQueries: ['GetFilters'],
-    }
-  );
-  const { called, loading } = status;
+  const { addFilter, isAdding } = React.useContext(FiltersContext);
+  const [hasCalled, setHasCalled] = React.useState<boolean>(false);
   return {
-    addFilter: ({ filter }) => mutate({ variables: filter }),
-    hasBeenCalled: called,
-    isSaving: loading,
+    addFilter: ({ filter }) => {
+      setHasCalled(true);
+      addFilter({ filter });
+    },
+    hasBeenCalled: hasCalled,
+    isSaving: isAdding,
   };
 };
 

@@ -5,6 +5,7 @@
   "dependencies": {
     "@apollo/client": "^3.3.6",
     "@auth0/auth0-react": "^1.2.0",
+    "@graphql-tools/schema": "^10.0.4",
     "@testing-library/jest-dom": "^5.16.1",
     "@testing-library/react": "^10.4.9",
     "@testing-library/user-event": "^7.2.1",

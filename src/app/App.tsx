@@ -1,30 +1,51 @@
 import React, { FunctionComponent } from 'react';
+import { Route, Routes } from 'react-router-dom';
 
 import { configuration } from 'app/configuration';
 import Greenbacks from 'components/Greenbacks';
 import AccountConnectionProvider from 'context/AccountConnection';
 import AuthProvider from 'context/Auth';
-import { ApiFiltersProvider as FiltersProvider } from 'context/Filters';
-import GreenbacksApiProvider from 'context/GreenbacksApi';
+import { ApiFiltersProvider, MemoryFiltersProvider } from 'context/Filters';
+import { DemoApiProvider, HttpApiProvider } from 'context/GreenbacksApi';
 import RouteProvider from 'context/Route';
 import { UserSettingsProvider } from 'context/UserSettings';
 import GlobalStyle from 'styles/GlobalStyle';
 
 const App: FunctionComponent = () => (
-  <AuthProvider>
-    <GreenbacksApiProvider uri={`${configuration.apiHost}/graphql`}>
-      <AccountConnectionProvider>
-        <FiltersProvider>
-          <RouteProvider>
-            <UserSettingsProvider>
-              <GlobalStyle />
-              <Greenbacks />
-            </UserSettingsProvider>
-          </RouteProvider>
-        </FiltersProvider>
-      </AccountConnectionProvider>
-    </GreenbacksApiProvider>
-  </AuthProvider>
+  <RouteProvider>
+    <Routes>
+      <Route
+        path="/"
+        element={
+          <AuthProvider>
+            <HttpApiProvider uri={`${configuration.apiHost}/graphql`}>
+              <AccountConnectionProvider>
+                <ApiFiltersProvider>
+                  <UserSettingsProvider>
+                    <GlobalStyle />
+                    <Greenbacks />
+                  </UserSettingsProvider>
+                </ApiFiltersProvider>
+              </AccountConnectionProvider>
+            </HttpApiProvider>
+          </AuthProvider>
+        }
+      />
+      <Route
+        path="/demo/*"
+        element={
+          <DemoApiProvider>
+            <MemoryFiltersProvider>
+              <UserSettingsProvider>
+                <GlobalStyle />
+                <Greenbacks />
+              </UserSettingsProvider>
+            </MemoryFiltersProvider>
+          </DemoApiProvider>
+        }
+      />
+    </Routes>
+  </RouteProvider>
 );
 
 export default App;

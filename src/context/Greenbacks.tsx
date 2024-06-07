@@ -15,7 +15,7 @@ import {
   AllOptionalUserSettingCallbacks,
   AllOptionalUserSettings,
 } from 'context/UserSettings';
-import type { Filter } from 'types/filter';
+import type { Filter, FilterInput } from 'types/filter';
 
 export const TestGreenbacksProvider: FC<Props> = ({
   children,
@@ -65,7 +65,7 @@ interface Props {
   locales?: string | string[];
   mocks?: MockedApiResponse[];
   now?: string;
-  onAddFilter?: (input: { filter: Filter }) => void;
+  onAddFilter?: (input: { filter: FilterInput }) => void;
   onUpdateAccountConnection?: (input: { token: string }) => void;
   route?: string;
   userSettingCallbacks?: AllOptionalUserSettingCallbacks;
