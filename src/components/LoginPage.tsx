@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 import Button from 'components/Button';
+import { Link } from 'components/Link';
 import { PageWrapper } from 'components/Page';
 import { Size, Text } from 'components/Text';
 import useLogin from 'hooks/useLogin';
@@ -20,6 +21,9 @@ export function Login({
         <Button isFullWidth onClick={onLogin}>
           Login
         </Button>
+        <LinkWrapper>
+          <Link href="/demo">Demo</Link>
+        </LinkWrapper>
       </Wrapper>
     </PageWrapper>
   );
@@ -32,6 +36,12 @@ const Wrapper = styled.div`
     margin-bottom: 128px;
     text-align: center;
   }
+`;
+
+const LinkWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
 `;
 
 export function LoginContainer(): React.ReactElement {

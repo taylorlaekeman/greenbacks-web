@@ -36,11 +36,14 @@ function getStyle({ style }: { style: LinkStyle }) {
   }
 }
 
-const sharedStyles = css<StyleProps>``;
+const sharedStyles = css<StyleProps>`
+  color: #013220;
+  font-family: 'Lora', serif;
+  font-size: 1rem;
+`;
 
 const defaultStyle = css<StyleProps>`
   ${sharedStyles}
-  color: inherit;
 `;
 
 const unstyledStyle = css<StyleProps>`

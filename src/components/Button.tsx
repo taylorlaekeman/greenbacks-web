@@ -77,6 +77,7 @@ const sharedStyles = css<StyleProps>`
   color: #013220;
   cursor: pointer;
   font-family: 'Lora', serif;
+  font-size: 1rem;
   ${({ $isFullWidth }) => $isFullWidth && 'width: 100%;'}
 `;
 

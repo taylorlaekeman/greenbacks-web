@@ -15,7 +15,20 @@ const App: FunctionComponent = () => (
   <RouteProvider>
     <Routes>
       <Route
-        path="/"
+        path="/demo/*"
+        element={
+          <DemoApiProvider>
+            <MemoryFiltersProvider>
+              <UserSettingsProvider>
+                <GlobalStyle />
+                <Greenbacks />
+              </UserSettingsProvider>
+            </MemoryFiltersProvider>
+          </DemoApiProvider>
+        }
+      />
+      <Route
+        path="*"
         element={
           <AuthProvider>
             <HttpApiProvider uri={`${configuration.apiHost}/graphql`}>
@@ -29,19 +42,6 @@ const App: FunctionComponent = () => (
               </AccountConnectionProvider>
             </HttpApiProvider>
           </AuthProvider>
-        }
-      />
-      <Route
-        path="/demo/*"
-        element={
-          <DemoApiProvider>
-            <MemoryFiltersProvider>
-              <UserSettingsProvider>
-                <GlobalStyle />
-                <Greenbacks />
-              </UserSettingsProvider>
-            </MemoryFiltersProvider>
-          </DemoApiProvider>
         }
       />
     </Routes>
