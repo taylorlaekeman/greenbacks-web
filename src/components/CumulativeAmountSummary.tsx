@@ -34,6 +34,7 @@ export function CumulativeAmountSummary({
   hasMonthSelector = false,
   isCurrentMonth = false,
   isLoading = false,
+  latestActualDate,
   month,
   onChangeMonth = noop,
   onChangeVisibleTagCount = noop,
@@ -49,6 +50,7 @@ export function CumulativeAmountSummary({
   hasMonthSelector?: boolean;
   isCurrentMonth?: boolean;
   isLoading?: boolean;
+  latestActualDate?: datetime;
   month?: datetime;
   onChangeMonth?: (input: datetime) => void;
   onChangeVisibleTagCount?: (input: number) => void;
@@ -118,9 +120,10 @@ export function CumulativeAmountSummary({
         <SpendingTimeline
           comparisonLabel="average"
           comparisonSpendingByDate={comparisonSpendingByDate}
+          endDate={endDate}
           hasLastActualReferenceLine={false}
           hasLastPredictedReferenceLine={false}
-          endDate={endDate}
+          latestActualDate={latestActualDate}
           startDate={startDate}
           transactions={transactions}
         />
@@ -327,11 +330,13 @@ export function CumulativeAmountSummaryContainer(): React.ReactElement {
   const visibleMonth = params.month
     ? datetime.fromISO(params.month)
     : now.startOf('month');
+  const endOfVisibleMonth = visibleMonth.endOf('month');
+  const endDate = now > endOfVisibleMonth ? endOfVisibleMonth : now;
   const {
     isLoading: isLoadingCumulativeTransactions,
     spending: currentMonthSpending,
   } = useTransactionsByCategory({
-    endDate: visibleMonth.endOf('month').toISODate(),
+    endDate: endDate.toISODate(),
     isTestData,
     startDate: visibleMonth.startOf('month').toISODate(),
   });
@@ -363,6 +368,7 @@ export function CumulativeAmountSummaryContainer(): React.ReactElement {
         visibleMonth.toFormat('yyyy-LL') === now.toFormat('yyyy-LL')
       }
       isLoading={isLoadingCumulativeTransactions || isLoadingComparisonPeriod}
+      latestActualDate={now}
       month={visibleMonth}
       onChangeMonth={(newMonth) =>
         setParams({ month: newMonth.toFormat('yyyy-LL') })

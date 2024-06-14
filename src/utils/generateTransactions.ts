@@ -11,12 +11,15 @@ export function generateTransactions({
   startDate: DateTime;
 }): CoreTransaction[] {
   let results: CoreTransaction[] = [];
+  const serializedEndDate = endDate.toISODate();
   for (
     let date = startDate.startOf('month');
     date <= endDate;
     date = date.plus({ months: 1 })
   ) {
-    const monthTransactions = generateTransactionsForMonth({ month: date });
+    const monthTransactions = generateTransactionsForMonth({
+      month: date,
+    }).filter((transaction) => transaction.datetime <= serializedEndDate);
     results = [...results, ...monthTransactions];
   }
   return results;
