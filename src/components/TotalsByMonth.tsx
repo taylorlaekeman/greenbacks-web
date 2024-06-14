@@ -43,11 +43,11 @@ const TotalsByMonth: FC = () => {
       <Graph
         isEarningVisible={visibleCategories.includes('Earning')}
         isEarningMinusSavingVisible={visibleCategories.includes(
-          'Earning Minus Saving'
+          'Earning Minus Saving',
         )}
         isSavingVisible={visibleCategories.includes('Saving')}
         isSavingAndSpendingVisible={visibleCategories.includes(
-          'Saving & Spending'
+          'Saving & Spending',
         )}
         isSpendingVisible={visibleCategories.includes('Spending')}
         totalsByMonth={totalsByMonth}
@@ -88,7 +88,7 @@ const Graph: FC<{
             [key]: `earning-${earning}-saving-${saving}-spending-${spending}`,
           };
         },
-        {}
+        {},
       )}
     />
     <ResponsiveContainer aspect={1.5} minWidth={300} width="100%">

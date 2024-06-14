@@ -17,7 +17,7 @@ const groupTransactionsByMonth = ({
         [yearAndMonth]: [...existingTransactions, transaction],
       };
     },
-    {}
+    {},
   );
   return Object.entries(transactionsByMonth).map(([month, transactions]) => ({
     month,

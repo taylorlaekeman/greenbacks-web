@@ -38,7 +38,7 @@ test('shows loading indicator while transactions are loading', () => {
   render(
     <TestGreenbacksProvider mocks={mocks} route="/accounts">
       <Greenbacks />
-    </TestGreenbacksProvider>
+    </TestGreenbacksProvider>,
   );
   const loadingIndicator = screen.getByTestId('loading-indicator-accounts');
   expect(loadingIndicator).toBeInTheDocument();
@@ -62,7 +62,7 @@ test('shows account correctly', async () => {
   render(
     <TestGreenbacksProvider mocks={mocks} route="/accounts">
       <Greenbacks />
-    </TestGreenbacksProvider>
+    </TestGreenbacksProvider>,
   );
   await act(wait);
   expect(screen.getByText('test institution name')).toBeInTheDocument();
@@ -93,7 +93,7 @@ test('has reauthenticate button if reauthentication is required', async () => {
   render(
     <TestGreenbacksProvider mocks={mocks} route="/accounts">
       <Greenbacks />
-    </TestGreenbacksProvider>
+    </TestGreenbacksProvider>,
   );
   await act(wait);
   const wrapper = screen.getByTestId('account-wrapper-testSecondId');
@@ -140,7 +140,7 @@ test('reauthenticate button loads plaid update flow', async () => {
       route="/accounts"
     >
       <Greenbacks />
-    </TestGreenbacksProvider>
+    </TestGreenbacksProvider>,
   );
   await act(wait);
   const button = screen.getByRole('button', { name: 'Reauthenticate' });

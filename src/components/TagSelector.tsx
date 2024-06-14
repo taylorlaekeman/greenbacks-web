@@ -6,7 +6,7 @@ import useTagsByCategory from 'hooks/useTagsByCategory';
 const TagSelector: FC = () => {
   const { spending: spendingTags } = useTagsByCategory();
   const [selectedTags, setSelectedTags] = useState<string[] | undefined>(
-    spendingTags
+    spendingTags,
   );
   return (
     <Checkboxes

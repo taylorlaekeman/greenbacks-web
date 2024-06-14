@@ -10,12 +10,8 @@ const useSelectedTags = (): {
   selectedTags: string[];
   tags: string[];
 } => {
-  const {
-    deselect,
-    select,
-    selectedTags,
-    tags,
-  } = useContext<ITagSelectionContext>(TagSelectionContext);
+  const { deselect, select, selectedTags, tags } =
+    useContext<ITagSelectionContext>(TagSelectionContext);
   return { deselect, select, selectedTags, tags };
 };
 

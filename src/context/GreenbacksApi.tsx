@@ -191,7 +191,7 @@ export function DemoApiProvider({
                   endDate?: string;
                   startDate?: string;
                 };
-              }
+              },
             ) => {
               const generatedTransactions = generateTransactions({
                 endDate: DateTime.fromISO(endDate),

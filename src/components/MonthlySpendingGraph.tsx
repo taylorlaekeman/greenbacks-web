@@ -17,20 +17,20 @@ import getMonth from 'utils/getMonth';
 
 const MonthlySpendingGraph: FC = () => {
   const { now } = useNow();
-  const { firstDay, lastDay, readable: readableMonth } = getMonth({
+  const {
+    firstDay,
+    lastDay,
+    readable: readableMonth,
+  } = getMonth({
     datetime: now,
   });
-  const {
-    isLoading: isLoadingTotalsByMonth,
-    totalsByMonth,
-  } = useTotalsByMonth();
-  const {
-    isLoading: isLoadingSpending,
-    totalSpending: currentMonthSpending,
-  } = useTotalSpending({
-    endDate: lastDay,
-    startDate: firstDay,
-  });
+  const { isLoading: isLoadingTotalsByMonth, totalsByMonth } =
+    useTotalsByMonth();
+  const { isLoading: isLoadingSpending, totalSpending: currentMonthSpending } =
+    useTotalSpending({
+      endDate: lastDay,
+      startDate: firstDay,
+    });
   const {
     isLoading: isLoadingProjectedRemainingSpending,
     projectedRemainingSpending,

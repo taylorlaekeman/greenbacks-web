@@ -27,20 +27,18 @@ const TopSpendingCategories: FC = () => {
     endDate: endOfMonth,
     startDate: startOfMonth,
   });
-  const {
-    isLoading: isLoadingAverages,
-    spending: averageSpending,
-  } = useTransactionsByTag({
-    endDate: endOfAveragingPeriod,
-    startDate: startOfAveragingPeriod,
-  });
+  const { isLoading: isLoadingAverages, spending: averageSpending } =
+    useTransactionsByTag({
+      endDate: endOfAveragingPeriod,
+      startDate: startOfAveragingPeriod,
+    });
   if (isLoading || isLoadingAverages) return <LoadingIndicator />;
   const averageSpendingByTag: Record<string, number> = averageSpending.reduce(
     (result, { tag, totalAmount }) => ({
       ...result,
       [tag]: totalAmount / averagingCount,
     }),
-    {}
+    {},
   );
   return (
     <>
@@ -85,7 +83,7 @@ const Category: FC<{
         <ul>
           {transactions
             .sort(({ amount: firstAmount }, { amount: secondAmount }) =>
-              firstAmount > secondAmount ? -1 : 1
+              firstAmount > secondAmount ? -1 : 1,
             )
             .map((transaction) => (
               <li key={transaction.id}>

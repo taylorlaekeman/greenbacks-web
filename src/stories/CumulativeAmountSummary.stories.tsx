@@ -77,7 +77,7 @@ const meta: Meta<Args> = {
 function StoryWrapper(props: Args): React.ReactElement {
   const { expandedTag: initialExpandedTag } = props;
   const [expandedTag, setExpandedTag] = useState<string | undefined>(
-    initialExpandedTag
+    initialExpandedTag,
   );
   const [visibleTagCount, setVisibleTagCount] = useState<number>(5);
   const { endDate, month, startDate } = props;

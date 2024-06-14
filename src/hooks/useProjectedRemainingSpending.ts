@@ -14,13 +14,11 @@ const useProjectedRemainingSpending = ({
     endIso: lastDayOfAveragingPeriod,
     startIso: firstDayOfAveragingPeriod,
   } = useAveragingPeriod();
-  const {
-    isLoading,
-    spending: averagingPeriodSpending,
-  } = useTransactionsByCategory({
-    endDate: lastDayOfAveragingPeriod,
-    startDate: firstDayOfAveragingPeriod,
-  });
+  const { isLoading, spending: averagingPeriodSpending } =
+    useTransactionsByCategory({
+      endDate: lastDayOfAveragingPeriod,
+      startDate: firstDayOfAveragingPeriod,
+    });
   if (isLoading) return { isLoading };
   const projectedRemainingSpendingByDay = getProjectedRemainingSpendingByDay({
     averagingCount,

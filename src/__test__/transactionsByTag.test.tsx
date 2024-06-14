@@ -14,10 +14,10 @@ test('shows loading indicator while transactions are loading', () => {
   render(
     <TestGreenbacksProvider mocks={mocks} now="2020-07-01" route="/widgets">
       <Greenbacks />
-    </TestGreenbacksProvider>
+    </TestGreenbacksProvider>,
   );
   const loadingIndicator = screen.getByTestId(
-    'loading-indicator-monthly-spending-by-tag'
+    'loading-indicator-monthly-spending-by-tag',
   );
   expect(loadingIndicator).toBeInTheDocument();
 });
@@ -105,10 +105,10 @@ test('groups transactions by tag', async () => {
   render(
     <TestGreenbacksProvider mocks={apiMocks} now="2020-01-01" route="/widgets">
       <Greenbacks />
-    </TestGreenbacksProvider>
+    </TestGreenbacksProvider>,
   );
   const { findAllByRole } = within(
-    await screen.findByTestId('section-monthly-spending-by-tag')
+    await screen.findByTestId('section-monthly-spending-by-tag'),
   );
   const items = await findAllByRole('listitem');
   expect(items[0]).toHaveTextContent(/second tag: \$3.00/);
@@ -166,10 +166,10 @@ test('groups untagged transactions', async () => {
   render(
     <TestGreenbacksProvider mocks={apiMocks} now="2020-01-01" route="/widgets">
       <Greenbacks />
-    </TestGreenbacksProvider>
+    </TestGreenbacksProvider>,
   );
   const { getByText } = within(
-    await screen.findByTestId('section-monthly-spending-by-tag')
+    await screen.findByTestId('section-monthly-spending-by-tag'),
   );
   expect(getByText(/Untagged: \$2.00/)).toBeVisible();
   const graph = await screen.findByTestId('monthly-spending-by-tag-graph');
@@ -207,10 +207,10 @@ test('shows current month when no month is present in route', async () => {
   render(
     <TestGreenbacksProvider mocks={apiMocks} now="2020-01-01" route="/widgets">
       <Greenbacks />
-    </TestGreenbacksProvider>
+    </TestGreenbacksProvider>,
   );
   const container = await screen.findByTestId(
-    'section-monthly-spending-by-tag'
+    'section-monthly-spending-by-tag',
   );
   expect(within(container).getByText(/test tag/)).toBeVisible();
 });

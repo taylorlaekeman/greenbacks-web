@@ -28,7 +28,7 @@ const useSpendingByDayOfMonth = ({
       const spendingSoFar = result[day] || 0;
       return { ...result, [day]: spendingSoFar + amount };
     },
-    {}
+    {},
   );
   return {
     isLoading,

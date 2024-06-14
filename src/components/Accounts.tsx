@@ -16,10 +16,8 @@ const Accounts: FC = () => {
     saveAccount,
   } = useAccounts();
   const { update } = useUpdateAccountConnection();
-  const [
-    isAccountConnectorVisible,
-    setIsAccountConnectorVisible,
-  ] = useState<boolean>(false);
+  const [isAccountConnectorVisible, setIsAccountConnectorVisible] =
+    useState<boolean>(false);
 
   if (isLoadingAccounts)
     return (
@@ -41,7 +39,7 @@ const Accounts: FC = () => {
                 </Button>
               )}
             </li>
-          )
+          ),
         )}
       </ul>
       <Button

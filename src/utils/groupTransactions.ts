@@ -27,18 +27,18 @@ export function groupTransactions({
         [key]: [...existingTransactions, transaction],
       };
     },
-    {}
+    {},
   );
   const groups = Object.entries(groupedTransactions).map(
     ([key, keyTransactions]) => ({
       key,
       transactions: keyTransactions,
-    })
+    }),
   );
   const groupsWithTotals = groups.map((group) => {
     const total = group.transactions.reduce(
       (sum, transaction) => sum + transaction.amount,
-      0
+      0,
     );
     return { ...group, total };
   });
@@ -105,7 +105,7 @@ function getKey(transaction: Transaction, groupBy: GroupBy): string {
 
 function getGroupSortKey(
   group: Group,
-  sortGroupsBy: SortGroupsBy
+  sortGroupsBy: SortGroupsBy,
 ): string | number {
   switch (sortGroupsBy) {
     case SortGroupsBy.Total:
@@ -118,7 +118,7 @@ function getGroupSortKey(
 
 function getTransactionSortKey(
   transaction: Transaction,
-  sortTransactionsBy: SortTransactionsBy
+  sortTransactionsBy: SortTransactionsBy,
 ): string | number {
   switch (sortTransactionsBy) {
     case SortTransactionsBy.Amount:

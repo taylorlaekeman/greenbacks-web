@@ -171,10 +171,10 @@ test('shows totals by month', async () => {
       now="2021-01-01"
     >
       <Greenbacks />
-    </TestGreenbacksProvider>
+    </TestGreenbacksProvider>,
   );
   await waitForElementToBeRemoved(() =>
-    screen.queryByTestId('loading-indicator-monthly-spending-by-tag-graph')
+    screen.queryByTestId('loading-indicator-monthly-spending-by-tag-graph'),
   );
   const graph = await screen.findByTestId('monthly-spending-by-tag-graph');
   screen.debug(graph);
@@ -364,10 +364,10 @@ test('only shows selected tags', async () => {
       now="2021-01-01"
     >
       <Greenbacks />
-    </TestGreenbacksProvider>
+    </TestGreenbacksProvider>,
   );
   await waitForElementToBeRemoved(() =>
-    screen.queryByTestId('loading-indicator-monthly-spending-graph')
+    screen.queryByTestId('loading-indicator-monthly-spending-graph'),
   );
   userEvent.click(await screen.findByRole('checkbox', { name: 'spending-2' }));
   const graph = await screen.findByTestId('monthly-spending-by-tag-graph');
@@ -403,12 +403,12 @@ test('shows loading indicator while transactions are loading', async () => {
   render(
     <TestGreenbacksProvider route="/widgets/spending">
       <Greenbacks />
-    </TestGreenbacksProvider>
+    </TestGreenbacksProvider>,
   );
   expect(
-    screen.getByTestId('loading-indicator-monthly-spending-graph')
+    screen.getByTestId('loading-indicator-monthly-spending-graph'),
   ).toBeVisible();
   expect(
-    screen.queryByTestId('monthly-spending-graph')
+    screen.queryByTestId('monthly-spending-graph'),
   ).not.toBeInTheDocument();
 });

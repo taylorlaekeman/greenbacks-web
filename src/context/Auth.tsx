@@ -45,7 +45,7 @@ export const TestAuthProvider: FC<TestProps> = ({
   isAuthenticated: isInitiallyAuthenticated = true,
 }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(
-    isInitiallyAuthenticated
+    isInitiallyAuthenticated,
   );
   return (
     <AuthContext.Provider

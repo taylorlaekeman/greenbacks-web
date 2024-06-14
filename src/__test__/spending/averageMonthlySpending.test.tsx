@@ -18,10 +18,10 @@ test('shows loading indicator while transactions are loading', () => {
       now="2021-01-01"
     >
       <Greenbacks />
-    </TestGreenbacksProvider>
+    </TestGreenbacksProvider>,
   );
   const loadingIndicator = screen.getByTestId(
-    'loading-indicator-average-monthly-spending'
+    'loading-indicator-average-monthly-spending',
   );
   expect(loadingIndicator).toBeInTheDocument();
 });
@@ -35,10 +35,10 @@ test('shows zero without any expenses', async () => {
       now="2021-01-01"
     >
       <Greenbacks />
-    </TestGreenbacksProvider>
+    </TestGreenbacksProvider>,
   );
   expect(
-    await screen.findByText('You spend $0.00 per month on average')
+    await screen.findByText('You spend $0.00 per month on average'),
   ).toBeVisible();
 });
 
@@ -84,12 +84,12 @@ test('correctly averages transactions', async () => {
       now="2021-01-01"
     >
       <Greenbacks />
-    </TestGreenbacksProvider>
+    </TestGreenbacksProvider>,
   );
   expect(
     await screen.findByText(
-      'You spend $1.50 per month on average (50% of earning)'
-    )
+      'You spend $1.50 per month on average (50% of earning)',
+    ),
   ).toBeVisible();
 });
 
@@ -110,10 +110,10 @@ test('handles months without expenses', async () => {
       now="2021-01-01"
     >
       <Greenbacks />
-    </TestGreenbacksProvider>
+    </TestGreenbacksProvider>,
   );
   expect(
-    await screen.findByText('You spend $1.00 per month on average')
+    await screen.findByText('You spend $1.00 per month on average'),
   ).toBeVisible();
 });
 
@@ -164,10 +164,10 @@ test('excludes savings', async () => {
       now="2021-01-01"
     >
       <Greenbacks />
-    </TestGreenbacksProvider>
+    </TestGreenbacksProvider>,
   );
   expect(
-    await screen.findByText('You spend $1.00 per month on average')
+    await screen.findByText('You spend $1.00 per month on average'),
   ).toBeVisible();
 });
 
@@ -207,9 +207,9 @@ test('does not show spending rate when average earnings are 0', async () => {
       now="2021-01-01"
     >
       <Greenbacks />
-    </TestGreenbacksProvider>
+    </TestGreenbacksProvider>,
   );
   expect(
-    await screen.findByText('You spend $1.00 per month on average')
+    await screen.findByText('You spend $1.00 per month on average'),
   ).toBeVisible();
 });

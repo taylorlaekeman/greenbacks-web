@@ -12,10 +12,8 @@ import useTransactionsByTag from 'hooks/useTransactionsByTag';
 
 const Spending: FC = () => {
   const { count, endIso: endDate, startIso: startDate } = useAveragingPeriod();
-  const {
-    isLoading: isLoadingTransactionsByTag,
-    spending: spendingByTag,
-  } = useTransactionsByTag({ endDate, startDate });
+  const { isLoading: isLoadingTransactionsByTag, spending: spendingByTag } =
+    useTransactionsByTag({ endDate, startDate });
   const { isLoading, spending: spendingTags } = useTagsByCategory();
   const [selectedTags, setSelectedTags] = useState<string[] | undefined>();
   useEffect(() => {

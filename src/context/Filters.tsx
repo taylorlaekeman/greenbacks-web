@@ -22,10 +22,8 @@ export const FiltersContext = createContext<{
 }>({ addFilter: noop, isAdding: false, isLoading: false });
 
 export const LocalStorageFiltersProvider: FC = ({ children }) => {
-  const {
-    idFilters: initialIdFilters = [],
-    filters: initialFilters = [],
-  } = getFiltersFromStorage();
+  const { idFilters: initialIdFilters = [], filters: initialFilters = [] } =
+    getFiltersFromStorage();
   const { addFilter, filters } = useFilters({
     initialIdFilters,
     initialFilters,
@@ -35,7 +33,7 @@ export const LocalStorageFiltersProvider: FC = ({ children }) => {
       'filters',
       JSON.stringify({
         filters,
-      })
+      }),
     );
   }, [filters]);
   return (
@@ -107,7 +105,7 @@ const useFilters = ({
     {
       idFilters: initialIdFilters,
       filters: initialFilters,
-    }
+    },
   );
   const addFilter = useCallback(
     ({ filter }) => {
@@ -116,12 +114,12 @@ const useFilters = ({
         type: ActionType.AddFilter,
       });
     },
-    [dispatch]
+    [dispatch],
   );
-  const allFilters = useMemo(() => [...idFilters, ...filters], [
-    idFilters,
-    filters,
-  ]);
+  const allFilters = useMemo(
+    () => [...idFilters, ...filters],
+    [idFilters, filters],
+  );
   return {
     addFilter,
     filters: allFilters,

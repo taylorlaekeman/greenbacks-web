@@ -20,10 +20,9 @@ const MonthlyOverview: FC = () => {
     endDate,
     startDate,
   });
-  const {
-    isLoading: isLoadingTotalSpending,
-    totalSpending,
-  } = useTotalSpending({ endDate, startDate });
+  const { isLoading: isLoadingTotalSpending, totalSpending } = useTotalSpending(
+    { endDate, startDate },
+  );
   const isLoading =
     isLoadingTotalEarning || isLoadingTotalSaving || isLoadingTotalSpending;
 

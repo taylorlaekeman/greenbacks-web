@@ -26,13 +26,11 @@ const MonthlySpendingByTag: FC = () => {
     endIso: endOfAveragingPeriod,
     startIso: startOfAveragingPeriod,
   } = useAveragingPeriod();
-  const {
-    spending: averageSpending,
-    isLoading: isLoadingAverages,
-  } = useTransactionsByTag({
-    endDate: endOfAveragingPeriod,
-    startDate: startOfAveragingPeriod,
-  });
+  const { spending: averageSpending, isLoading: isLoadingAverages } =
+    useTransactionsByTag({
+      endDate: endOfAveragingPeriod,
+      startDate: startOfAveragingPeriod,
+    });
   const { isLoading, spending } = useTransactionsByTag({
     endDate: endOfMonth,
     startDate: startOfMonth,
@@ -64,7 +62,7 @@ const MonthlySpendingByTag: FC = () => {
       ...result,
       [tag]: COLOURS[index % COLOURS.length],
     }),
-    {}
+    {},
   );
   const lastTag = orderedTags
     .slice()
@@ -179,7 +177,7 @@ const formatSpendingBarData = ({
 }) => {
   const spendingGroup = spending?.reduce(
     (group, { tag, totalAmount }) => ({ ...group, [tag]: totalAmount }),
-    { label: 'current' }
+    { label: 'current' },
   );
   if (!isAverageVisible) return [spendingGroup];
   const averageSpendingGroup = averageSpending?.reduce(
@@ -187,7 +185,7 @@ const formatSpendingBarData = ({
       ...group,
       [tag]: totalAmount / averagingCount,
     }),
-    { label: 'average' }
+    { label: 'average' },
   );
   return [spendingGroup, averageSpendingGroup];
 };

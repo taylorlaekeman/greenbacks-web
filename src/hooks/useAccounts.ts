@@ -14,13 +14,11 @@ const useAccounts: UseAccounts = () => {
     `,
     {
       fetchPolicy: 'network-only',
-    }
+    },
   );
   const initializationToken = initializationTokenData?.getInitializationToken;
-  const {
-    data: accountsResponse,
-    loading: isLoadingAccounts,
-  } = useQuery<AccountsResult>(ACCOUNTS_QUERY);
+  const { data: accountsResponse, loading: isLoadingAccounts } =
+    useQuery<AccountsResult>(ACCOUNTS_QUERY);
   const accounts = accountsResponse?.accounts || [];
   const { mutate: saveAccount } = useMutation<SaveAccountVariables>({
     mutation: SAVE_ACCOUNT_MUTATION,

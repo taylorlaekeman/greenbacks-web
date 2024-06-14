@@ -30,7 +30,7 @@ export function MonthlyAmountsGraph({
   if (Object.keys(monthlyAmountsBySeriesName).length === 0) return <></>;
   if (
     Object.values(monthlyAmountsBySeriesName).every(
-      (series) => series.length === 0
+      (series) => series.length === 0,
     )
   )
     return <></>;
@@ -46,7 +46,7 @@ export function MonthlyAmountsGraph({
       const monthlyAmounts = monthlyAmountsBySeriesName[name] ?? [];
       const sum = monthlyAmounts.reduce(
         (total, { amount }) => total + amount,
-        0
+        0,
       );
       const average = sum / monthCount;
       return {
@@ -54,11 +54,11 @@ export function MonthlyAmountsGraph({
         [name]: average,
       };
     },
-    {}
+    {},
   );
   const emptyAmounts = seriesNames.reduce(
     (result, name) => ({ ...result, [name]: 0 }),
-    {}
+    {},
   );
   const amountsByMonth: Record<string, Record<string, number>> = {};
   for (
@@ -79,7 +79,7 @@ export function MonthlyAmountsGraph({
     ([serializedMonth, amountsBySeriesName]) => ({
       ...amountsBySeriesName,
       month: serializedMonth,
-    })
+    }),
   );
   return (
     <ResponsiveContainer
@@ -209,7 +209,7 @@ function getMonthRange({
     earliestMonth: startDateOrDefault,
     latestMonth: endDateOrDefault,
     monthCount: Math.round(
-      endDateOrDefault.diff(startDateOrDefault, 'months').months
+      endDateOrDefault.diff(startDateOrDefault, 'months').months,
     ),
   };
 }

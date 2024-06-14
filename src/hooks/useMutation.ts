@@ -5,9 +5,7 @@ const useMutation: IUseMutation = ({ mutation }) => {
   return { mutate };
 };
 
-export type IUseMutation = <TVariables>(
-  input: UseMutationInput
-) => {
+export type IUseMutation = <TVariables>(input: UseMutationInput) => {
   mutate: (mutateInput: { variables: TVariables }) => void;
 };
 

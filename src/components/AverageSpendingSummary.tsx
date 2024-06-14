@@ -9,10 +9,8 @@ import useSpendingRate from 'hooks/useSpendingRate';
 const AverageSpendingSummary: FC<{ hasLinkToSpendingPage?: boolean }> = ({
   hasLinkToSpendingPage = false,
 }) => {
-  const {
-    averageMonthlySpending,
-    isLoading: isLoadingAverageSpending,
-  } = useAverageMonthlySpending();
+  const { averageMonthlySpending, isLoading: isLoadingAverageSpending } =
+    useAverageMonthlySpending();
   const { spendingRate, isLoading: isLoadingSpendingRate } = useSpendingRate();
   const { format } = useCurrencyFormatter();
 

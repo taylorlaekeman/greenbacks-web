@@ -251,7 +251,7 @@ function generateTransactionsForMonth({
   ];
   const creditCardTotal = randomizedSpending.reduce(
     (sum, transaction) => sum + transaction.amount,
-    0
+    0,
   );
   return [
     ...randomizedSpending,

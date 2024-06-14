@@ -9,7 +9,7 @@ test('logs in and shows home page', () => {
   render(
     <TestGreenbacksProvider isAuthenticated={false}>
       <Greenbacks />
-    </TestGreenbacksProvider>
+    </TestGreenbacksProvider>,
   );
   const button = screen.getByRole('button', { name: 'Login' });
   userEvent.click(button);

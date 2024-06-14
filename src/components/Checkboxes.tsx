@@ -24,9 +24,11 @@ const Checkboxes: FC<{
   <fieldset>
     {label && <legend>{label}</legend>}
     {options.map((option) => {
-      const { colour, label: optionLabel, value: optionValue } = getOption(
-        option
-      );
+      const {
+        colour,
+        label: optionLabel,
+        value: optionValue,
+      } = getOption(option);
       const isChecked = selectedOptions.includes(optionValue);
       return (
         <div key={optionValue}>
@@ -40,7 +42,7 @@ const Checkboxes: FC<{
                 getNewSelectedOptions({
                   changedOption: optionValue,
                   selectedOptions,
-                })
+                }),
               );
             }}
             value={optionValue}
@@ -55,7 +57,7 @@ const Checkboxes: FC<{
           options.map((option) => {
             if (typeof option === 'string') return option;
             return option.value;
-          })
+          }),
         );
       }}
     >

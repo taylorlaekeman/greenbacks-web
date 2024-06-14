@@ -77,7 +77,7 @@ export function AverageAmountSummary({
   const visibleTransactionGroups =
     transactionsByTagAndMonth?.slice(0, visibleTagCount) ?? [];
   const remainingTagsGroup = combineRemainingTags(
-    transactionsByTagAndMonth?.slice(visibleTagCount, allTags.length) ?? []
+    transactionsByTagAndMonth?.slice(visibleTagCount, allTags.length) ?? [],
   );
   if (isLoading)
     return (
@@ -140,7 +140,7 @@ export function AverageAmountSummary({
                 tag={tag}
                 transactionsByMonth={transactionGroups}
               />
-            )
+            ),
           )}
         {remainingTagsGroup.average > 0 && (
           <ExpandableTagAmount
@@ -188,14 +188,14 @@ function combineRemainingTags(
     average: number;
     tag: string;
     transactionsByMonth: Group[];
-  }>
+  }>,
 ): { average: number; tag: string; transactionsByMonth: Group[] } {
   const totalAmount = remainingGroups.reduce(
     (sum, group) => sum + group.average,
-    0
+    0,
   );
   const allTransactions = remainingGroups.flatMap((group) =>
-    group.transactionsByMonth.flatMap((monthGroup) => monthGroup.transactions)
+    group.transactionsByMonth.flatMap((monthGroup) => monthGroup.transactions),
   );
   const regroupedTransactions = groupTransactions({
     groupBy: GroupBy.Month,
@@ -302,7 +302,7 @@ function TagVisibilityController({
 }): React.ReactElement {
   const actualVisibleTagCount = Math.max(
     Math.min(visibleTagCount, totalTagCount),
-    1
+    1,
   );
   const canIncreaseVisibleTagCount = totalTagCount > actualVisibleTagCount;
   const canDecreaseVisibleTagCount = actualVisibleTagCount > 1;

@@ -7,6 +7,7 @@ import { ReactComponent as FilterIcon } from 'assets/icons/filter.svg';
 import { ReactComponent as MinusIcon } from 'assets/icons/minus.svg';
 import { ReactComponent as PlusIcon } from 'assets/icons/plus.svg';
 import { ReactComponent as TagIcon } from 'assets/icons/tag.svg';
+import { ReactComponent as XIcon } from 'assets/icons/x.svg';
 import styled from 'utils/styled';
 
 export const Icon: FC<{ icon: IconType }> = ({ icon }) => (
@@ -23,6 +24,7 @@ export enum IconType {
   Minus = 'minus',
   Plus = 'plus',
   Tag = 'tag',
+  X = 'x',
 }
 
 const Wrapper = styled.div`
@@ -45,15 +47,17 @@ function InnerIcon({ icon }: { icon: IconType }): React.ReactElement {
       return <ChevronRightIcon />;
     case IconType.Cog:
       return <CogIcon />;
+    case IconType.Filter:
+      return <FilterIcon />;
     case IconType.Minus:
       return <MinusIcon />;
     case IconType.Plus:
       return <PlusIcon />;
     case IconType.Tag:
       return <TagIcon />;
-    case IconType.Filter:
+    case IconType.X:
     default:
-      return <FilterIcon />;
+      return <XIcon />;
   }
 }
 

@@ -7,9 +7,8 @@ const useInitializationToken = (): {
   isLoading: boolean;
   token?: string;
 } => {
-  const [fetchInitializationToken, { data, loading: isLoading }] = useLazyQuery(
-    QUERY
-  );
+  const [fetchInitializationToken, { data, loading: isLoading }] =
+    useLazyQuery(QUERY);
   const { getInitializationToken: token } = data || {};
   return { fetchInitializationToken, isLoading, token };
 };

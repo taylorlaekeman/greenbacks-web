@@ -23,16 +23,12 @@ const useSpendingTimeline = ({
   const isCurrentMonth =
     endDate === now.endOf('month').toISODate() &&
     startDate === now.startOf('month').toISODate();
-  const {
-    actualSpending,
-    averageSpending,
-    isLoading,
-    rawActualTransactions,
-  } = useDailySpending({
-    endDate,
-    monthsToAverage,
-    startDate,
-  });
+  const { actualSpending, averageSpending, isLoading, rawActualTransactions } =
+    useDailySpending({
+      endDate,
+      monthsToAverage,
+      startDate,
+    });
   if (isLoading) return { isLoading: true };
   const timeline = buildTimeline({
     actualSpending,
@@ -57,7 +53,7 @@ export interface DailyTotal {
 }
 
 const getDateRange = (
-  datetime: string
+  datetime: string,
 ): { days: number; endDate: string; startDate: string } => {
   const endDate = DateTime.fromISO(datetime).endOf('month');
   return {
@@ -94,18 +90,16 @@ const useDailySpending = ({
     endDate,
     startDate,
   });
-  const {
-    isLoading: isLoadingAverageSpending,
-    spending: averageTotals,
-  } = useSpendingByDayOfMonth({
-    endDate: endOfAveragingPeriod,
-    startDate: startOfAveragingPeriod,
-  });
+  const { isLoading: isLoadingAverageSpending, spending: averageTotals } =
+    useSpendingByDayOfMonth({
+      endDate: endOfAveragingPeriod,
+      startDate: startOfAveragingPeriod,
+    });
   if (isLoadingActualSpending || isLoadingAverageSpending)
     return { isLoading: true };
   const averageSpending = Object.entries(averageTotals || {}).reduce(
     (result, [day, amount]) => ({ ...result, [day]: amount / count }),
-    {}
+    {},
   );
   return {
     actualSpending,
@@ -145,7 +139,7 @@ const buildTimeline = ({
         day: i + 1,
         isCurrentMonth,
         projectedTotal,
-      })
+      }),
     );
   }
   return timeline;

@@ -53,20 +53,20 @@ test('shows earnings', async () => {
       route="/widgets/months/2020-01/"
     >
       <Greenbacks />
-    </TestGreenbacksProvider>
+    </TestGreenbacksProvider>,
   );
   const { getByText, queryByTestId, queryByText } = within(
-    await screen.findByTestId('section-monthly-earnings')
+    await screen.findByTestId('section-monthly-earnings'),
   );
   await waitForElementToBeRemoved(() =>
-    queryByTestId('loading-indicator-monthly-earnings')
+    queryByTestId('loading-indicator-monthly-earnings'),
   );
   expect(getByText('2020-01-01')).toBeVisible();
   expect(getByText(/\$1.00—first merchant \(first name\)/)).toBeVisible();
   expect(getByText('2020-01-15')).toBeVisible();
   expect(getByText(/\$2.00—second merchant \(second name\)/)).toBeVisible();
   expect(
-    queryByText(/\$2.00—third merchant \(hidden\)/)
+    queryByText(/\$2.00—third merchant \(hidden\)/),
   ).not.toBeInTheDocument();
 });
 
@@ -74,10 +74,10 @@ test('shows loading indicator while transactions are loading', () => {
   render(
     <TestGreenbacksProvider route="/widgets">
       <Greenbacks />
-    </TestGreenbacksProvider>
+    </TestGreenbacksProvider>,
   );
   const loadingIndicator = screen.getByTestId(
-    'loading-indicator-monthly-earnings'
+    'loading-indicator-monthly-earnings',
   );
   expect(loadingIndicator).toBeInTheDocument();
 });

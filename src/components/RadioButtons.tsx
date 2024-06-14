@@ -1,10 +1,13 @@
 import React, { FC } from 'react';
 
+import { basicFontStyles } from 'components/Text';
 import noop from 'utils/noop';
 import styled from 'utils/styled';
 
 const RadioButtons: FC<{
   hasSharpUpperCorners?: boolean;
+  hasTopBorder?: boolean;
+  hasVisibleButtons?: boolean;
   label?: string;
   name?: string;
   onChange?: (input: string) => void;
@@ -12,18 +15,23 @@ const RadioButtons: FC<{
   value?: string;
 }> = ({
   hasSharpUpperCorners = false,
+  hasTopBorder = true,
+  hasVisibleButtons = true,
   label,
   name = 'radio-button',
   onChange = noop,
   options = [],
   value,
 }) => (
-  <FieldSet $hasSharpUpperCorners={hasSharpUpperCorners}>
+  <FieldSet
+    $hasSharpUpperCorners={hasSharpUpperCorners}
+    $hasTopBorder={hasTopBorder}
+  >
     {label && <legend>{label}</legend>}
     {options.map((option) => {
       const { label: optionLabel, value: optionValue } = getOption(option);
       return (
-        <InputOption key={optionValue}>
+        <InputOption key={optionValue} hasVisibleButtons={hasVisibleButtons}>
           <input
             checked={optionValue === value}
             id={optionValue}
@@ -51,41 +59,49 @@ const getOption = (option: Option | string): Option => {
   return option;
 };
 
-const FieldSet = styled.fieldset<{ $hasSharpUpperCorners?: boolean }>`
-  border: none;
+const FieldSet = styled.fieldset<{
+  $hasSharpUpperCorners?: boolean;
+  $hasTopBorder?: boolean;
+}>`
+  border: solid lightgrey 1px;
+  border-radius: 4px;
+  margin: 0;
   padding: 0;
 
-  div:last-child {
-    border-bottom: solid black 1px;
-    border-bottom-left-radius: 8px;
-    border-bottom-right-radius: 8px;
+  & > div:last-child {
+    border-bottom: none;
   }
 
-  ${({ $hasSharpUpperCorners }) => {
-    if ($hasSharpUpperCorners) return '';
-    return `
-      div:first-of-type {
-        border-top-left-radius: 8px;
-        border-top-right-radius: 8px;
-      }
-    `;
-  }}
+  ${({ $hasSharpUpperCorners = false }) =>
+    $hasSharpUpperCorners &&
+    `
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+    `}
+
+  ${({ $hasTopBorder = true }) => !$hasTopBorder && `border-top: none;`}
 `;
 
-const InputOption = styled.div`
+const InputOption = styled.div<{ hasVisibleButtons?: boolean }>`
   align-items: center;
-  border: solid black 1px;
-  border-bottom: none;
+  border-bottom: solid lightgrey 1px;
   display: grid;
   grid-template-columns: max-content 1fr;
+  padding: 8px 16px;
+
+  ${basicFontStyles}
 
   input {
-    margin: 8px;
-  }
-
-  label {
-    padding: 8px;
-    padding-left: 0;
+    margin: 0;
+    ${({ hasVisibleButtons = true }) =>
+      hasVisibleButtons && `margin-right: 8px;`}
+    ${({ hasVisibleButtons = true }) =>
+      !hasVisibleButtons &&
+      `
+        margin-left: -4px;
+        opacity: 0;
+        width: 0;
+    `}
   }
 `;
 

@@ -9,7 +9,7 @@ test('logs out', () => {
   render(
     <TestGreenbacksProvider isAuthenticated>
       <Greenbacks />
-    </TestGreenbacksProvider>
+    </TestGreenbacksProvider>,
   );
   const logoutButton = screen.getByRole('button', { name: 'Logout' });
   userEvent.click(logoutButton);

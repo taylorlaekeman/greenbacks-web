@@ -73,7 +73,7 @@ export function CumulativeAmountSummary({
   const remainingTagAmounts = groupedTransactions.slice(tagCutoffIndex);
   const remainingSpendingAmount = remainingTagAmounts.reduce(
     (totalSoFar, group) => totalSoFar + group.total,
-    0
+    0,
   );
   const remainingTransactions = remainingTagAmounts
     .flatMap((group) => group.transactions)
@@ -82,7 +82,7 @@ export function CumulativeAmountSummary({
     groupedTransactions.length > visibleTagCount;
   const actualVisibleTagCount = Math.min(
     visibleTagCount,
-    groupedTransactions.length
+    groupedTransactions.length,
   );
   const canDecreaseVisibleTagCount = actualVisibleTagCount > 1;
   if (isLoading)
@@ -162,7 +162,7 @@ export function CumulativeAmountSummary({
                   transactions={visibleTransactions}
                 />
               );
-            }
+            },
           )}
           {remainingSpendingAmount > 0 && (
             <TagAmount
@@ -200,7 +200,7 @@ export function CumulativeAmountSummary({
                     onClick={() => {
                       const currentTagCount = Math.min(
                         visibleTagCount,
-                        visibleTagAmounts.length
+                        visibleTagAmounts.length,
                       );
                       const newTagCount = Math.max(currentTagCount - 1, 1);
                       onChangeVisibleTagCount(newTagCount);
@@ -226,7 +226,7 @@ function getTotalSpending({
 }): number {
   return transactions.reduce(
     (total, transaction) => total + transaction.amount,
-    0
+    0,
   );
 }
 
@@ -315,7 +315,7 @@ function getSpendingPeriodText({
     return `Since ${startDate.toLocaleString(datetime.DATE_FULL)} you've spent`;
   if (startDate && endDate)
     return `Between ${startDate.toLocaleString(
-      datetime.DATE_MED
+      datetime.DATE_MED,
     )} and ${endDate.toLocaleString(datetime.DATE_MED)} you spent`;
   return undefined;
 }
@@ -347,7 +347,7 @@ export function CumulativeAmountSummaryContainer(): React.ReactElement {
   const [visibleTagCount, setVisibleTagCount] = useState<number>(5);
 
   const comparisonSpendingByDate = Object.entries(
-    previousYearSpendingByDayOfMonth ?? {}
+    previousYearSpendingByDayOfMonth ?? {},
   ).reduce((result, [day, spending]) => {
     const date = visibleMonth.set({ day: parseInt(day, 10) }).toISODate();
     return { ...result, [date]: spending / 12 };

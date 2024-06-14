@@ -16,7 +16,7 @@ const SectionContainer: FC<{
   title,
 }) => {
   const [isCollapsed, setIsCollapsed] = useState<boolean>(
-    isCollapsible && isCollapsedByDefault
+    isCollapsible && isCollapsedByDefault,
   );
   return (
     <section data-testid={`section-${id}`}>

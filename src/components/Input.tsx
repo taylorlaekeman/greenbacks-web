@@ -1,5 +1,6 @@
 import React, { FC } from 'react';
 
+import { basicFontStyles } from 'components/Text';
 import noop from 'utils/noop';
 import styled from 'utils/styled';
 
@@ -7,23 +8,32 @@ const Input: FC<{
   hasSharpLowerCorners?: boolean;
   id: string;
   onChange?: (input: string) => void;
+  placeholder?: string;
   value?: string;
-}> = ({ hasSharpLowerCorners = false, id, onChange = noop, value = '' }) => (
+}> = ({
+  hasSharpLowerCorners = false,
+  id,
+  onChange = noop,
+  placeholder,
+  value = '',
+}) => (
   <StyledInput
     $hasSharpLowerCorners={hasSharpLowerCorners}
     id={id}
     onChange={(event) => {
       onChange(event.target.value);
     }}
+    placeholder={placeholder}
     value={value}
   />
 );
 
 const StyledInput = styled.input<{ $hasSharpLowerCorners?: boolean }>`
-  border: solid black 1px;
-  border-radius: 8px;
+  border: solid lightgrey 1px;
+  border-radius: 4px;
+  box-sizing: border-box;
   outline: none;
-  padding: 8px;
+  padding: 8px 16px;
   width: 100%;
 
   ${({ $hasSharpLowerCorners }) => {
@@ -33,6 +43,8 @@ const StyledInput = styled.input<{ $hasSharpLowerCorners?: boolean }>`
       border-bottom-right-radius: 0;
     `;
   }}
+
+  ${basicFontStyles}
 `;
 
 export default Input;

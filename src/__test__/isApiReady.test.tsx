@@ -8,7 +8,7 @@ test('shows loading indicator when api is not ready', () => {
   render(
     <TestGreenbacksProvider isApiReady={false}>
       <Greenbacks />
-    </TestGreenbacksProvider>
+    </TestGreenbacksProvider>,
   );
   expect(screen.getByTestId('loading-indicator')).toBeInTheDocument();
 });

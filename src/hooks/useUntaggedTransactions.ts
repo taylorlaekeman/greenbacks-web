@@ -33,7 +33,7 @@ const groupUntaggedTransactions = ({
     tagGroups.find(({ tag }: TagGroup) => tag === UNTAGGED) || {};
   const sortedTransactions = transactions?.sort(
     ({ amount: firstAmount }, { amount: secondAmount }) =>
-      firstAmount > secondAmount ? -1 : 1
+      firstAmount > secondAmount ? -1 : 1,
   );
   return sortedTransactions;
 };

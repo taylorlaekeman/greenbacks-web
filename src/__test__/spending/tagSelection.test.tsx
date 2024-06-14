@@ -25,15 +25,15 @@ test('tags are selected by default', async () => {
       now="2021-01-01"
     >
       <Greenbacks />
-    </TestGreenbacksProvider>
+    </TestGreenbacksProvider>,
   );
   await screen.findByRole('checkbox', { name: 'first-tag' });
   screen.debug();
   expect(
-    await screen.findByRole('checkbox', { name: 'first-tag' })
+    await screen.findByRole('checkbox', { name: 'first-tag' }),
   ).toHaveAttribute('data-checked', 'true');
   expect(
-    await screen.findByRole('checkbox', { name: 'second-tag' })
+    await screen.findByRole('checkbox', { name: 'second-tag' }),
   ).toHaveAttribute('data-checked', 'true');
 });
 
@@ -52,7 +52,7 @@ test('clicking checkbox for selected tag deselects and reselects it', async () =
       now="2021-01-01"
     >
       <Greenbacks />
-    </TestGreenbacksProvider>
+    </TestGreenbacksProvider>,
   );
   const checkbox = await screen.findByRole('checkbox', { name: 'test-tag' });
   userEvent.click(checkbox);
@@ -79,14 +79,14 @@ test('clicking deselect all deselects all', async () => {
       now="2021-01-01"
     >
       <Greenbacks />
-    </TestGreenbacksProvider>
+    </TestGreenbacksProvider>,
   );
   userEvent.click(await screen.findByRole('button', { name: 'Deselect all' }));
   expect(
-    await screen.findByRole('checkbox', { name: 'first-tag' })
+    await screen.findByRole('checkbox', { name: 'first-tag' }),
   ).toHaveAttribute('data-checked', 'false');
   expect(
-    await screen.findByRole('checkbox', { name: 'second-tag' })
+    await screen.findByRole('checkbox', { name: 'second-tag' }),
   ).toHaveAttribute('data-checked', 'false');
 });
 
@@ -108,14 +108,14 @@ test('clicking select all selects all', async () => {
       now="2021-01-01"
     >
       <Greenbacks />
-    </TestGreenbacksProvider>
+    </TestGreenbacksProvider>,
   );
   userEvent.click(await screen.findByRole('button', { name: 'Deselect all' }));
   userEvent.click(await screen.findByRole('button', { name: 'Select all' }));
   expect(
-    await screen.findByRole('checkbox', { name: 'first-tag' })
+    await screen.findByRole('checkbox', { name: 'first-tag' }),
   ).toHaveAttribute('data-checked', 'true');
   expect(
-    await screen.findByRole('checkbox', { name: 'second-tag' })
+    await screen.findByRole('checkbox', { name: 'second-tag' }),
   ).toHaveAttribute('data-checked', 'true');
 });

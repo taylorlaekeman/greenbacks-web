@@ -41,7 +41,7 @@ const PreviousMonthSpending: FC = () => {
   });
 
   const averageSpendingByDate = Object.entries(
-    averageSpendingByDayOfMonth ?? {}
+    averageSpendingByDayOfMonth ?? {},
   ).reduce((result, [day, spending]) => {
     const date = month.set({ day: parseInt(day, 10) }).toISODate();
     return { ...result, [date]: spending };
@@ -157,7 +157,7 @@ export function PureSpendingTimeline({
   const serializedLatestActualDate = latestActualDateOrDefault.toISODate();
   const lastDay = timeline[timeline.length - 1];
   const lastActualDay = timeline.find(
-    (day) => day.date === serializedLatestActualDate
+    (day) => day.date === serializedLatestActualDate,
   );
   const hasComparisonData = Object.keys(comparisonSpendingByDate).length > 0;
   return (
@@ -304,7 +304,7 @@ function buildTimeline({
         [transaction.datetime]: currentTotal + transaction.amount,
       };
     },
-    {}
+    {},
   );
   const dailyTotals: DailyAmounts[] = [];
   for (let d = startDate; d <= endDate; d = d.plus({ days: 1 })) {
@@ -326,7 +326,7 @@ function buildTimeline({
     const currentComparison = currentRecord.comparison;
     const newComparison = getNewDailyTotal(
       previousComparison,
-      currentComparison
+      currentComparison,
     );
     const previousPredicted = i === 0 ? 0 : previousRecord.projected;
     const currentPredicted = currentComparison;
@@ -367,12 +367,10 @@ function findObservedDateRange({
   latestDate: DateTime;
   latestTransactionDate: DateTime;
 } {
-  const {
-    earliest: earliestTransactionDate,
-    latest: latestTransactionDate,
-  } = findRangeFromDateList({
-    dates: transactions.map((transaction) => transaction.datetime),
-  });
+  const { earliest: earliestTransactionDate, latest: latestTransactionDate } =
+    findRangeFromDateList({
+      dates: transactions.map((transaction) => transaction.datetime),
+    });
   const comparisonDates = Object.keys(comparisonSpendingByDate);
   if (comparisonDates.length === 0)
     return {
@@ -380,10 +378,8 @@ function findObservedDateRange({
       latestDate: latestTransactionDate,
       latestTransactionDate,
     };
-  const {
-    earliest: earliestComparisonDate,
-    latest: latestComparisonDate,
-  } = findRangeFromDateList({ dates: Object.keys(comparisonSpendingByDate) });
+  const { earliest: earliestComparisonDate, latest: latestComparisonDate } =
+    findRangeFromDateList({ dates: Object.keys(comparisonSpendingByDate) });
   const earliestDate =
     earliestTransactionDate < earliestComparisonDate
       ? earliestTransactionDate
@@ -399,11 +395,10 @@ function findObservedDateRange({
   };
 }
 
-function findRangeFromDateList({
-  dates,
-}: {
-  dates: string[];
-}): { earliest: DateTime; latest: DateTime } {
+function findRangeFromDateList({ dates }: { dates: string[] }): {
+  earliest: DateTime;
+  latest: DateTime;
+} {
   let earliest = dates[0];
   let latest = earliest;
   dates.forEach((date) => {
@@ -418,7 +413,7 @@ function findRangeFromDateList({
 
 function getNewDailyTotal(
   total: number | undefined,
-  current: number | undefined
+  current: number | undefined,
 ): number {
   return (total ?? 0) + (current ?? 0);
 }

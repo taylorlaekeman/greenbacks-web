@@ -36,7 +36,7 @@ const getTotalsByMonth = ({
   return transactions.reduce<Record<string, number>>(
     (
       totalsByMonth: Record<string, number>,
-      { amount, datetime: transactionDate }: Transaction
+      { amount, datetime: transactionDate }: Transaction,
     ) => {
       const { iso: month } = getMonth({
         datetime: datetime.fromISO(transactionDate),
@@ -44,7 +44,7 @@ const getTotalsByMonth = ({
       const currentAmount = totalsByMonth[month] || 0;
       return { ...totalsByMonth, [month]: currentAmount + amount };
     },
-    {}
+    {},
   );
 };
 
@@ -81,7 +81,7 @@ const combineMonthlyTotals = ({
     });
   return Object.values(totalsByMonth)
     .sort(({ month: firstMonth }, { month: secondMonth }) =>
-      firstMonth > secondMonth ? -1 : 1
+      firstMonth > secondMonth ? -1 : 1,
     )
     .map((monthlyTotal) => ({
       ...monthlyTotal,

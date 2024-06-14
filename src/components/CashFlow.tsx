@@ -23,18 +23,12 @@ const CashFlow: FC = () => {
   const { endDate, startDate } = useMonth();
   const [selectedAverage, setSelectedAverage] = useState<string>('12');
   const monthsToAverage = parseInt(selectedAverage, 10);
-  const {
-    averageMonthlyEarning,
-    isLoading: isLoadingAverageEarning,
-  } = useAverageMonthlyEarning({ months: monthsToAverage });
-  const {
-    averageMonthlySpending,
-    isLoading: isLoadingAverageSpending,
-  } = useAverageMonthlySpending({ months: monthsToAverage });
-  const {
-    averageMonthlySaving,
-    isLoading: isLoadingAverageSaving,
-  } = useAverageMonthlySaving({ months: monthsToAverage });
+  const { averageMonthlyEarning, isLoading: isLoadingAverageEarning } =
+    useAverageMonthlyEarning({ months: monthsToAverage });
+  const { averageMonthlySpending, isLoading: isLoadingAverageSpending } =
+    useAverageMonthlySpending({ months: monthsToAverage });
+  const { averageMonthlySaving, isLoading: isLoadingAverageSaving } =
+    useAverageMonthlySaving({ months: monthsToAverage });
   const {
     earning,
     isLoading: isLoadingMonthTransactions,
@@ -165,7 +159,7 @@ function getTotals({
 function getTotal(transactions: Transaction[] | undefined): number | undefined {
   return transactions?.reduce(
     (total, transaction) => total + transaction.amount,
-    0
+    0,
   );
 }
 

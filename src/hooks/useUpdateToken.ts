@@ -7,9 +7,8 @@ const useUpdateToken = (): {
   isLoading: boolean;
   updateToken?: string;
 } => {
-  const [fetchUpdateToken, { data, loading: isLoading }] = useLazyQuery(
-    UPDATE_TOKEN_QUERY
-  );
+  const [fetchUpdateToken, { data, loading: isLoading }] =
+    useLazyQuery(UPDATE_TOKEN_QUERY);
   const { updateToken } = data || {};
   return {
     fetchUpdateToken: ({ accountId }) => {

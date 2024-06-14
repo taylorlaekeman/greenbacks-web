@@ -11,7 +11,7 @@ test('returns undefined if transactions are undefined', () => {
   expect(
     groupTransactions({
       transactions: undefined,
-    })
+    }),
   ).toBe(undefined);
 });
 

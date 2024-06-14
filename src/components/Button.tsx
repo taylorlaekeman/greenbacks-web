@@ -78,7 +78,7 @@ const sharedStyles = css<StyleProps>`
   cursor: pointer;
   font-family: 'Lora', serif;
   font-size: 1rem;
-  ${({ $isFullWidth }) => $isFullWidth && 'width: 100%;'}
+  width: ${({ $isFullWidth }) => ($isFullWidth ? '100%' : 'max-content')};
 `;
 
 const primaryStyle = css<StyleProps>`

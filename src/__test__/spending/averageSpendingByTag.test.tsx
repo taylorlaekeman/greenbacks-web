@@ -53,10 +53,10 @@ test('correctly averages spending', async () => {
       now="2021-01-01"
     >
       <Greenbacks />
-    </TestGreenbacksProvider>
+    </TestGreenbacksProvider>,
   );
   const { findAllByRole } = within(
-    await screen.findByTestId('section-average-spending-by-tag')
+    await screen.findByTestId('section-average-spending-by-tag'),
   );
   const items = await findAllByRole('listitem');
   expect(items[0]).toHaveTextContent(/second tag: \$2.00/);
@@ -110,10 +110,10 @@ test('excludes savings', async () => {
       now="2021-01-01"
     >
       <Greenbacks />
-    </TestGreenbacksProvider>
+    </TestGreenbacksProvider>,
   );
   const { findAllByRole } = within(
-    await screen.findByTestId('section-average-spending-by-tag')
+    await screen.findByTestId('section-average-spending-by-tag'),
   );
   const items = await findAllByRole('listitem');
   expect(items[0]).toHaveTextContent(/second tag: \$1.00/);
@@ -165,10 +165,10 @@ test('excludes earnings', async () => {
       now="2021-01-01"
     >
       <Greenbacks />
-    </TestGreenbacksProvider>
+    </TestGreenbacksProvider>,
   );
   const { findAllByRole } = within(
-    await screen.findByTestId('section-average-spending-by-tag')
+    await screen.findByTestId('section-average-spending-by-tag'),
   );
   const items = await findAllByRole('listitem');
   expect(items[0]).toHaveTextContent(/second tag: \$1.00/);
@@ -220,10 +220,10 @@ test('excludes hidden transactions', async () => {
       now="2021-01-01"
     >
       <Greenbacks />
-    </TestGreenbacksProvider>
+    </TestGreenbacksProvider>,
   );
   const { findAllByRole } = within(
-    await screen.findByTestId('section-average-spending-by-tag')
+    await screen.findByTestId('section-average-spending-by-tag'),
   );
   const items = await findAllByRole('listitem');
   expect(items[0]).toHaveTextContent(/second tag: \$1.00/);
@@ -258,10 +258,10 @@ test('groups untagged transactions', async () => {
       now="2021-01-01"
     >
       <Greenbacks />
-    </TestGreenbacksProvider>
+    </TestGreenbacksProvider>,
   );
   const { findAllByRole } = within(
-    await screen.findByTestId('section-average-spending-by-tag')
+    await screen.findByTestId('section-average-spending-by-tag'),
   );
   const items = await findAllByRole('listitem');
   expect(items[0]).toHaveTextContent(/Untagged: \$2.00/);
@@ -274,12 +274,12 @@ test('shows loading indicator', async () => {
   render(
     <TestGreenbacksProvider route="/widgets/spending">
       <Greenbacks />
-    </TestGreenbacksProvider>
+    </TestGreenbacksProvider>,
   );
   expect(
-    screen.getByTestId('loading-indicator-average-spending-by-tag')
+    screen.getByTestId('loading-indicator-average-spending-by-tag'),
   ).toBeVisible();
   expect(
-    screen.queryByTestId('average-spending-by-tag-graph')
+    screen.queryByTestId('average-spending-by-tag-graph'),
   ).not.toBeInTheDocument();
 });

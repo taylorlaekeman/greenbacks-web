@@ -16,12 +16,12 @@ const QueryParameterMonthSelector: FC = () => {
   const previousMonthUrl = `${pathname}?${addQueryParam(
     search,
     'month',
-    previousMonth
+    previousMonth,
   )}`;
   const nextMonthUrl = `${pathname}?${addQueryParam(
     search,
     'month',
-    nextMonth
+    nextMonth,
   )}`;
   return (
     <Wrapper>
@@ -61,7 +61,7 @@ export function PureMonthSelector({
 function addQueryParam(
   currentParams: string,
   newKey: string,
-  newValue: string
+  newValue: string,
 ): string {
   const queryParams = new URLSearchParams(currentParams);
   queryParams.set(newKey, newValue);

@@ -23,13 +23,11 @@ const SpendingByTagAndMonthGraph: FC<{ selectedTags?: string[] }> = ({
   const { now } = useNow();
   const { lastDay } = getMonth({ datetime: now });
   const { startIso: startOfAveragingPeriod } = useAveragingPeriod();
-  const {
-    isLoading: isLoadingSpending,
-    spending,
-  } = useTransactionsByTagAndMonth({
-    endDate: lastDay,
-    startDate: startOfAveragingPeriod,
-  });
+  const { isLoading: isLoadingSpending, spending } =
+    useTransactionsByTagAndMonth({
+      endDate: lastDay,
+      startDate: startOfAveragingPeriod,
+    });
   const { isLoading: isLoadingTags, spending: tags } = useTagsByCategory();
 
   if (isLoadingSpending || isLoadingTags)
@@ -85,7 +83,7 @@ const formatData = ({
           ...result,
           [tag]: totalAmount,
         }),
-        {}
+        {},
       );
     return { month, ...amountsByTag };
   });
@@ -112,7 +110,7 @@ const getDataTags = ({
           ...result,
           [`data-${month}-${formatTagForDataTag(tag)}`]: totalAmount,
         }),
-        {}
+        {},
       );
     return {
       ...existingTags,

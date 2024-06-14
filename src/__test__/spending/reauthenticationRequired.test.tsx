@@ -21,15 +21,15 @@ test('shows reauthentication required error when transactions endpoint returns r
       now="2021-01-01"
     >
       <Greenbacks />
-    </TestGreenbacksProvider>
+    </TestGreenbacksProvider>,
   );
   expect(
     await screen.findByText(
-      /At least one of your accounts needs reauthentication/
-    )
+      /At least one of your accounts needs reauthentication/,
+    ),
   ).toBeInTheDocument();
   expect(
-    (await screen.findAllByRole('link', { name: 'Accounts' }))[0]
+    (await screen.findAllByRole('link', { name: 'Accounts' }))[0],
   ).toBeInTheDocument();
 });
 
@@ -48,7 +48,7 @@ test('reauthentication required error link redirects to acounts page', async () 
       now="2021-01-01"
     >
       <Greenbacks />
-    </TestGreenbacksProvider>
+    </TestGreenbacksProvider>,
   );
   const link = (await screen.findAllByRole('link', { name: 'Accounts' }))[0];
   userEvent.click(link);

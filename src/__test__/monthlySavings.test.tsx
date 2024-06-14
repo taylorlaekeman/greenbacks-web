@@ -76,21 +76,21 @@ test('shows savings', async () => {
   render(
     <TestGreenbacksProvider mocks={apiMocks} route="/widgets/months/2020-01/">
       <Greenbacks />
-    </TestGreenbacksProvider>
+    </TestGreenbacksProvider>,
   );
   const { getByText, queryByTestId, queryByText } = within(
-    await screen.findByTestId('section-monthly-savings')
+    await screen.findByTestId('section-monthly-savings'),
   );
   await waitForElementToBeRemoved(() =>
-    queryByTestId('loading-indicator-monthly-savings')
+    queryByTestId('loading-indicator-monthly-savings'),
   );
   expect(getByText('2020-01-01')).toBeVisible();
   expect(
-    getByText(/\$1.00—first merchant \(first name\) first tag/)
+    getByText(/\$1.00—first merchant \(first name\) first tag/),
   ).toBeVisible();
   expect(getByText('2020-01-15')).toBeVisible();
   expect(
-    getByText(/\$2.00—second merchant \(second name\) second tag/)
+    getByText(/\$2.00—second merchant \(second name\) second tag/),
   ).toBeVisible();
   expect(queryByText(/third merchant/)).not.toBeInTheDocument();
 });
@@ -99,10 +99,10 @@ test('shows loading indicator while transactions are loading', () => {
   render(
     <TestGreenbacksProvider route="/widgets">
       <Greenbacks />
-    </TestGreenbacksProvider>
+    </TestGreenbacksProvider>,
   );
   const loadingIndicator = screen.getByTestId(
-    'loading-indicator-monthly-savings'
+    'loading-indicator-monthly-savings',
   );
   expect(loadingIndicator).toBeInTheDocument();
 });

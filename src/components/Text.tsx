@@ -95,6 +95,12 @@ const sharedStyles = css<InnerTextProps>`
   `}
 `;
 
+export const basicFontStyles = css`
+  color: #013220;
+  font-family: 'Lora', serif;
+  font-size: 1rem;
+`;
+
 const P = styled.p<InnerTextProps>`
   ${sharedStyles}
 `;

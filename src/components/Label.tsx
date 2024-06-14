@@ -1,7 +1,14 @@
 import React, { FC } from 'react';
+import styled from 'styled-components';
 
-const Label: FC<{ forId: string }> = ({ children, forId }) => (
-  <label htmlFor={forId}>{children}</label>
+import { basicFontStyles } from 'components/Text';
+
+const Label: FC<{ forId?: string }> = ({ children, forId }) => (
+  <StyledLabel htmlFor={forId}>{children}</StyledLabel>
 );
+
+const StyledLabel = styled.label`
+  ${basicFontStyles}
+`;
 
 export default Label;

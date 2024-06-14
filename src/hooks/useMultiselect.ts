@@ -16,7 +16,7 @@ function useMultiselect({
 } {
   const [hasLoadedOptions, setHasLoadedOptions] = useState<boolean>(false);
   const [selectedOptions, setSelectedOptions] = useState<(string | Option)[]>(
-    defaultValue || options
+    defaultValue || options,
   );
   useEffect(() => {
     if (options?.length > 0 && !hasLoadedOptions) {
@@ -27,9 +27,9 @@ function useMultiselect({
   const memoizedSelectedOptions = useMemo(
     () =>
       selectedOptions.map((option) =>
-        typeof option === 'string' ? option : option.value
+        typeof option === 'string' ? option : option.value,
       ),
-    [selectedOptions]
+    [selectedOptions],
   );
   return {
     onChange: (newSelectedOptions) => {

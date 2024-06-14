@@ -41,10 +41,10 @@ test('shows total earning', async () => {
   render(
     <TestGreenbacksProvider mocks={apiMocks} route="/widgets/months/2020-01/">
       <Greenbacks />
-    </TestGreenbacksProvider>
+    </TestGreenbacksProvider>,
   );
   const { findByText } = within(
-    await screen.findByTestId('section-monthly-overview')
+    await screen.findByTestId('section-monthly-overview'),
   );
   expect(await findByText('Total Earning: $2.00')).toBeVisible();
 });
@@ -81,10 +81,10 @@ test('shows total spending', async () => {
   render(
     <TestGreenbacksProvider mocks={apiMocks} route="/widgets/months/2020-01/">
       <Greenbacks />
-    </TestGreenbacksProvider>
+    </TestGreenbacksProvider>,
   );
   const { findByText } = within(
-    await screen.findByTestId('section-monthly-overview')
+    await screen.findByTestId('section-monthly-overview'),
   );
   expect(await findByText('Total Spending: $2.00')).toBeVisible();
 });
@@ -129,10 +129,10 @@ test('shows total saving', async () => {
   render(
     <TestGreenbacksProvider mocks={apiMocks} route="/widgets/months/2020-01/">
       <Greenbacks />
-    </TestGreenbacksProvider>
+    </TestGreenbacksProvider>,
   );
   const { findByText } = within(
-    await screen.findByTestId('section-monthly-overview')
+    await screen.findByTestId('section-monthly-overview'),
   );
   expect(await findByText('Total Saving: $1.00')).toBeVisible();
 });
@@ -180,10 +180,10 @@ test('shows savings rate', async () => {
   render(
     <TestGreenbacksProvider mocks={apiMocks} route="/widgets/months/2020-01/">
       <Greenbacks />
-    </TestGreenbacksProvider>
+    </TestGreenbacksProvider>,
   );
   const { findByText } = within(
-    await screen.findByTestId('section-monthly-overview')
+    await screen.findByTestId('section-monthly-overview'),
   );
   expect(await findByText('Savings Rate: 50%')).toBeVisible();
 });
@@ -192,10 +192,10 @@ test('shows loading indicator while transactions are loading', async () => {
   render(
     <TestGreenbacksProvider route="/widgets/months/2020-01/">
       <Greenbacks />
-    </TestGreenbacksProvider>
+    </TestGreenbacksProvider>,
   );
   expect(
-    screen.getByTestId('loading-indicator-monthly-overview')
+    screen.getByTestId('loading-indicator-monthly-overview'),
   ).toBeVisible();
 });
 
@@ -255,10 +255,10 @@ test('shows cash flow graph', async () => {
   render(
     <TestGreenbacksProvider mocks={apiMocks} route="/widgets/months/2020-01/">
       <Greenbacks />
-    </TestGreenbacksProvider>
+    </TestGreenbacksProvider>,
   );
   const graphDataContainer = await screen.findByTestId(
-    'monthly-cash-flow-graph'
+    'monthly-cash-flow-graph',
   );
   expect(graphDataContainer).toHaveAttribute('data-earning', '101');
   expect(graphDataContainer).toHaveAttribute('data-saving', '102');

@@ -25,7 +25,7 @@ const useTransactionsByCategory = ({
   });
   const { earning, saving, spending } = useMemo(
     () => categorizeTransactions({ credits, debits }),
-    [credits, debits]
+    [credits, debits],
   );
   return {
     earning,
@@ -53,7 +53,7 @@ function categorizeTransactions({
   ];
   const saving = debits?.filter(({ category }) => category === Category.Saving);
   const spending = debits?.filter(
-    ({ category }) => category === Category.Spending
+    ({ category }) => category === Category.Spending,
   );
   return {
     earning: earning.length > 0 ? earning : undefined,

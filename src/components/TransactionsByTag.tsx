@@ -88,7 +88,7 @@ const groupSmallTags = ({
 }): TagGroup[] => {
   const total = transactions?.reduce(
     (sum, { totalAmount }) => sum + totalAmount,
-    0
+    0,
   );
   const largeTags: TagGroup[] = [];
   const smallTags: TagGroup[] = [];
@@ -106,13 +106,13 @@ const groupSmallTags = ({
             totalAmount: consolidatedTotal,
             transactions: consolidatedTransactions,
           },
-          { totalAmount: tagTotal, transactions: tagTransactions }
+          { totalAmount: tagTotal, transactions: tagTransactions },
         ) => ({
           tag: 'Small Tags',
           totalAmount: consolidatedTotal + tagTotal,
           transactions: [...consolidatedTransactions, ...tagTransactions],
-        })
-      )
+        }),
+      ),
     );
   }
   return tags;

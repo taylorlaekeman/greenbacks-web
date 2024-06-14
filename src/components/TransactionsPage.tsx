@@ -128,8 +128,8 @@ function findTags({
         ...tags,
         [transaction.tag || 'Untagged']: '',
       }),
-      {}
-    )
+      {},
+    ),
   ).sort();
 }
 
@@ -161,17 +161,17 @@ function filterTransactions({
   } = {};
   if (earning && selectedCategories.includes(Category.Earning)) {
     selectedTransactions.earning = earning.filter((transaction) =>
-      selectedEarningTags.includes(transaction.tag || 'Untagged')
+      selectedEarningTags.includes(transaction.tag || 'Untagged'),
     );
   }
   if (saving && selectedCategories.includes(Category.Saving)) {
     selectedTransactions.saving = saving.filter((transaction) =>
-      selectedSavingTags.includes(transaction.tag || 'Untagged')
+      selectedSavingTags.includes(transaction.tag || 'Untagged'),
     );
   }
   if (spending && selectedCategories.includes(Category.Spending)) {
     selectedTransactions.spending = spending.filter((transaction) =>
-      selectedSpendingTags.includes(transaction.tag || 'Untagged')
+      selectedSpendingTags.includes(transaction.tag || 'Untagged'),
     );
   }
   return selectedTransactions;

@@ -9,7 +9,7 @@ const groupTransactionsByTag = ({
   const groupsByTag = transactions.reduce(
     (
       tagGroups: Record<string, TagGroup>,
-      transaction
+      transaction,
     ): Record<string, TagGroup> => {
       const { amount, tag = UNTAGGED } = transaction;
       const { totalAmount: currentTotal, transactions: existingTransactions } =
@@ -23,12 +23,11 @@ const groupTransactionsByTag = ({
         },
       };
     },
-    {}
+    {},
   );
-  return Object.values(
-    groupsByTag
-  ).sort(({ totalAmount: firstAmount }, { totalAmount: secondAmount }) =>
-    firstAmount > secondAmount ? -1 : 1
+  return Object.values(groupsByTag).sort(
+    ({ totalAmount: firstAmount }, { totalAmount: secondAmount }) =>
+      firstAmount > secondAmount ? -1 : 1,
   );
 };
 

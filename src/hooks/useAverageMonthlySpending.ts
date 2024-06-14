@@ -6,7 +6,11 @@ const useAverageMonthlySpending = ({ months }: { months?: number } = {}): {
   error?: Error;
   isLoading: boolean;
 } => {
-  const { count, endIso: endDate, startIso: startDate } = useAveragingPeriod({
+  const {
+    count,
+    endIso: endDate,
+    startIso: startDate,
+  } = useAveragingPeriod({
     months,
   });
   const { error, isLoading, spending } = useTransactionsByCategory({

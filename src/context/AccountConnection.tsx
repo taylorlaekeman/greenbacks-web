@@ -8,7 +8,7 @@ interface AccountConnectionContext {
 }
 
 export const AccountConnectionContext = createContext<AccountConnectionContext>(
-  {}
+  {},
 );
 
 const AccountConnectionProvider: FC = ({ children }) => {
