@@ -30,31 +30,43 @@ function generateTransactionsForMonth({
 }: {
   month: DateTime;
 }): CoreTransaction[] {
-  const groceryAmountRange = { maxAmount: 20000, minAmount: 1000 };
+  const groceryAmountRange = { maxAmount: 14000, minAmount: 1000 };
   const groceryTransactions = [
-    generateRandomizedTransaction({
+    getTransaction({
+      amount: 8843,
+      datetime: month.startOf('month').endOf('week').toISODate(),
       merchant: 'Hello Fresh',
-      month,
-      index: 1,
-      ...groceryAmountRange,
+      name: 'Hello Fresh',
     }),
-    generateRandomizedTransaction({
+    getTransaction({
+      amount: 8843,
+      datetime: month
+        .startOf('month')
+        .endOf('week')
+        .plus({ weeks: 1 })
+        .toISODate(),
       merchant: 'Hello Fresh',
-      month,
-      index: 2,
-      ...groceryAmountRange,
+      name: 'Hello Fresh',
     }),
-    generateRandomizedTransaction({
+    getTransaction({
+      amount: 8843,
+      datetime: month
+        .startOf('month')
+        .endOf('week')
+        .plus({ weeks: 2 })
+        .toISODate(),
       merchant: 'Hello Fresh',
-      month,
-      index: 3,
-      ...groceryAmountRange,
+      name: 'Hello Fresh',
     }),
-    generateRandomizedTransaction({
+    getTransaction({
+      amount: 8843,
+      datetime: month
+        .startOf('month')
+        .endOf('week')
+        .plus({ weeks: 3 })
+        .toISODate(),
       merchant: 'Hello Fresh',
-      month,
-      index: 4,
-      ...groceryAmountRange,
+      name: 'Hello Fresh',
     }),
     generateRandomizedTransaction({
       merchant: 'Toronto Market',
@@ -84,135 +96,147 @@ function generateTransactionsForMonth({
       month,
       index: 1,
       ...groceryAmountRange,
+      maxAmount: 6000,
     }),
     generateRandomizedTransaction({
       merchant: "Shopper's Drugmart",
       month,
       index: 2,
       ...groceryAmountRange,
+      maxAmount: 6000,
     }),
   ];
-  const restaurantAmountRange = { maxAmount: 10000, minAmount: 1000 };
   const restaurantTransactions = [
     generateRandomizedTransaction({
       merchant: 'A&W',
       month,
-      ...restaurantAmountRange,
+      maxAmount: 2000,
+      minAmount: 500,
     }),
     generateRandomizedTransaction({
       merchant: 'Yonge Sushi',
       month,
-      ...restaurantAmountRange,
+      maxAmount: 9000,
+      minAmount: 200,
     }),
     generateRandomizedTransaction({
       merchant: 'Neighbourhood Pizza',
       month,
-      ...restaurantAmountRange,
+      maxAmount: 3000,
+      minAmount: 1500,
     }),
     generateRandomizedTransaction({
       merchant: 'Burrito King',
       month,
       index: 1,
-      ...restaurantAmountRange,
+      maxAmount: 3000,
+      minAmount: 1500,
     }),
     generateRandomizedTransaction({
       merchant: 'Burrito King',
       month,
       index: 2,
-      ...restaurantAmountRange,
+      maxAmount: 3000,
+      minAmount: 1500,
     }),
   ];
-  const transportationAmountRange = {
-    maxAmount: 2000,
-    minAmount: 300,
-  };
   const transportationTransactions = [
     generateRandomizedTransaction({
       merchant: 'Esso',
       month,
-      ...transportationAmountRange,
+      maxAmount: 8000,
+      minAmount: 4000,
     }),
     generateRandomizedTransaction({
       merchant: 'Go Transit',
       month,
       index: 1,
-      ...transportationAmountRange,
+      maxAmount: 2000,
+      minAmount: 800,
     }),
     generateRandomizedTransaction({
       merchant: 'Go Transit',
       month,
       index: 2,
-      ...transportationAmountRange,
+      maxAmount: 2000,
+      minAmount: 800,
     }),
     generateRandomizedTransaction({
       merchant: 'TTC',
       month,
       index: 1,
-      ...transportationAmountRange,
+      maxAmount: 400,
+      minAmount: 350,
     }),
     generateRandomizedTransaction({
       merchant: 'TTC',
       month,
       index: 2,
-      ...transportationAmountRange,
+      maxAmount: 400,
+      minAmount: 350,
     }),
     generateRandomizedTransaction({
       merchant: 'TTC',
       month,
       index: 3,
-      ...transportationAmountRange,
+      maxAmount: 400,
+      minAmount: 350,
     }),
     generateRandomizedTransaction({
       merchant: 'TTC',
       month,
       index: 4,
-      ...transportationAmountRange,
+      maxAmount: 400,
+      minAmount: 350,
     }),
     generateRandomizedTransaction({
       merchant: 'TTC',
       month,
       index: 5,
-      ...transportationAmountRange,
+      maxAmount: 400,
+      minAmount: 350,
     }),
     generateRandomizedTransaction({
       merchant: 'TTC',
       month,
       index: 6,
-      ...transportationAmountRange,
+      maxAmount: 400,
+      minAmount: 350,
     }),
     generateRandomizedTransaction({
       merchant: 'TTC',
       month,
       index: 7,
-      ...transportationAmountRange,
+      maxAmount: 400,
+      minAmount: 350,
     }),
     generateRandomizedTransaction({
       merchant: 'TTC',
       month,
       index: 8,
-      ...transportationAmountRange,
+      maxAmount: 400,
+      minAmount: 350,
     }),
     generateRandomizedTransaction({
       merchant: 'TTC',
       month,
       index: 9,
-      ...transportationAmountRange,
+      maxAmount: 400,
+      minAmount: 350,
     }),
   ];
-  const entertainmentAmountRange = {
-    maxAmount: 5000,
-    minAmount: 2000,
-  };
   const entertainmentTransactions = [
     generateRandomizedTransaction({
       merchant: 'Cineplex',
       month,
-      ...entertainmentAmountRange,
+      maxAmount: 5000,
+      minAmount: 2000,
     }),
     generateRandomizedTransaction({
       merchant: 'Nintendo',
       month,
-      ...entertainmentAmountRange,
+      maxAmount: 10000,
+      minAmount: 2000,
     }),
   ];
   const miscAmountRange = {
