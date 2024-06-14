@@ -14,7 +14,6 @@ export function MonthlyAmountsGraph({
   endDate,
   hasAverageLines = true,
   hasLegend = true,
-  hasMaxLine = false,
   monthlyAmountsBySeriesName = {},
   seriesConfigurationByName = {},
   startDate,
@@ -22,7 +21,6 @@ export function MonthlyAmountsGraph({
   endDate?: DateTime;
   hasAverageLines?: boolean;
   hasLegend?: boolean;
-  hasMaxLine?: boolean;
   monthlyAmountsBySeriesName?: Record<string, MonthlyAmount[]>;
   seriesConfigurationByName?: Record<string, SeriesConfiguration>;
   startDate?: DateTime;
@@ -34,7 +32,7 @@ export function MonthlyAmountsGraph({
     )
   )
     return <></>;
-  const maxValue = getMaxValue(monthlyAmountsBySeriesName);
+  const monthToLabel = getMonthToLabel(monthlyAmountsBySeriesName);
   const { earliestMonth, latestMonth, monthCount } = getMonthRange({
     endDate,
     monthlyAmountsBySeriesName,
@@ -89,16 +87,6 @@ export function MonthlyAmountsGraph({
       width="100%"
     >
       <LineChart data={graphableData}>
-        {false && hasMaxLine && (
-          <ReferenceLine
-            label={{
-              fontSize: '0.8rem',
-              value: formatThousands(maxValue),
-            }}
-            stroke="lightgrey"
-            y={maxValue}
-          />
-        )}
         {seriesNames.map((name) => {
           const { colour } = seriesConfigurationByName[name] ?? {};
           return (
@@ -115,10 +103,10 @@ export function MonthlyAmountsGraph({
                   fontSize: '0.8rem',
                 }}
                 valueAccessor={(entry: {
-                  payload: { day: number };
+                  payload: { month: string };
                   value: number;
                 }) => {
-                  if (entry.value === maxValue) return entry.value;
+                  if (entry.payload.month === monthToLabel) return entry.value;
                   return null;
                 }}
               />
@@ -214,12 +202,18 @@ function getMonthRange({
   };
 }
 
-function getMaxValue(amountsByName: Record<string, MonthlyAmount[]>): number {
-  let max = 0;
-  Object.values(amountsByName).forEach((amountsByMonth) => {
-    amountsByMonth.forEach(({ amount }) => {
-      if (amount > max) max = amount;
+function getMonthToLabel(
+  amountsByName: Record<string, MonthlyAmount[]>,
+): string {
+  const monthAmounts = Object.values(amountsByName);
+  let { amount: max, month } = monthAmounts[0][0];
+  monthAmounts.forEach((amountsByMonth) => {
+    amountsByMonth.forEach(({ amount, month: monthToCheck }) => {
+      if (amount >= max) {
+        max = amount;
+        month = monthToCheck;
+      }
     });
   });
-  return max;
+  return month.toFormat('yyyy-LL');
 }
