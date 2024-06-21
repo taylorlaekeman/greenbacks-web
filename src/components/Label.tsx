@@ -9,6 +9,8 @@ const Label: FC<{ forId?: string }> = ({ children, forId }) => (
 
 const StyledLabel = styled.label`
   ${basicFontStyles}
+  display: inline-block;
+  padding: 4px 0;
 `;
 
 export default Label;
