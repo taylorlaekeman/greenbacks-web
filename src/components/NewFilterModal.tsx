@@ -99,6 +99,7 @@ const Form = styled.form`
   display: flex;
   flex-direction: column;
   gap: 12px;
+  padding-bottom: 8px;
 `;
 
 export function NewFilterModalContainer({
