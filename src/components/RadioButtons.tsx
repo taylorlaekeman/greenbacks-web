@@ -1,10 +1,12 @@
 import React, { FC } from 'react';
 
+import { Icon, IconType } from 'components/Icon';
 import { basicFontStyles } from 'components/Text';
 import noop from 'utils/noop';
 import styled from 'utils/styled';
 
 const RadioButtons: FC<{
+  customIcon?: IconType;
   hasSharpUpperCorners?: boolean;
   hasTopBorder?: boolean;
   hasVisibleButtons?: boolean;
@@ -14,6 +16,7 @@ const RadioButtons: FC<{
   options?: (Option | string)[];
   value?: string;
 }> = ({
+  customIcon,
   hasSharpUpperCorners = false,
   hasTopBorder = true,
   hasVisibleButtons = true,
@@ -31,7 +34,11 @@ const RadioButtons: FC<{
     {options.map((option) => {
       const { label: optionLabel, value: optionValue } = getOption(option);
       return (
-        <InputOption key={optionValue} hasVisibleButtons={hasVisibleButtons}>
+        <InputOption
+          key={optionValue}
+          hasCustomIcon={customIcon !== undefined}
+          hasVisibleButtons={hasVisibleButtons}
+        >
           <input
             checked={optionValue === value}
             id={optionValue}
@@ -42,6 +49,7 @@ const RadioButtons: FC<{
             type="radio"
             value={optionValue}
           />
+          {customIcon && <Icon icon={customIcon} />}
           <label htmlFor={optionValue}>{optionLabel}</label>
         </InputOption>
       );
@@ -82,21 +90,29 @@ const FieldSet = styled.fieldset<{
   ${({ $hasTopBorder = true }) => !$hasTopBorder && `border-top: none;`}
 `;
 
-const InputOption = styled.div<{ hasVisibleButtons?: boolean }>`
+const InputOption = styled.div<{
+  hasCustomIcon?: boolean;
+  hasVisibleButtons?: boolean;
+}>`
   align-items: center;
   border-bottom: solid lightgrey 1px;
   display: grid;
-  grid-template-columns: max-content 1fr;
+  grid-template-columns: max-content ${({ hasCustomIcon = false }) =>
+      hasCustomIcon && 'max-content'} 1fr;
   padding: 8px 16px;
 
   ${basicFontStyles}
 
+  div:has(svg) {
+    margin-right: 8px;
+  }
+
   input {
     margin: 0;
-    ${({ hasVisibleButtons = true }) =>
-      hasVisibleButtons && `margin-right: 8px;`}
-    ${({ hasVisibleButtons = true }) =>
-      !hasVisibleButtons &&
+    ${({ hasCustomIcon = false, hasVisibleButtons = true }) =>
+      hasVisibleButtons && !hasCustomIcon && `margin-right: 8px;`}
+    ${({ hasCustomIcon = false, hasVisibleButtons = true }) =>
+      (!hasVisibleButtons || hasCustomIcon) &&
       `
         margin-left: -4px;
         opacity: 0;

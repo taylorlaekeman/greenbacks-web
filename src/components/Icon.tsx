@@ -1,5 +1,7 @@
 import React, { FC } from 'react';
 
+import { ReactComponent as ArrowRightIcon } from 'assets/icons/arrow-right.svg';
+import { ReactComponent as ArrowRightCircleIcon } from 'assets/icons/arrow-right-circle.svg';
 import { ReactComponent as ChevronLeftIcon } from 'assets/icons/chevron-left.svg';
 import { ReactComponent as ChevronRightIcon } from 'assets/icons/chevron-right.svg';
 import { ReactComponent as CogIcon } from 'assets/icons/cog.svg';
@@ -17,6 +19,8 @@ export const Icon: FC<{ icon: IconType }> = ({ icon }) => (
 );
 
 export enum IconType {
+  ArrowRight = 'arrow-right',
+  ArrowRightCircle = 'arrow-right-circle',
   ChevronLeft = 'chevron-left',
   ChevronRight = 'chevron-right',
   Cog = 'cog',
@@ -29,8 +33,8 @@ export enum IconType {
 
 const Wrapper = styled.div`
   color: #013220;
-  height: 12px;
-  width: 12px;
+  height: 14px;
+  width: 14px;
 
   & > svg {
     height: 100%;
@@ -41,6 +45,10 @@ const Wrapper = styled.div`
 
 function InnerIcon({ icon }: { icon: IconType }): React.ReactElement {
   switch (icon) {
+    case IconType.ArrowRight:
+      return <ArrowRightIcon />;
+    case IconType.ArrowRightCircle:
+      return <ArrowRightCircleIcon />;
     case IconType.ChevronLeft:
       return <ChevronLeftIcon />;
     case IconType.ChevronRight:
