@@ -46,6 +46,7 @@ const Cog = styled(UnstyledCog)`
 
 export enum ButtonStyle {
   Primary,
+  Secondary,
   Text,
   Unstyled,
 }
@@ -62,6 +63,8 @@ const StyledButton = styled.button<StyleProps>`
 
 function getStyle({ style }: { style: ButtonStyle }) {
   switch (style) {
+    case ButtonStyle.Secondary:
+      return secondaryStyle;
     case ButtonStyle.Text:
       return textStyle;
     case ButtonStyle.Unstyled:
@@ -82,6 +85,14 @@ const sharedStyles = css<StyleProps>`
 `;
 
 const primaryStyle = css<StyleProps>`
+  ${sharedStyles}
+  background-color: #d0f0c0;
+  border: none;
+  border-radius: 4px;
+  padding: 4px 32px;
+`;
+
+const secondaryStyle = css<StyleProps>`
   ${sharedStyles}
   background: none;
   border: solid lightgrey 1px;

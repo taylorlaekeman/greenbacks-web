@@ -27,6 +27,12 @@ export const Primary: Story = {
   },
 };
 
+export const Secondary: Story = {
+  args: {
+    style: ButtonStyle.Secondary,
+  },
+};
+
 export const Text: Story = {
   args: {
     style: ButtonStyle.Text,
