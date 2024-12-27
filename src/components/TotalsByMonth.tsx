@@ -5,6 +5,7 @@ import {
   Legend,
   Line,
   LineChart,
+  ReferenceLine,
   ResponsiveContainer,
   XAxis,
 } from 'recharts';
@@ -42,12 +43,24 @@ const TotalsByMonth: FC<{ area?: string; hasCheckboxes?: boolean }> = ({
     const earning = totals[Series.Earning];
     if (!earning) return totals;
     const saving = totals[Series.Saving] ?? 0;
+    const spending = totals[Series.Spending] ?? 0;
     const available = earning - saving;
+    const net = earning - (saving + spending);
     return {
       ...totals,
       [Series.Available]: available,
+      [Series.Net]: net,
     };
   });
+
+  const visibleSeries = visibleCategories.map(
+    (category) => SERIES_BY_CATEGORY[category],
+  );
+
+  const hasNegative = (totalsByMonthWithAvailable ?? []).some(
+    (totals: Partial<Record<Series, number>>) =>
+      visibleSeries.some((series) => (totals[series] ?? 0) < 0),
+  );
 
   if (isLoading)
     return (
@@ -71,6 +84,8 @@ const TotalsByMonth: FC<{ area?: string; hasCheckboxes?: boolean }> = ({
           <Button
             onClick={() => {
               if (visibleCategories.includes('Earning'))
+                onChangeVisibleCategories(['Net']);
+              else if (visibleCategories.includes('Net'))
                 onChangeVisibleCategories(['Earning Minus Saving', 'Spending']);
               else onChangeVisibleCategories(['Earning', 'Saving', 'Spending']);
             }}
@@ -86,6 +101,8 @@ const TotalsByMonth: FC<{ area?: string; hasCheckboxes?: boolean }> = ({
           isEarningMinusSavingVisible={visibleCategories.includes(
             'Earning Minus Saving',
           )}
+          isNetVisible={visibleCategories.includes('Net')}
+          isReferenceLineVisible={hasNegative}
           isSavingVisible={visibleCategories.includes('Saving')}
           isSavingAndSpendingVisible={visibleCategories.includes(
             'Saving & Spending',
@@ -109,6 +126,8 @@ const TotalsByMonth: FC<{ area?: string; hasCheckboxes?: boolean }> = ({
 const Graph: FC<{
   isEarningVisible?: boolean;
   isEarningMinusSavingVisible?: boolean;
+  isNetVisible?: boolean;
+  isReferenceLineVisible?: boolean;
   isSavingVisible?: boolean;
   isSavingAndSpendingVisible?: boolean;
   isSpendingVisible?: boolean;
@@ -116,6 +135,8 @@ const Graph: FC<{
 }> = ({
   isEarningVisible = true,
   isEarningMinusSavingVisible = true,
+  isNetVisible = true,
+  isReferenceLineVisible = true,
   isSavingVisible = true,
   isSavingAndSpendingVisible = true,
   isSpendingVisible = true,
@@ -141,6 +162,27 @@ const Graph: FC<{
       />
       <ResponsiveContainer aspect={4} minWidth={250} width="100%">
         <LineChart data={formatData({ totalsByMonth })}>
+          {isNetVisible && (
+            <Line dataKey="net" dot={false} stroke="purple">
+              <LabelList
+                formatter={formatThousands}
+                style={{
+                  fontSize: '0.8rem',
+                }}
+                valueAccessor={(entry: {
+                  payload: { month: string };
+                  value: number;
+                }) => {
+                  if (
+                    entry.payload.month ===
+                    monthsToLabelBySeriesName[Series.Net]
+                  )
+                    return entry.value;
+                  return null;
+                }}
+              />
+            </Line>
+          )}
           {isEarningVisible && (
             <Line dataKey="earning" dot={false} stroke="green">
               <LabelList
@@ -233,6 +275,16 @@ const Graph: FC<{
               strokeWidth={1}
             />
           )}
+          {isReferenceLineVisible && (
+            <ReferenceLine
+              label={{
+                fontSize: '0.8rem',
+                value: 0,
+              }}
+              stroke="lightgrey"
+              y={0}
+            />
+          )}
           <XAxis
             dataKey="month"
             interval="preserveStartEnd"
@@ -268,6 +320,7 @@ const formatData = ({
     earning: earning || 0,
     available: difference(earning, saving),
     month,
+    net: difference(earning, sum(saving, spending)),
     saving: saving || 0,
     savingAndSpending: sum(saving, spending),
     spending: spending || 0,
@@ -315,8 +368,9 @@ function getMonthsToLabel(
       return newResult;
     },
     {
-      earning: { maximum: 0, month: '' },
       available: { maximum: 0, month: '' },
+      earning: { maximum: 0, month: '' },
+      net: { maximum: 0, month: '' },
       saving: { maximum: 0, month: '' },
       spending: { maximum: 0, month: '' },
     },
@@ -333,19 +387,30 @@ function getMonthsToLabel(
 enum Series {
   Available = 'available',
   Earning = 'earning',
+  Net = 'net',
   Saving = 'saving',
   Spending = 'spending',
 }
 
 interface MonthTotalsWithAvailable extends MonthTotals {
   available?: number;
+  net?: number;
 }
 
 const LEGEND_LABELS: Record<string, string> = {
   [Series.Available]: 'Available (Earning - Saving)',
   [Series.Earning]: 'Earning',
+  [Series.Net]: 'Net Cashflow',
   [Series.Saving]: 'Saving',
   [Series.Spending]: 'Spending',
+};
+
+const SERIES_BY_CATEGORY: Record<string, Series> = {
+  Earning: Series.Earning,
+  'Earning Minus Spending': Series.Available,
+  Net: Series.Net,
+  Saving: Series.Saving,
+  Spending: Series.Spending,
 };
 
 export default TotalsByMonth;
