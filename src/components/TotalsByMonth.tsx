@@ -35,7 +35,7 @@ const TotalsByMonth: FC<{ area?: string; hasCheckboxes?: boolean }> = ({
     onChange: onChangeVisibleCategories,
     selectedOptions: visibleCategories,
   } = useMultiselect({
-    defaultValue: ['Earning Minus Saving', 'Spending'],
+    defaultValue: ['Net'],
     options: categories,
   });
   const { isLoading, totalsByMonth } = useTotalsByMonth();
