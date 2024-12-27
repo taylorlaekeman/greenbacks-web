@@ -49,8 +49,6 @@ const TotalsByMonth: FC<{ area?: string; hasCheckboxes?: boolean }> = ({
     };
   });
 
-  console.log({ visibleCategories });
-
   if (isLoading)
     return (
       <Panel area={area}>
