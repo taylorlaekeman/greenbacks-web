@@ -1,12 +1,12 @@
+import { DateTime } from 'luxon';
 import React, { FC, Fragment } from 'react';
 import {
-  CartesianGrid,
+  LabelList,
   Legend,
   Line,
   LineChart,
   ResponsiveContainer,
   XAxis,
-  YAxis,
 } from 'recharts';
 
 import Checkboxes from 'components/Checkboxes';
@@ -92,69 +92,139 @@ const Graph: FC<{
   isSavingAndSpendingVisible = true,
   isSpendingVisible = true,
   totalsByMonth,
-}) => (
-  <>
-    <div
-      data-testid="totals-by-month-graph"
-      {...totalsByMonth?.reduce(
-        (dataTags, { earning, month, saving, spending }) => {
-          const key = `data-month-${month.replace(' ', '-')}`.toLowerCase();
-          return {
-            ...dataTags,
-            [key]: `earning-${earning}-saving-${saving}-spending-${spending}`,
-          };
-        },
-        {},
-      )}
-    />
-    <ResponsiveContainer aspect={4} minWidth={250} width="100%">
-      <LineChart data={formatData({ totalsByMonth })}>
-        <CartesianGrid strokeDasharray="3 3" vertical={false} />
-        {isEarningVisible && (
-          <Line dataKey="earning" dot={false} stroke="green" />
+}) => {
+  const earliestMonth = totalsByMonth?.[0].month ?? '';
+  const latestMonth = totalsByMonth?.[totalsByMonth.length - 1].month ?? '';
+  const monthsToLabelBySeriesName = getMonthsToLabel(totalsByMonth);
+  return (
+    <>
+      <div
+        data-testid="totals-by-month-graph"
+        {...totalsByMonth?.reduce(
+          (dataTags, { earning, month, saving, spending }) => {
+            const key = `data-month-${month.replace(' ', '-')}`.toLowerCase();
+            return {
+              ...dataTags,
+              [key]: `earning-${earning}-saving-${saving}-spending-${spending}`,
+            };
+          },
+          {},
         )}
-        {isEarningMinusSavingVisible && (
-          <Line dataKey="earningMinusSaving" dot={false} stroke="yellowgreen" />
-        )}
-        {isSavingVisible && <Line dataKey="saving" dot={false} stroke="blue" />}
-        {isSpendingVisible && (
-          <Line dataKey="spending" dot={false} stroke="orange" />
-        )}
-        {isSavingAndSpendingVisible && (
-          <Line
-            dataKey="savingAndSpending"
-            dot={false}
-            stroke="purple"
-            strokeWidth={1}
+      />
+      <ResponsiveContainer aspect={4} minWidth={250} width="100%">
+        <LineChart data={formatData({ totalsByMonth })}>
+          {isEarningVisible && (
+            <Line dataKey="earning" dot={false} stroke="green">
+              <LabelList
+                formatter={formatThousands}
+                style={{
+                  fontSize: '0.8rem',
+                }}
+                valueAccessor={(entry: {
+                  payload: { month: string };
+                  value: number;
+                }) => {
+                  if (
+                    entry.payload.month ===
+                    monthsToLabelBySeriesName[Series.Earning]
+                  )
+                    return entry.value;
+                  return null;
+                }}
+              />
+            </Line>
+          )}
+          {isEarningMinusSavingVisible && (
+            <Line
+              dataKey="earningMinusSaving"
+              dot={false}
+              stroke="yellowgreen"
+            />
+          )}
+          {isSavingVisible && (
+            <Line dataKey="saving" dot={false} stroke="blue">
+              <LabelList
+                formatter={formatThousands}
+                style={{
+                  fontSize: '0.8rem',
+                }}
+                valueAccessor={(entry: {
+                  payload: { month: string };
+                  value: number;
+                }) => {
+                  if (
+                    entry.payload.month ===
+                    monthsToLabelBySeriesName[Series.Saving]
+                  )
+                    return entry.value;
+                  return null;
+                }}
+              />
+            </Line>
+          )}
+          {isSpendingVisible && (
+            <Line dataKey="spending" dot={false} stroke="orange">
+              <LabelList
+                formatter={formatThousands}
+                style={{
+                  fontSize: '0.8rem',
+                }}
+                valueAccessor={(entry: {
+                  payload: { month: string };
+                  value: number;
+                }) => {
+                  if (
+                    entry.payload.month ===
+                    monthsToLabelBySeriesName[Series.Spending]
+                  )
+                    return entry.value;
+                  return null;
+                }}
+              />
+            </Line>
+          )}
+          {isSavingAndSpendingVisible && (
+            <Line
+              dataKey="savingAndSpending"
+              dot={false}
+              stroke="purple"
+              strokeWidth={1}
+            />
+          )}
+          <XAxis
+            dataKey="month"
+            interval="preserveStartEnd"
+            reversed
+            tick={{ fontSize: '0.8rem' }}
+            tickFormatter={(value) =>
+              DateTime.fromISO(value).toLocaleString({
+                month: 'short',
+                year: 'numeric',
+              })
+            }
+            ticks={[earliestMonth, latestMonth]}
           />
-        )}
-        <XAxis dataKey="name" interval="preserveStartEnd" reversed />
-        <YAxis
-          axisLine={false}
-          tickFormatter={formatThousands}
-          tickLine={false}
-          width={30}
-        />
-        <Legend
-          align="center"
-          iconType="plainline"
-          wrapperStyle={{ fontSize: '0.8rem' }}
-        />
-      </LineChart>
-    </ResponsiveContainer>
-  </>
-);
+          <Legend
+            align="center"
+            iconType="plainline"
+            wrapperStyle={{ fontSize: '0.8rem' }}
+          />
+        </LineChart>
+      </ResponsiveContainer>
+    </>
+  );
+};
 
 const formatData = ({
   totalsByMonth,
 }: {
   totalsByMonth?: MonthTotals[];
-}): { earning: number; name: string; saving: number; spending: number }[] => {
+}): { earning: number; month: string; saving: number; spending: number }[] => {
   if (!totalsByMonth) return [];
   const result = totalsByMonth.map(({ earning, month, saving, spending }) => ({
     earning: earning || 0,
     earningMinusSaving: difference(earning, saving),
-    name: shortenMonth(month),
+    month,
     saving: saving || 0,
     savingAndSpending: sum(saving, spending),
     spending: spending || 0,
@@ -183,24 +253,43 @@ function formatThousands(cents: number): string {
   return `${hundreds / 10}k`;
 }
 
-function shortenMonth(month: string): string {
-  const [monthName] = month.split(' ');
-  return SHORT_MONTH_NAMES[monthName];
+function getMonthsToLabel(
+  totals: MonthTotals[] | undefined,
+): Partial<Record<Series, string>> {
+  if (!totals) return {};
+  const monthsToLabel = totals?.reduce(
+    (result, monthTotal) => {
+      const newResult = { ...result };
+      Object.values(Series).forEach((series) => {
+        const seriesTotal = monthTotal[series];
+        if (!seriesTotal) return;
+        if (seriesTotal > result[series]?.maximum)
+          newResult[series] = {
+            maximum: seriesTotal,
+            month: monthTotal.month,
+          };
+      });
+      return newResult;
+    },
+    {
+      earning: { maximum: 0, month: '' },
+      saving: { maximum: 0, month: '' },
+      spending: { maximum: 0, month: '' },
+    },
+  );
+  return Object.entries(monthsToLabel).reduce(
+    (result, [key, value]) => ({
+      ...result,
+      [key]: value.month,
+    }),
+    {},
+  );
 }
 
-const SHORT_MONTH_NAMES: Record<string, string> = {
-  January: 'Jan',
-  February: 'Feb',
-  March: 'Mar',
-  April: 'Apr',
-  May: 'May',
-  June: 'June',
-  July: 'July',
-  August: 'Aug',
-  September: 'Sept',
-  October: 'Oct',
-  November: 'Nov',
-  December: 'Dec',
-};
+enum Series {
+  Earning = 'earning',
+  Saving = 'saving',
+  Spending = 'spending',
+}
 
 export default TotalsByMonth;

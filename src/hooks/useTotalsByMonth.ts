@@ -4,7 +4,6 @@ import useTransactionsByCategory from 'hooks/useTransactionsByCategory';
 import Transaction from 'types/transaction';
 import datetime from 'utils/datetime';
 import getMonth from 'utils/getMonth';
-import getReadableMonth from 'utils/getReadableMonth';
 
 const useTotalsByMonth = (): {
   isLoading: boolean;
@@ -79,14 +78,10 @@ const combineMonthlyTotals = ({
       result.month = month;
       totalsByMonth[month] = result;
     });
-  return Object.values(totalsByMonth)
-    .sort(({ month: firstMonth }, { month: secondMonth }) =>
+  return Object.values(totalsByMonth).sort(
+    ({ month: firstMonth }, { month: secondMonth }) =>
       firstMonth > secondMonth ? -1 : 1,
-    )
-    .map((monthlyTotal) => ({
-      ...monthlyTotal,
-      month: getReadableMonth({ iso: monthlyTotal.month }),
-    }));
+  );
 };
 
 export interface MonthTotals {
