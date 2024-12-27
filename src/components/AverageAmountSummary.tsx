@@ -52,7 +52,8 @@ export function AverageAmountSummary({
     seriesName: 'Spending',
   });
   const averageMonthlySpending =
-    transactionsByMonth.reduce((result, group) => result + group.total, 0) / 12;
+    transactionsByMonth.reduce((result, group) => result + group.total, 0) /
+    transactionsByMonth.length;
   const transactionsByTag = groupTransactions({
     groupBy: GroupBy.Tag,
     sortGroupsBy: SortGroupsBy.Total,
@@ -68,7 +69,7 @@ export function AverageAmountSummary({
       transactions: group.transactions,
     });
     return {
-      average: group.total / 12,
+      average: group.total / transactionsByMonth.length,
       tag: group.key,
       transactionsByMonth: tagTransactionsByMonth ?? [],
     };
@@ -103,6 +104,7 @@ export function AverageAmountSummary({
         <MonthlyAmountsGraph
           endDate={endDate}
           hasLegend={false}
+          monthCount={transactionsByMonth.length}
           monthlyAmountsBySeriesName={graphData}
           startDate={startDate}
         />

@@ -342,6 +342,7 @@ export function CumulativeAmountSummaryContainer(): React.ReactElement {
   });
   const {
     isLoading: isLoadingComparisonPeriod,
+    monthCount,
     spending: previousYearSpendingByDayOfMonth,
   } = useSpendingByDayOfMonth({
     endDate: now.minus({ months: 1 }).endOf('month').toISODate(),
@@ -355,7 +356,7 @@ export function CumulativeAmountSummaryContainer(): React.ReactElement {
     previousYearSpendingByDayOfMonth ?? {},
   ).reduce((result, [day, spending]) => {
     const date = visibleMonth.set({ day: parseInt(day, 10) }).toISODate();
-    return { ...result, [date]: spending / 12 };
+    return { ...result, [date]: spending / monthCount };
   }, {});
 
   return (

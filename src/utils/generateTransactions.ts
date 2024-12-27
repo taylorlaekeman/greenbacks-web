@@ -344,7 +344,7 @@ function generateTransactionsForMonth({
       accountId: 'account-2',
       amount: -260000,
       datetime: month.plus({ days: 15 }).toISODate(),
-      id: `${month.toUnixInteger()}-direct-deposit-1`,
+      id: `${month.toUnixInteger()}-direct-deposit-2`,
       merchant: 'Direct Deposit',
       name: 'Direct Deposit from Work Co',
     }),

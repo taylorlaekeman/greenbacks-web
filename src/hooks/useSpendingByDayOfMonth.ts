@@ -2,6 +2,7 @@ import { DateTime } from 'luxon';
 
 import useTransactionsByCategory from 'hooks/useTransactionsByCategory';
 import Transaction from 'types/transaction';
+import { GroupBy, groupTransactions } from 'utils/groupTransactions';
 
 const useSpendingByDayOfMonth = ({
   endDate,
@@ -13,6 +14,7 @@ const useSpendingByDayOfMonth = ({
   startDate: string;
 }): {
   isLoading: boolean;
+  monthCount: number;
   rawTransactions?: Transaction[];
   spending?: Record<string, number>;
 } => {
@@ -21,7 +23,12 @@ const useSpendingByDayOfMonth = ({
     isTestData,
     startDate,
   });
-  if (!spending) return { isLoading };
+  if (!spending) return { isLoading, monthCount: 0 };
+  const transactionsByMonth =
+    groupTransactions({
+      groupBy: GroupBy.Month,
+      transactions: spending,
+    }) ?? [];
   const spendingByDayOfMonth = spending.reduce(
     (result: Record<string, number>, { amount, datetime }) => {
       const day = getDayOfMonth(datetime);
@@ -32,6 +39,7 @@ const useSpendingByDayOfMonth = ({
   );
   return {
     isLoading,
+    monthCount: transactionsByMonth.length,
     rawTransactions: spending,
     spending: spendingByDayOfMonth,
   };

@@ -15,12 +15,14 @@ export function MonthlyAmountsGraph({
   hasAverageLines = true,
   hasLegend = true,
   monthlyAmountsBySeriesName = {},
+  monthCount,
   seriesConfigurationByName = {},
   startDate,
 }: {
   endDate?: DateTime;
   hasAverageLines?: boolean;
   hasLegend?: boolean;
+  monthCount?: number;
   monthlyAmountsBySeriesName?: Record<string, MonthlyAmount[]>;
   seriesConfigurationByName?: Record<string, SeriesConfiguration>;
   startDate?: DateTime;
@@ -33,7 +35,11 @@ export function MonthlyAmountsGraph({
   )
     return <></>;
   const monthToLabel = getMonthToLabel(monthlyAmountsBySeriesName);
-  const { earliestMonth, latestMonth, monthCount } = getMonthRange({
+  const {
+    earliestMonth,
+    latestMonth,
+    monthCount: fullRangeMonthCount,
+  } = getMonthRange({
     endDate,
     monthlyAmountsBySeriesName,
     startDate,
@@ -46,7 +52,7 @@ export function MonthlyAmountsGraph({
         (total, { amount }) => total + amount,
         0,
       );
-      const average = sum / monthCount;
+      const average = sum / (monthCount ?? fullRangeMonthCount);
       return {
         ...result,
         [name]: average,
