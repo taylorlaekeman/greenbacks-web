@@ -1,9 +1,12 @@
 import styled from 'utils/styled';
 
 export const Panel = styled.div<{
+  area?: string;
   hasBorder?: boolean;
   hasTopBorder?: boolean;
 }>`
+  ${({ area }) => area && `grid-area: ${area};`}
+
   background-color: white;
 
   ${({ hasBorder = true }) =>

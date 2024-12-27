@@ -9,10 +9,13 @@ import {
   XAxis,
 } from 'recharts';
 
+import { Button, ButtonStyle } from 'components/Button';
 import Checkboxes from 'components/Checkboxes';
+import { Icon, IconType } from 'components/Icon';
+import { Alignment, JustifiedRow } from 'components/JustifiedRow';
 import LoadingIndicator from 'components/LoadingIndicator';
 import { Panel, PanelItem } from 'components/Panel';
-import SectionContainer from 'components/SectionContainer';
+import { Size, Text } from 'components/Text';
 import useMultiselect from 'hooks/useMultiselect';
 import useTotalsByMonth, { MonthTotals } from 'hooks/useTotalsByMonth';
 
@@ -31,50 +34,77 @@ const TotalsByMonth: FC<{ area?: string; hasCheckboxes?: boolean }> = ({
     onChange: onChangeVisibleCategories,
     selectedOptions: visibleCategories,
   } = useMultiselect({
-    defaultValue: ['Earning', 'Saving', 'Spending'],
+    defaultValue: ['Earning Minus Saving', 'Spending'],
     options: categories,
   });
   const { isLoading, totalsByMonth } = useTotalsByMonth();
+  const totalsByMonthWithAvailable = totalsByMonth?.map((totals) => {
+    const earning = totals[Series.Earning];
+    if (!earning) return totals;
+    const saving = totals[Series.Saving] ?? 0;
+    const available = earning - saving;
+    return {
+      ...totals,
+      [Series.Available]: available,
+    };
+  });
+
+  console.log({ visibleCategories });
 
   if (isLoading)
     return (
-      <SectionContainer
-        area={area}
-        id="totals-by-month"
-        title="Totals by Month"
-      >
-        <LoadingIndicator name="totals-by-month" />
-      </SectionContainer>
+      <Panel area={area}>
+        <PanelItem hasBottomBorder>
+          <Text size={Size.Medium}>Cash Flow</Text>
+        </PanelItem>
+        <PanelItem>
+          <JustifiedRow alignment={Alignment.Center}>
+            <LoadingIndicator />
+          </JustifiedRow>
+        </PanelItem>
+      </Panel>
     );
 
   return (
-    <SectionContainer area={area} id="totals-by-month">
-      <Panel>
-        <PanelItem hasBottomBorder>Cash Flow</PanelItem>
-        <PanelItem>
-          <Graph
-            isEarningVisible={visibleCategories.includes('Earning')}
-            isEarningMinusSavingVisible={visibleCategories.includes(
-              'Earning Minus Saving',
-            )}
-            isSavingVisible={visibleCategories.includes('Saving')}
-            isSavingAndSpendingVisible={visibleCategories.includes(
-              'Saving & Spending',
-            )}
-            isSpendingVisible={visibleCategories.includes('Spending')}
-            totalsByMonth={totalsByMonth}
-          />
-          {hasCheckboxes && (
-            <Checkboxes
-              label="Categories"
-              onChange={onChangeVisibleCategories}
-              options={categories}
-              selectedOptions={visibleCategories}
-            />
+    <Panel area={area}>
+      <PanelItem hasBottomBorder>
+        <JustifiedRow>
+          <Text size={Size.Medium}>Cash Flow</Text>
+          <Button
+            onClick={() => {
+              if (visibleCategories.includes('Earning'))
+                onChangeVisibleCategories(['Earning Minus Saving', 'Spending']);
+              else onChangeVisibleCategories(['Earning', 'Saving', 'Spending']);
+            }}
+            style={ButtonStyle.Unstyled}
+          >
+            <Icon icon={IconType.Filter} />
+          </Button>
+        </JustifiedRow>
+      </PanelItem>
+      <PanelItem>
+        <Graph
+          isEarningVisible={visibleCategories.includes('Earning')}
+          isEarningMinusSavingVisible={visibleCategories.includes(
+            'Earning Minus Saving',
           )}
-        </PanelItem>
-      </Panel>
-    </SectionContainer>
+          isSavingVisible={visibleCategories.includes('Saving')}
+          isSavingAndSpendingVisible={visibleCategories.includes(
+            'Saving & Spending',
+          )}
+          isSpendingVisible={visibleCategories.includes('Spending')}
+          totalsByMonth={totalsByMonthWithAvailable}
+        />
+        {hasCheckboxes && (
+          <Checkboxes
+            label="Categories"
+            onChange={onChangeVisibleCategories}
+            options={categories}
+            selectedOptions={visibleCategories}
+          />
+        )}
+      </PanelItem>
+    </Panel>
   );
 };
 
@@ -84,7 +114,7 @@ const Graph: FC<{
   isSavingVisible?: boolean;
   isSavingAndSpendingVisible?: boolean;
   isSpendingVisible?: boolean;
-  totalsByMonth?: MonthTotals[];
+  totalsByMonth?: MonthTotalsWithAvailable[];
 }> = ({
   isEarningVisible = true,
   isEarningMinusSavingVisible = true,
@@ -135,11 +165,25 @@ const Graph: FC<{
             </Line>
           )}
           {isEarningMinusSavingVisible && (
-            <Line
-              dataKey="earningMinusSaving"
-              dot={false}
-              stroke="yellowgreen"
-            />
+            <Line dataKey="available" dot={false} stroke="yellowgreen">
+              <LabelList
+                formatter={formatThousands}
+                style={{
+                  fontSize: '0.8rem',
+                }}
+                valueAccessor={(entry: {
+                  payload: { month: string };
+                  value: number;
+                }) => {
+                  if (
+                    entry.payload.month ===
+                    monthsToLabelBySeriesName[Series.Available]
+                  )
+                    return entry.value;
+                  return null;
+                }}
+              />
+            </Line>
           )}
           {isSavingVisible && (
             <Line dataKey="saving" dot={false} stroke="blue">
@@ -206,6 +250,7 @@ const Graph: FC<{
           />
           <Legend
             align="center"
+            formatter={(value) => LEGEND_LABELS[value] ?? value}
             iconType="plainline"
             wrapperStyle={{ fontSize: '0.8rem' }}
           />
@@ -223,7 +268,7 @@ const formatData = ({
   if (!totalsByMonth) return [];
   const result = totalsByMonth.map(({ earning, month, saving, spending }) => ({
     earning: earning || 0,
-    earningMinusSaving: difference(earning, saving),
+    available: difference(earning, saving),
     month,
     saving: saving || 0,
     savingAndSpending: sum(saving, spending),
@@ -254,7 +299,7 @@ function formatThousands(cents: number): string {
 }
 
 function getMonthsToLabel(
-  totals: MonthTotals[] | undefined,
+  totals: MonthTotalsWithAvailable[] | undefined,
 ): Partial<Record<Series, string>> {
   if (!totals) return {};
   const monthsToLabel = totals?.reduce(
@@ -273,6 +318,7 @@ function getMonthsToLabel(
     },
     {
       earning: { maximum: 0, month: '' },
+      available: { maximum: 0, month: '' },
       saving: { maximum: 0, month: '' },
       spending: { maximum: 0, month: '' },
     },
@@ -287,9 +333,21 @@ function getMonthsToLabel(
 }
 
 enum Series {
+  Available = 'available',
   Earning = 'earning',
   Saving = 'saving',
   Spending = 'spending',
 }
+
+interface MonthTotalsWithAvailable extends MonthTotals {
+  available?: number;
+}
+
+const LEGEND_LABELS: Record<string, string> = {
+  [Series.Available]: 'Available (Earning - Saving)',
+  [Series.Earning]: 'Earning',
+  [Series.Saving]: 'Saving',
+  [Series.Spending]: 'Spending',
+};
 
 export default TotalsByMonth;
