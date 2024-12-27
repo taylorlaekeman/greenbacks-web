@@ -1,24 +1,25 @@
-import React, { FC, useState } from 'react';
+import React from 'react';
+import { usePlaidLink } from 'react-plaid-link';
 
-import AccountConnector from 'components/AccountConnector';
 import Button from 'components/Button';
 import LoadingIndicator from 'components/LoadingIndicator';
 import PageWrapper from 'components/PageWrapper';
-import useAccounts from 'hooks/useAccounts';
+import useAccounts, { Account } from 'hooks/useAccounts';
+import { useInitializationToken } from 'hooks/useInitializationToken';
 import useUpdateAccountConnection from 'hooks/useUpdateAccountConnection';
+import noop from '../utils/noop';
 
-const Accounts: FC = () => {
-  const {
-    accounts,
-    initializationToken,
-    isLoadingAccounts,
-    isLoadingInitializationToken,
-    saveAccount,
-  } = useAccounts();
-  const { update } = useUpdateAccountConnection();
-  const [isAccountConnectorVisible, setIsAccountConnectorVisible] =
-    useState<boolean>(false);
-
+export function Accounts({
+  accounts = [],
+  isLoadingAccounts = false,
+  onClickConnect = noop,
+  onClickReauthenticate = noop,
+}: {
+  accounts?: Account[];
+  isLoadingAccounts?: boolean;
+  onClickConnect?: () => void;
+  onClickReauthenticate?: (input: string) => void;
+}): React.ReactElement {
   if (isLoadingAccounts)
     return (
       <PageWrapper name="accounts">
@@ -28,34 +29,93 @@ const Accounts: FC = () => {
 
   return (
     <PageWrapper name="accounts">
-      <ul>
-        {accounts.map(
-          ({ id, institution: { name }, isReauthenticationRequired }) => (
-            <li data-testid={`account-wrapper-${id}`} key={id}>
-              {name}
-              {isReauthenticationRequired && (
-                <Button onClick={() => update?.({ accountId: id })}>
-                  Reauthenticate
-                </Button>
-              )}
-            </li>
-          ),
-        )}
-      </ul>
+      {accounts.length > 0 ? (
+        <ul>
+          {accounts.map(
+            ({ id, institution: { name }, isReauthenticationRequired }) => (
+              <li data-testid={`account-wrapper-${id}`} key={id}>
+                {name}
+                {isReauthenticationRequired && (
+                  <Button onClick={() => onClickReauthenticate(id)}>
+                    Reauthenticate
+                  </Button>
+                )}
+              </li>
+            ),
+          )}
+        </ul>
+      ) : (
+        <div>You haven&apos;t connected any accounts yet</div>
+      )}
       <Button
-        isLoading={isLoadingInitializationToken}
-        onClick={() => setIsAccountConnectorVisible(true)}
+        onClick={() => {
+          onClickConnect();
+        }}
       >
         Connect Account
       </Button>
-      {initializationToken && isAccountConnectorVisible && (
-        <AccountConnector
-          onSuccess={(token) => saveAccount({ token })}
-          token={initializationToken}
-        />
-      )}
     </PageWrapper>
   );
-};
+}
+
+export function AccountsContainer(): React.ReactElement {
+  const { accounts, isLoading: isLoadingAccounts, saveAccount } = useAccounts();
+  const { update } = useUpdateAccountConnection();
+  const { fetchInitializationToken, token: initializationToken } =
+    useInitializationToken();
+  const { isReady, open } = useAccountConnector({
+    initializationToken,
+    onExit: () => {
+      console.log('on exit');
+    },
+    onSuccess: (token) => {
+      console.log('on success');
+      saveAccount({ token });
+    },
+  });
+  const [hasOpened, setHasOpened] = React.useState<boolean>(false);
+  React.useEffect(() => {
+    console.log({ isReady, hasOpened });
+    if (isReady && !hasOpened) {
+      open();
+      setHasOpened(true);
+    }
+  }, [hasOpened, isReady, open, setHasOpened]);
+  return (
+    <Accounts
+      accounts={accounts}
+      isLoadingAccounts={isLoadingAccounts}
+      onClickReauthenticate={(accountId) => update?.({ accountId })}
+      onClickConnect={() => {
+        console.log('on click connect');
+        fetchInitializationToken();
+      }}
+    />
+  );
+}
+
+function useAccountConnector({
+  initializationToken,
+  onExit = noop,
+  onSuccess = noop,
+}: {
+  initializationToken?: string;
+  onExit?: () => void;
+  onSuccess?: (input: string) => void;
+}): { isReady: boolean; open: () => void } {
+  const { open, ready } = usePlaidLink({
+    onExit,
+    onSuccess,
+    token: initializationToken ?? null,
+  });
+  const isReady = initializationToken !== undefined && ready;
+  return {
+    isReady,
+    open: () => {
+      if (!isReady) return;
+      open();
+    },
+  };
+}
 
 export default Accounts;

@@ -2,22 +2,13 @@ import useMutation from 'hooks/useMutation';
 import useQuery from 'hooks/useQuery';
 import gql from 'utils/gql';
 
-const useAccounts: UseAccounts = () => {
-  const {
-    data: initializationTokenData,
-    loading: isLoadingInitializationToken,
-  } = useQuery<GetInitializationTokenResult>(
-    gql`
-      {
-        getInitializationToken
-      }
-    `,
-    {
-      fetchPolicy: 'network-only',
-    },
-  );
-  const initializationToken = initializationTokenData?.getInitializationToken;
-  const { data: accountsResponse, loading: isLoadingAccounts } =
+function useAccounts(): {
+  accounts: Account[];
+  isLoading: boolean;
+  isLoadingAccounts: boolean;
+  saveAccount: (input: SaveAccountInput) => void;
+} {
+  const { data: accountsResponse, loading: isLoading } =
     useQuery<AccountsResult>(ACCOUNTS_QUERY);
   const accounts = accountsResponse?.accounts || [];
   const { mutate: saveAccount } = useMutation<SaveAccountVariables>({
@@ -25,14 +16,13 @@ const useAccounts: UseAccounts = () => {
   });
   return {
     accounts,
-    initializationToken,
-    isLoadingAccounts,
-    isLoadingInitializationToken,
+    isLoading,
+    isLoadingAccounts: isLoading,
     saveAccount: ({ token }) => {
       saveAccount({ variables: { token } });
     },
   };
-};
+}
 
 export const ACCOUNTS_QUERY = gql`
   {
@@ -47,20 +37,6 @@ export const ACCOUNTS_QUERY = gql`
     }
   }
 `;
-
-export type UseAccounts = () => UseAccountsResult;
-
-export interface UseAccountsResult {
-  accounts: Account[];
-  initializationToken?: string;
-  isLoadingAccounts: boolean;
-  isLoadingInitializationToken: boolean;
-  saveAccount: (input: SaveAccountInput) => void;
-}
-
-interface GetInitializationTokenResult {
-  getInitializationToken: string;
-}
 
 interface AccountsResult {
   accounts: Account[];
@@ -85,11 +61,11 @@ export interface SaveAccountInput {
 }
 
 const SAVE_ACCOUNT_MUTATION = `
-mutation saveAccount($token: String!) {
-  saveAccount(input: { token: $token }) {
-    id
+  mutation saveAccount($token: String!) {
+    saveAccount(input: { token: $token }) {
+      id
+    }
   }
-}
 `;
 
 export default useAccounts;

@@ -6,6 +6,7 @@ import Link from 'components/Link';
 import { PageContainer } from 'components/Page';
 import { Text } from 'components/Text';
 import { UserSettingsContext } from 'context/UserSettings';
+import useAccounts, { Account } from 'hooks/useAccounts';
 import noop from 'utils/noop';
 
 export function NoAccounts({
@@ -38,4 +39,42 @@ const Wrapper = styled.div`
 export function NoAccountsContainer(): React.ReactElement {
   const { onChangeTestDataUsage } = useContext(UserSettingsContext);
   return <NoAccounts onEnableDemoMode={() => onChangeTestDataUsage(true)} />;
+}
+
+export function NoAccountsBarrier({
+  accounts = [],
+  children = <></>,
+  isDemoMode = false,
+  isLoadingAccounts = false,
+  onEnableDemoMode = noop,
+}: {
+  accounts?: Account[];
+  children?: React.ReactNode;
+  isDemoMode?: boolean;
+  isLoadingAccounts?: boolean;
+  onEnableDemoMode?: () => void;
+}): React.ReactElement {
+  if (isDemoMode) return <>{children}</>;
+  if (isLoadingAccounts) return <>{children}</>;
+  if (accounts.length > 0) return <>{children}</>;
+  return <NoAccounts onEnableDemoMode={onEnableDemoMode} />;
+}
+
+export function NoAccountsBarrierContainer({
+  children = <></>,
+}: {
+  children?: React.ReactNode;
+}): React.ReactElement {
+  const { accounts, isLoadingAccounts } = useAccounts();
+  const { isTestData, onChangeTestDataUsage } = useContext(UserSettingsContext);
+  return (
+    <NoAccountsBarrier
+      accounts={accounts}
+      isDemoMode={isTestData}
+      isLoadingAccounts={isLoadingAccounts}
+      onEnableDemoMode={() => onChangeTestDataUsage(true)}
+    >
+      {children}
+    </NoAccountsBarrier>
+  );
 }

@@ -1,15 +1,23 @@
-import React, { FunctionComponent } from 'react';
+import React from 'react';
 
 // import { mutations, useMutation } from 'api';
 // import { useConnectionInitializer } from 'finance';
-import { PlaidLink } from 'react-plaid-link';
+import { usePlaidLink } from 'react-plaid-link';
 // import noop from 'utils/noop';
 
-const AccountConnector: FunctionComponent<Props> = ({ onSuccess, token }) => (
-  <PlaidLink onSuccess={onSuccess} token={token}>
-    Test
-  </PlaidLink>
-);
+function AccountConnector({
+  onSuccess,
+  token,
+}: {
+  onSuccess: (token: string) => void;
+  token?: string;
+}): React.ReactElement {
+  const { open, ready } = usePlaidLink({ onSuccess, token: token ?? null });
+  if (token && ready) {
+    open();
+  }
+  return <div>test</div>;
+}
 /*
   const [createConnection] = useMutation(mutations.createConnection, {
     onError: noop,
