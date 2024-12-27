@@ -65,17 +65,12 @@ export function AccountsContainer(): React.ReactElement {
     useInitializationToken();
   const { isReady, open } = useAccountConnector({
     initializationToken,
-    onExit: () => {
-      console.log('on exit');
-    },
     onSuccess: (token) => {
-      console.log('on success');
       saveAccount({ token });
     },
   });
   const [hasOpened, setHasOpened] = React.useState<boolean>(false);
   React.useEffect(() => {
-    console.log({ isReady, hasOpened });
     if (isReady && !hasOpened) {
       open();
       setHasOpened(true);
@@ -86,10 +81,7 @@ export function AccountsContainer(): React.ReactElement {
       accounts={accounts}
       isLoadingAccounts={isLoadingAccounts}
       onClickReauthenticate={(accountId) => update?.({ accountId })}
-      onClickConnect={() => {
-        console.log('on click connect');
-        fetchInitializationToken();
-      }}
+      onClickConnect={fetchInitializationToken}
     />
   );
 }
