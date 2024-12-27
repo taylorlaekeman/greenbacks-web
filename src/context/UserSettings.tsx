@@ -32,11 +32,15 @@ export const UserSettingsContext = React.createContext<
 });
 
 export function UserSettingsProvider({
+  areWidgetsInitiallyVisible = false,
   children,
 }: {
+  areWidgetsInitiallyVisible?: boolean;
   children: React.ReactNode;
 }): React.ReactElement {
-  const [areWidgetsVisible, setAreWidgetsVisible] = useState<boolean>(false);
+  const [areWidgetsVisible, setAreWidgetsVisible] = useState<boolean>(
+    areWidgetsInitiallyVisible,
+  );
   const [isTestData, setIsTestData] = useState<boolean>(false);
   return (
     <UserSettingsContext.Provider

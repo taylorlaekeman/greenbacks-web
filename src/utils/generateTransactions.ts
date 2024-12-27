@@ -280,7 +280,7 @@ function generateTransactionsForMonth({
     (sum, transaction) => sum + transaction.amount,
     0,
   );
-  return [
+  const spending = [
     ...randomizedSpending,
     getTransaction({
       accountId: 'account-1',
@@ -315,7 +315,7 @@ function generateTransactionsForMonth({
       name: 'Beanfield Internet',
     }),
     getTransaction({
-      accountId: 'account-1',
+      accountId: 'account-2',
       amount: 50000,
       datetime: month.plus({ days: 15 }).toISODate(),
       id: `${month.toUnixInteger()}-TD-TransferToSavings`,
@@ -323,7 +323,7 @@ function generateTransactionsForMonth({
       name: 'Transfer to Savings',
     }),
     getTransaction({
-      accountId: 'account-1',
+      accountId: 'account-2',
       amount: creditCardTotal,
       datetime: month.plus({ days: 15 }).toISODate(),
       id: `${month.toUnixInteger()}-TD-CreditCardPayment`,
@@ -331,6 +331,25 @@ function generateTransactionsForMonth({
       name: 'Credit Card Payment',
     }),
   ];
+  const earning = [
+    getTransaction({
+      accountId: 'account-2',
+      amount: -260000,
+      datetime: month.toISODate(),
+      id: `${month.toUnixInteger()}-direct-deposit-1`,
+      merchant: 'Direct Deposit',
+      name: 'Direct Deposit from Work Co',
+    }),
+    getTransaction({
+      accountId: 'account-2',
+      amount: -260000,
+      datetime: month.plus({ days: 15 }).toISODate(),
+      id: `${month.toUnixInteger()}-direct-deposit-1`,
+      merchant: 'Direct Deposit',
+      name: 'Direct Deposit from Work Co',
+    }),
+  ];
+  return [...spending, ...earning];
 }
 
 function generateRandomizedTransaction({

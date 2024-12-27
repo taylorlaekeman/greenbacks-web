@@ -1,14 +1,17 @@
 import React, { FC, useState } from 'react';
+import styled from 'styled-components';
 
 import Button from 'components/Button';
 import noop from 'utils/noop';
 
 const SectionContainer: FC<{
+  area?: string;
   id: string;
   isCollapsedByDefault?: boolean;
   isCollapsible?: boolean;
-  title: string;
+  title?: string;
 }> = ({
+  area,
   children,
   id,
   isCollapsedByDefault = false,
@@ -19,15 +22,17 @@ const SectionContainer: FC<{
     isCollapsible && isCollapsedByDefault,
   );
   return (
-    <section data-testid={`section-${id}`}>
-      <SectionTitle
-        isCollapsible={isCollapsible}
-        onClick={() => setIsCollapsed(!isCollapsed)}
-      >
-        {title}
-      </SectionTitle>
+    <Wrapper $area={area} data-testid={`section-${id}`}>
+      {title && (
+        <SectionTitle
+          isCollapsible={isCollapsible}
+          onClick={() => setIsCollapsed(!isCollapsed)}
+        >
+          {title}
+        </SectionTitle>
+      )}
       {!isCollapsed && children}
-    </section>
+    </Wrapper>
   );
 };
 
@@ -44,5 +49,9 @@ const SectionTitle: FC<{ isCollapsible?: boolean; onClick?: () => void }> = ({
     </Button>
   );
 };
+
+const Wrapper = styled.section<{ $area?: string }>`
+  ${({ $area }) => `grid-area: ${$area};`}
+`;
 
 export default SectionContainer;

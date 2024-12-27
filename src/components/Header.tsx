@@ -26,12 +26,12 @@ export function Header({
           </Link>
         )}
         {hasLinks && hasWidgetLink && (
-          <Link href="/widgets">
+          <Link href="widgets">
             <Text>Widgets</Text>
           </Link>
         )}
         {hasLinks && (
-          <Link href="/accounts">
+          <Link href="accounts">
             <Text>Accounts</Text>
           </Link>
         )}

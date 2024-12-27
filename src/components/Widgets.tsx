@@ -57,7 +57,7 @@ export function Widgets(): React.ReactElement {
         id="page-selector"
         onChange={(newPage) => {
           setPage(newPage);
-          navigate(`/widgets/${newPage}`);
+          navigate(newPage);
         }}
         options={options}
         value={page}

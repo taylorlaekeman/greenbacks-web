@@ -1,6 +1,7 @@
 import React, { FC, Fragment } from 'react';
 import {
   CartesianGrid,
+  Legend,
   Line,
   LineChart,
   ResponsiveContainer,
@@ -10,11 +11,15 @@ import {
 
 import Checkboxes from 'components/Checkboxes';
 import LoadingIndicator from 'components/LoadingIndicator';
+import { Panel, PanelItem } from 'components/Panel';
 import SectionContainer from 'components/SectionContainer';
 import useMultiselect from 'hooks/useMultiselect';
 import useTotalsByMonth, { MonthTotals } from 'hooks/useTotalsByMonth';
 
-const TotalsByMonth: FC = () => {
+const TotalsByMonth: FC<{ area?: string; hasCheckboxes?: boolean }> = ({
+  area,
+  hasCheckboxes = true,
+}) => {
   const categories = [
     'Earning',
     'Earning Minus Saving',
@@ -26,38 +31,49 @@ const TotalsByMonth: FC = () => {
     onChange: onChangeVisibleCategories,
     selectedOptions: visibleCategories,
   } = useMultiselect({
-    defaultValue: ['Earning Minus Saving', 'Spending'],
+    defaultValue: ['Earning', 'Saving', 'Spending'],
     options: categories,
   });
   const { isLoading, totalsByMonth } = useTotalsByMonth();
 
   if (isLoading)
     return (
-      <SectionContainer id="totals-by-month" title="Totals by Month">
+      <SectionContainer
+        area={area}
+        id="totals-by-month"
+        title="Totals by Month"
+      >
         <LoadingIndicator name="totals-by-month" />
       </SectionContainer>
     );
 
   return (
-    <SectionContainer id="totals-by-month" title="Totals by Month">
-      <Graph
-        isEarningVisible={visibleCategories.includes('Earning')}
-        isEarningMinusSavingVisible={visibleCategories.includes(
-          'Earning Minus Saving',
-        )}
-        isSavingVisible={visibleCategories.includes('Saving')}
-        isSavingAndSpendingVisible={visibleCategories.includes(
-          'Saving & Spending',
-        )}
-        isSpendingVisible={visibleCategories.includes('Spending')}
-        totalsByMonth={totalsByMonth}
-      />
-      <Checkboxes
-        label="Categories"
-        onChange={onChangeVisibleCategories}
-        options={categories}
-        selectedOptions={visibleCategories}
-      />
+    <SectionContainer area={area} id="totals-by-month">
+      <Panel>
+        <PanelItem hasBottomBorder>Cash Flow</PanelItem>
+        <PanelItem>
+          <Graph
+            isEarningVisible={visibleCategories.includes('Earning')}
+            isEarningMinusSavingVisible={visibleCategories.includes(
+              'Earning Minus Saving',
+            )}
+            isSavingVisible={visibleCategories.includes('Saving')}
+            isSavingAndSpendingVisible={visibleCategories.includes(
+              'Saving & Spending',
+            )}
+            isSpendingVisible={visibleCategories.includes('Spending')}
+            totalsByMonth={totalsByMonth}
+          />
+          {hasCheckboxes && (
+            <Checkboxes
+              label="Categories"
+              onChange={onChangeVisibleCategories}
+              options={categories}
+              selectedOptions={visibleCategories}
+            />
+          )}
+        </PanelItem>
+      </Panel>
     </SectionContainer>
   );
 };
@@ -91,7 +107,7 @@ const Graph: FC<{
         {},
       )}
     />
-    <ResponsiveContainer aspect={1.5} minWidth={300} width="100%">
+    <ResponsiveContainer aspect={4} minWidth={250} width="100%">
       <LineChart data={formatData({ totalsByMonth })}>
         <CartesianGrid strokeDasharray="3 3" vertical={false} />
         {isEarningVisible && (
@@ -118,6 +134,11 @@ const Graph: FC<{
           tickFormatter={formatThousands}
           tickLine={false}
           width={30}
+        />
+        <Legend
+          align="center"
+          iconType="plainline"
+          wrapperStyle={{ fontSize: '0.8rem' }}
         />
       </LineChart>
     </ResponsiveContainer>
