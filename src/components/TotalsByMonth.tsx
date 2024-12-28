@@ -9,6 +9,7 @@ import {
   ResponsiveContainer,
   XAxis,
 } from 'recharts';
+import styled from 'styled-components';
 
 import { Button, ButtonStyle } from 'components/Button';
 import Checkboxes from 'components/Checkboxes';
@@ -17,6 +18,7 @@ import { Alignment, JustifiedRow } from 'components/JustifiedRow';
 import LoadingIndicator from 'components/LoadingIndicator';
 import { Panel, PanelItem } from 'components/Panel';
 import { Size, Text } from 'components/Text';
+import useCurrencyFormatter from 'hooks/useCurrencyFormatter';
 import useMultiselect from 'hooks/useMultiselect';
 import useTotalsByMonth, { MonthTotals } from 'hooks/useTotalsByMonth';
 
@@ -24,6 +26,7 @@ const TotalsByMonth: FC<{ area?: string; hasCheckboxes?: boolean }> = ({
   area,
   hasCheckboxes = true,
 }) => {
+  const { format } = useCurrencyFormatter();
   const categories = [
     'Earning',
     'Earning Minus Saving',
@@ -62,6 +65,24 @@ const TotalsByMonth: FC<{ area?: string; hasCheckboxes?: boolean }> = ({
       visibleSeries.some((series) => (totals[series] ?? 0) < 0),
   );
 
+  const seriesToAverage = [Series.Earning, Series.Saving, Series.Spending];
+
+  const totalsBySeries = (totalsByMonthWithAvailable ?? []).reduce(
+    (
+      result: Partial<Record<Series, number>>,
+      totals: Partial<Record<Series, number>>,
+    ) => {
+      const newResult = { ...result };
+      seriesToAverage.forEach((series) => {
+        const oldValue = result[series] ?? 0;
+        const currentValue = totals[series] ?? 0;
+        newResult[series] = oldValue + currentValue;
+      });
+      return newResult;
+    },
+    {},
+  );
+
   if (isLoading)
     return (
       <Panel area={area}>
@@ -95,7 +116,7 @@ const TotalsByMonth: FC<{ area?: string; hasCheckboxes?: boolean }> = ({
           </Button>
         </JustifiedRow>
       </PanelItem>
-      <PanelItem>
+      <PanelItem hasBottomBorder>
         <Graph
           isEarningVisible={visibleCategories.includes('Earning')}
           isEarningMinusSavingVisible={visibleCategories.includes(
@@ -118,6 +139,37 @@ const TotalsByMonth: FC<{ area?: string; hasCheckboxes?: boolean }> = ({
             selectedOptions={visibleCategories}
           />
         )}
+      </PanelItem>
+      <PanelItem hasPadding={false}>
+        <JustifiedRow>
+          <AverageWrapper>
+            <Text size={Size.Large}>
+              {format(
+                (totalsBySeries[Series.Earning] ?? 0) /
+                  (totalsByMonth?.length ?? 1),
+              )}
+            </Text>
+            <Text size={Size.Small}>Average Monthly Earning</Text>
+          </AverageWrapper>
+          <AverageWrapper>
+            <Text size={Size.Large}>
+              {format(
+                (totalsBySeries[Series.Saving] ?? 0) /
+                  (totalsByMonth?.length ?? 1),
+              )}
+            </Text>
+            <Text size={Size.Small}>Average Monthly Saving</Text>
+          </AverageWrapper>
+          <AverageWrapper hasRightBorder={false}>
+            <Text size={Size.Large}>
+              {format(
+                (totalsBySeries[Series.Spending] ?? 0) /
+                  (totalsByMonth?.length ?? 1),
+              )}
+            </Text>
+            <Text size={Size.Small}>Average Monthly Spending</Text>
+          </AverageWrapper>
+        </JustifiedRow>
       </PanelItem>
     </Panel>
   );
@@ -412,5 +464,12 @@ const SERIES_BY_CATEGORY: Record<string, Series> = {
   Saving: Series.Saving,
   Spending: Series.Spending,
 };
+
+const AverageWrapper = styled.div<{ hasRightBorder?: boolean }>`
+  ${({ hasRightBorder = true }) =>
+    hasRightBorder && 'border-right: solid lightgrey 1px;'}
+  flex-grow: 1;
+  padding: 8px 16px;
+`;
 
 export default TotalsByMonth;
