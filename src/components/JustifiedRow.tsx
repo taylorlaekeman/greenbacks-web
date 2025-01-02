@@ -4,24 +4,43 @@ import styled from 'styled-components';
 export function JustifiedRow({
   alignment = Alignment.SpaceBetween,
   children,
+  columnBreakpoint,
   space = Space.None,
 }: {
   alignment?: Alignment;
   children?: React.ReactNode;
+  columnBreakpoint?: number;
   space?: Space;
 }): React.ReactElement {
   return (
-    <Wrapper alignment={alignment} space={space}>
+    <Wrapper
+      alignment={alignment}
+      columnBreakpoint={columnBreakpoint}
+      space={space}
+    >
       {children}
     </Wrapper>
   );
 }
 
-const Wrapper = styled.div<{ alignment: Alignment; space: Space }>`
+const Wrapper = styled.div<{
+  alignment: Alignment;
+  columnBreakpoint?: number;
+  space: Space;
+}>`
   align-items: baseline;
   display: flex;
   gap: ${({ space }) => getWidth({ space })};
   justify-content: ${({ alignment }) => alignment};
+  ${({ columnBreakpoint }) =>
+    columnBreakpoint &&
+    `
+      flex-direction: column;
+
+      @media (min-width: ${columnBreakpoint}px) {
+        flex-direction: row;
+      }
+    `}
 `;
 
 export enum Alignment {

@@ -141,7 +141,7 @@ const TotalsByMonth: FC<{ area?: string; hasCheckboxes?: boolean }> = ({
         )}
       </PanelItem>
       <PanelItem hasPadding={false}>
-        <JustifiedRow>
+        <JustifiedRow columnBreakpoint={610}>
           <AverageWrapper>
             <Text size={Size.Large}>
               {format(
@@ -467,9 +467,17 @@ const SERIES_BY_CATEGORY: Record<string, Series> = {
 
 const AverageWrapper = styled.div<{ hasRightBorder?: boolean }>`
   ${({ hasRightBorder = true }) =>
-    hasRightBorder && 'border-right: solid lightgrey 1px;'}
+    hasRightBorder &&
+    `
+      border-bottom: solid lightgrey 1px;
+      @media (min-width: 610px) {
+        border-bottom: none;
+        border-right: solid lightgrey 1px;
+      }
+    `}
   flex-grow: 1;
   padding: 8px 16px;
+  width: 100%;
 `;
 
 export default TotalsByMonth;
